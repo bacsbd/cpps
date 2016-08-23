@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get('/', get_index);
 router.get('/bugsandhugs', get_bugsandhugs);
+router.get('/faq', get_faq);
 
 module.exports = {
   addRouter(app) {
@@ -21,4 +22,8 @@ function get_index(req, res) {
 
 function get_bugsandhugs(req, res) {
   myRender(req, res, 'index/bugsandhugs');
+}
+
+function get_faq(req, res) {
+  myRender(req, res, 'index/faq');
 }
