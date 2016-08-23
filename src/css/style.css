@@ -1,0 +1,10 @@
+.navitem-pullright {
+  float: right;
+}
+.footer {
+  font-size: 1.2rem;
+  color: gray;
+}
+.footer a {
+  text-decoration: none;
+}
