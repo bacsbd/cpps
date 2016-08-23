@@ -18,7 +18,7 @@ module.exports = function(gulp) {
 
   gulp.task('browser-sync', gulp.series('nodemon', function() {
     return browsersync.init({
-      proxy: 'http://localhost:8000',
+      proxy: 'http://localhost:8002',
       files: config.path.browsersync
     });
   }));

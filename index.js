@@ -12,6 +12,13 @@ app.set('views', path.join(rootPath, './views'));
 
 app.use('/public', express.static(path.join(rootPath, '/public')));
 
+/**
+ * Add Routers
+ */
+require('./controllers/index/route.js').addRouter(app);
+
+/*End Add Routers*/
+
 app.use(function(err, req, res, next) {
   console.error(err.stack);
   res.status(500).send('Something broke!');
