@@ -9,10 +9,10 @@ block content
           .any.items
             label
               .label-body Email:
-              input.u-full-width( name='email', type='text')
+              input.u-full-width( name='email', type='email', maxlength=256)
             label
               .label-body Password:
-              input.u-full-width( name='password', type='password')
+              input.u-full-width( name='password', type='password', minlength=6, maxlength=256, title='Must be between 6 to 256 characters')
         .row
           .any.items
             input(type='submit', value='Login')
