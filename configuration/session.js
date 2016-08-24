@@ -2,9 +2,12 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const secret = require('../secret.js').secret;
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 
 module.exports = {
   addSession(app) {
+    app.use(cookieParser(secret));
+
     app.use(session({
       secret,
       resave: false,

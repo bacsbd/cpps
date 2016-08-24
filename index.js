@@ -1,6 +1,7 @@
 const express = require('express');
 const world = require('forthright48/world');
 const path = require('path');
+const bodyParser = require('body-parser')
 
 const app = express();
 const server = require('http').createServer(app);
@@ -11,13 +12,25 @@ app.set('view engine', 'pug');
 app.set('views', path.join(rootPath, './views'));
 
 app.use('/public', express.static(path.join(rootPath, '/public')));
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({
+  extended: true
+})); // support encoded bodies
+
 
 /**
  *Configuration
  */
 require('./configuration/database');
+require('./configuration/session').addSession(app);
+app.use(require('connect-flash')());
 /*End Configuration*/
 
+/**
+ *Add Models
+ */
+require('./models/user/userModel.js');
+/*End Add Models*/
 
 /**
  * Add Routers
