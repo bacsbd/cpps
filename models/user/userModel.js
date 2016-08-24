@@ -2,10 +2,11 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
-const userSchema = mongoose.schema({
+const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
     validate: {
       validator: validator.isEmail,
       message: 'Email not valid'
@@ -36,24 +37,15 @@ const userSchema = mongoose.schema({
   timestamps: true
 });
 
-userSchema.pre('save', function(next) {
-  //Sanitize Email
-  this.email = validator.normalizeEmail(this.email);
-  next();
-});
-
-userSchema.methods.createSalt = function() {
+userSchema.statics.createSalt = function() {
   return bcrypt.genSaltSync(10);
 };
-userSchema.methods.createHash = function(val) {
+userSchema.statics.createHash = function(val) {
   return bcrypt.hashSync(val, 10);
 };
 userSchema.methods.comparePassword = function(val) {
   return bcrypt.compareSync(this.password, val);
 };
+userSchema.statics.normalizeEmail = validator.normalizeEmail;
 
-const User = mongoose.model('User', userSchema);
-
-module.exports = {
-  model: User
-};
+mongoose.model('User', userSchema);
