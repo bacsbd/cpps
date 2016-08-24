@@ -1,0 +1,19 @@
+extends ../layouts/layout.pug
+
+block content
+  .row.u-flex.u-flex-center
+    .six.items.offset-by-3.u-text-center
+      h3 Login
+      form(action='/user/login', method='post')
+        .row
+          .any.items
+            label
+              .label-body Email:
+              input.u-full-width( name='email', type='text')
+            label
+              .label-body Password:
+              input.u-full-width( name='password', type='password')
+        .row
+          .any.items
+            input(type='submit', value='Login')
+      p New here? Click <a href='/user/register'>here</a> to Register.
