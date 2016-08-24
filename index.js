@@ -15,7 +15,7 @@ app.use('/public', express.static(path.join(rootPath, '/public')));
 /**
  *Configuration
  */
-
+require('./configuration/database');
 /*End Configuration*/
 
 

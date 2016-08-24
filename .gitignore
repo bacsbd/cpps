@@ -1,3 +1,4 @@
 node_modules/*
 !node_modules/forthright48
 .eslintrc
+secret.js
