@@ -33,6 +33,12 @@ require('./models/user/userModel.js');
 /*End Add Models*/
 
 /**
+ *Add Middleware
+ */
+require('./middlewares/flash.js')(app);
+/*End Add Middleware*/
+
+/**
  * Add Routers
  */
 require('./controllers/index/indexController.js').addRouter(app);
