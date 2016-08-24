@@ -13,11 +13,19 @@ app.set('views', path.join(rootPath, './views'));
 app.use('/public', express.static(path.join(rootPath, '/public')));
 
 /**
+ *Configuration
+ */
+
+/*End Configuration*/
+
+
+/**
  * Add Routers
  */
-require('./controllers/index/route.js').addRouter(app);
+require('./controllers/index/indexController.js').addRouter(app);
 
 /*End Add Routers*/
+
 
 app.use(function(err, req, res, next) {
   console.error(err.stack);
