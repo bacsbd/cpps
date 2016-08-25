@@ -18,5 +18,5 @@ module.exports = {
     },
     browsersync: ['./public/**/*.css', './public/**/*.js', 'views/**/*.pug']
   },
-  vendors: []
+  vendors: ['jquery', 'notifyjs-browser']
 };

@@ -25,7 +25,11 @@ module.exports = function(gulp) {
     });
 
     return b.bundle()
-      .pipe(source('vendor.min.js'))
+      .pipe(source('vendor.js'))
+      // .pipe(gulp.dest('./public/js/vendor/'))
+      .pipe(rename({
+        suffix: '.min'
+      }))
       .pipe(buffer())
       .pipe(uglify())
       .pipe(gulp.dest('./public/js/vendor/'));
