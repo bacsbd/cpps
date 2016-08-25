@@ -5,10 +5,10 @@ module.exports = function(app) {
     const flash = {
       info: req.flash('info'),
       success: req.flash('success'),
-      warning: req.flash('warning'),
+      warning: req.flash('warn'),
       error: req.flash('error')
     };
-    res.locals.flash = flash;
+    res.locals.flash = JSON.stringify(flash);
     next();
   });
 };

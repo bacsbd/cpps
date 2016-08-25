@@ -4,7 +4,11 @@
 var $ = require('jquery');
 var notify = require('notifyjs-browser')(null, $);
 
-$.notify('hello world', 'success');
-console.log(flash);
+for (var val in flash) {
+  var len = flash[val].length;
+  for (var i = 0; i < len; i++) {
+    $.notify(flash[val][i], val);
+  }
+}
 
 },{"jquery":"jquery","notifyjs-browser":"notifyjs-browser"}]},{},[1]);
