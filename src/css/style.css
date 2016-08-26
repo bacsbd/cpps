@@ -8,3 +8,7 @@
 .footer a {
   text-decoration: none;
 }
+.recaptcha div {
+  margin-left: auto;
+  margin-right: auto;
+}

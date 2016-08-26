@@ -1,11 +1,12 @@
 const express = require('express');
 const world = require('forthright48/world');
 const path = require('path');
-const bodyParser = require('body-parser')
-
+const bodyParser = require('body-parser');
+const recaptcha = require('express-recaptcha');
 const app = express();
 const server = require('http').createServer(app);
 const rootPath = world.rootPath;
+const secret = require('./secret.js');
 
 app.set('port', 8002);
 app.set('view engine', 'pug');
@@ -24,6 +25,7 @@ app.use(bodyParser.urlencoded({
 require('./configuration/database');
 require('./configuration/session').addSession(app);
 app.use(require('connect-flash')());
+recaptcha.init(secret.recaptcha.site, secret.recaptcha.secret);
 /*End Configuration*/
 
 /**

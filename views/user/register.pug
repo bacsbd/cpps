@@ -9,11 +9,13 @@ block content
           .any.items
             label
               .label-body Email:
-              input.u-full-width( name='email', type='email', maxlength=256)
+              input.u-full-width( name='email', type='email', maxlength=256, required)
             label
               .label-body Password:
-              input.u-full-width( name='password', type='password', minlength=6, maxlength=256, title='Must be between 6 to 256 characters')
+              input.u-full-width( name='password', type='password', minlength=6, maxlength=256, title='Must be between 6 to 256 characters', required)
         .row
-          .any.items
+          .any.items.u-text-center
+            .recaptcha.
+              !{recaptcha}
             input(type='submit', value='Register')
       p Already a member? Click <a href='/user/login'>here</a> to Login.

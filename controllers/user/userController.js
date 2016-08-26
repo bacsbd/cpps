@@ -1,13 +1,14 @@
 const express = require('express');
 const myRender = require('forthright48/world').myRender;
 const User = require('mongoose').model('User');
+const recaptcha = require('express-recaptcha');
 
 const router = express.Router();
 
 router.get('/login', get_login);
 router.post('/login', post_login);
-router.get('/register', get_register);
-router.post('/register', post_register);
+router.get('/register', recaptcha.middleware.render, get_register);
+router.post('/register', recaptcha.middleware.verify, post_register);
 
 module.exports = {
   addRouter(app) {
@@ -46,10 +47,16 @@ function post_login(req, res, next) {
 }
 
 function get_register(req, res) {
-  return myRender(req, res, 'user/register');
+  return myRender(req, res, 'user/register', {
+    recaptcha: req.recaptcha
+  });
 }
 
 function post_register(req, res, next) {
+  if (req.recaptcha.error) {
+    req.flash('error', 'Please complete the captcha');
+    return res.redirect('/user/register');
+  }
   const email = User.normalizeEmail(req.body.email);
   const password = User.createHash(req.body.password);
 
