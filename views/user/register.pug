@@ -1,0 +1,19 @@
+extends ../layouts/layout.pug
+
+block content
+  .row.u-flex.u-flex-center
+    .six.items.offset-by-3.u-text-center
+      h3 Register
+      form(action='/user/register', method='post')
+        .row
+          .any.items
+            label
+              .label-body Email:
+              input.u-full-width( name='email', type='email', maxlength=256)
+            label
+              .label-body Password:
+              input.u-full-width( name='password', type='password', minlength=6, maxlength=256, title='Must be between 6 to 256 characters')
+        .row
+          .any.items
+            input(type='submit', value='Register')
+      p Already a member? Click <a href='/user/login'>here</a> to Login.

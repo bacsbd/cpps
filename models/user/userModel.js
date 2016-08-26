@@ -44,7 +44,7 @@ userSchema.statics.createHash = function(val) {
   return bcrypt.hashSync(val, 10);
 };
 userSchema.methods.comparePassword = function(val) {
-  return bcrypt.compareSync(this.password, val);
+  return bcrypt.compareSync(val, this.password);
 };
 userSchema.statics.normalizeEmail = validator.normalizeEmail;
 

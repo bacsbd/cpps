@@ -6,10 +6,8 @@ const router = express.Router();
 
 router.get('/login', get_login);
 router.post('/login', post_login);
-
-router.get('/test', function(req, res) {
-  res.send(JSON.stringify(req.flash('test')));
-})
+router.get('/register', get_register);
+router.post('/register', post_register);
 
 module.exports = {
   addRouter(app) {
@@ -29,7 +27,7 @@ function post_login(req, res, next) {
   const password = req.body.password;
 
   User.findOne({
-      email: email
+      email
     })
     .exec(function(err, user) {
       if (err) return next(err);
@@ -45,4 +43,31 @@ function post_login(req, res, next) {
         return res.redirect('/user/login');
       }
     });
+}
+
+function get_register(req, res) {
+  return myRender(req, res, 'user/register');
+}
+
+function post_register(req, res, next) {
+  const email = User.normalizeEmail(req.body.email);
+  const password = User.createHash(req.body.password);
+
+  const user = new User({
+    email,
+    password
+  });
+
+  user.save(function(err) {
+    if (err) {
+      if (err.code === 11000) {
+        req.flash('error', 'Email address already exists');
+      } else {
+        req.flash('error', `An error occured. Error code: ${err.code}`);
+      }
+      return res.redirect('/user/register');
+    }
+    req.flash('success', 'Successfully registered');
+    return res.redirect('/');
+  });
 }

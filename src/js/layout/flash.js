@@ -1,6 +1,10 @@
 const $ = require('jquery');
 const notify = require('notifyjs-browser')(null, $);
 
+$.notify.defaults({
+  autoHide: false
+});
+
 for (const val in flash) {
   const len = flash[val].length;
   for (let i = 0; i < len; i++) {
