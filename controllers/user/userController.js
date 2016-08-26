@@ -9,6 +9,7 @@ router.get('/login', get_login);
 router.post('/login', post_login);
 router.get('/register', recaptcha.middleware.render, get_register);
 router.post('/register', recaptcha.middleware.verify, post_register);
+router.get('/logout', get_logout);
 
 module.exports = {
   addRouter(app) {
@@ -38,6 +39,8 @@ function post_login(req, res, next) {
       }
       if (user.comparePassword(password)) {
         req.flash('success', 'Successfully logged in');
+        req.session.email = email;
+        req.session.status = user.status;
         return res.redirect('/');
       } else {
         req.flash('error', 'Password did not match');
@@ -75,6 +78,13 @@ function post_register(req, res, next) {
       return res.redirect('/user/register');
     }
     req.flash('success', 'Successfully registered');
+    return res.redirect('/');
+  });
+}
+
+function get_logout(req, res, next) {
+  req.session.destroy(function(err) {
+    if (err) next(err);
     return res.redirect('/');
   });
 }
