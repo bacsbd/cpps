@@ -4,7 +4,7 @@
 
 module.exports = function(req, res, next) {
   const sess = req.session || {};
-  if (sess.login) next();
+  if (sess.login) return next();
   else {
     req.flash('info', 'Please login and try again');
     return res.redirect('/user/login');

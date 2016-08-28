@@ -37,7 +37,8 @@ require('./models/user/userModel.js');
 /**
  *Add Middleware
  */
-require('./middlewares/flash.js')(app);
+app.use(require('./middlewares/flash.js'));
+app.use(require('./middlewares/verification.js'));
 /*End Add Middleware*/
 
 /**
