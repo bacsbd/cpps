@@ -19,36 +19,28 @@ app.use(bodyParser.urlencoded({
 })); // support encoded bodies
 
 
-/**
- *Configuration
- */
+/*Configuration*/
 require('./configuration/database');
 require('./configuration/session').addSession(app);
 app.use(require('connect-flash')());
 recaptcha.init(secret.recaptcha.site, secret.recaptcha.secret);
-/*End Configuration*/
+/****/
 
-/**
- *Add Models
- */
-require('./models/user/userModel.js');
-/*End Add Models*/
+/*Models*/
+require('./models/userModel.js');
+require('./models/notebookModel.js');
+/****/
 
-/**
- *Add Middleware
- */
+/*Middleware*/
 app.use(require('./middlewares/flash.js'));
 app.use(require('./middlewares/verification.js'));
-/*End Add Middleware*/
+/****/
 
-/**
- * Add Routers
- */
+/*Routers*/
 require('./controllers/index/indexController.js').addRouter(app);
 require('./controllers/user/loginController.js').addRouter(app);
 require('./controllers/user/verificationController.js').addRouter(app);
-
-/*End Add Routers*/
+/****/
 
 app.use(function(err, req, res, next) {
   console.error(err.stack);
