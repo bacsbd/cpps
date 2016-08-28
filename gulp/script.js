@@ -14,19 +14,26 @@ const vendors = config.vendors;
 module.exports = function(gulp) {
   gulp.task('build:vendor', function() {
     const b = browserify({
-      debug: true
+      debug: true,
+      paths: ['./node_modules', './src/js/']
     });
 
     // require all libs specified in vendors array
     vendors.forEach(function(lib) {
+      let expose = lib;
+      if (lib[0] === '.') {
+        //Relative path
+        expose = path.basename(lib, '.js');
+      }
+
       b.require(lib, {
-        expose: lib
+        expose
       });
     });
 
     return b.bundle()
       .pipe(source('vendor.js'))
-      // .pipe(gulp.dest('./public/js/vendor/'))
+      .pipe(gulp.dest('./public/js/vendor/'))
       .pipe(rename({
         suffix: '.min'
       }))
@@ -37,7 +44,10 @@ module.exports = function(gulp) {
 
   function browserified(filePath) {
     const fileName = path.basename(filePath);
-    return browserify(filePath)
+    return browserify({
+        entries: [filePath],
+        paths: ['./node_modules', './src/js/']
+      })
       .external(vendors)
       .transform('babelify', {
         presets: ['es2015']
