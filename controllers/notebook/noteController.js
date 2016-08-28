@@ -1,9 +1,14 @@
 const express = require('express');
-const myRender = require('forthright48/world').myRender;
+const {
+  myRender,
+  grabMiddleware
+} = require('forthright48/world');
+const rootMiddleware = grabMiddleware('root');
 
 const router = express.Router();
 
 router.get('/', get_index);
+router.get('/add-note', rootMiddleware, get_addNote);
 
 module.exports = {
   addRouter(app) {
@@ -15,5 +20,9 @@ module.exports = {
  *Implementation
  */
 function get_index(req, res) {
-  myRender(req, res, 'notebook/index');
+  return myRender(req, res, 'notebook/index');
+}
+
+function get_addNote(req, res) {
+  return myRender(req, res, 'notebook/addNote');
 }

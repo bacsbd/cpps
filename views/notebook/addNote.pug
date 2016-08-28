@@ -1,0 +1,17 @@
+extends ../layouts/layout.pug
+
+block content
+  .row.u-flex.u-flex-center
+    .any.items.u-text-center
+      h3 Add New Note
+      form(action='/notebook/add-note', method='post')
+        label
+          .label-body Title:
+          input.u-full-width(name='title',type='text',required)
+        label
+          .label-body Slug:
+          input.u-full-width(name='slug',type='text', pattern='[a-z0-9\-]+', title='Small letters, digits and hyphens only',required)
+        label
+          .label-body Body:
+          textarea.u-full-width(name='body')
+        input(type='submit', value='Add Note')
