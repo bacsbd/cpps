@@ -41,6 +41,7 @@ function post_login(req, res, next) {
         req.flash('success', 'Successfully logged in');
         req.session.login = true;
         req.session.verified = user.verified;
+        if (!user.verified) req.session.verificationValue = user.verificationValue;
         req.session.email = email;
         req.session.status = user.status;
         return res.redirect('/');
@@ -67,7 +68,8 @@ function post_register(req, res, next) {
 
   const user = new User({
     email,
-    password
+    password,
+    verificationValue: User.createSalt()
   });
 
   user.save(function(err) {
