@@ -1,4 +1,5 @@
 /*Responsible for inserting all flash messages to res.locals for rendering*/
+/*One time use only*/
 
 module.exports = function(app) {
   app.use(function(req, res, next) {

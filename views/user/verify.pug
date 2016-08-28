@@ -1,0 +1,17 @@
+extends ../layouts/layout.pug
+
+block content
+  .row.u-flex.u-flex-center
+    .six.items.offset-by-3.u-text-center
+      p You have to verify your email address before proceeding.
+      h3 Enter Verification Code
+      form(action='/user/verify', method='post')
+        .row
+          .any.items
+            label
+              .label-body Code:
+              input.u-full-width( name='code', type='text', maxlength=256, required)
+        .row
+          .any.items
+            input(type='submit', value='Verify')
+      p Did not receive your verification code? Click <a href='/user/send-verification-code'>here</a>.

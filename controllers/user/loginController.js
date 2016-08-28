@@ -39,6 +39,8 @@ function post_login(req, res, next) {
       }
       if (user.comparePassword(password)) {
         req.flash('success', 'Successfully logged in');
+        req.session.login = true;
+        req.session.verified = user.verified;
         req.session.email = email;
         req.session.status = user.status;
         return res.redirect('/');

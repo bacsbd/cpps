@@ -44,10 +44,10 @@ require('./middlewares/flash.js')(app);
  * Add Routers
  */
 require('./controllers/index/indexController.js').addRouter(app);
-require('./controllers/user/userController.js').addRouter(app);
+require('./controllers/user/loginController.js').addRouter(app);
+require('./controllers/user/verificationController.js').addRouter(app);
 
 /*End Add Routers*/
-
 
 app.use(function(err, req, res, next) {
   console.error(err.stack);
