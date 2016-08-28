@@ -2,7 +2,7 @@ const $ = require('jquery');
 const notify = require('notifyjs-browser')(null, $);
 
 $.notify.defaults({
-  autoHide: false
+  autoHideDelay: 15000
 });
 
 for (const val in flash) {
