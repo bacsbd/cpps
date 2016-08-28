@@ -40,6 +40,7 @@ app.use(require('./middlewares/verification.js'));
 require('./controllers/index/indexController.js').addRouter(app);
 require('./controllers/user/loginController.js').addRouter(app);
 require('./controllers/user/verificationController.js').addRouter(app);
+require('./controllers/notebook/noteController.js').addRouter(app);
 /****/
 
 app.use(function(err, req, res, next) {

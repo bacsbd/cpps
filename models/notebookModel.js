@@ -17,4 +17,4 @@ const noteSchema = new mongoose.Schema({
   timestamps: true
 });
 
-mongoose.model('Notebook', userSchema);
+mongoose.model('Notebook', noteSchema);

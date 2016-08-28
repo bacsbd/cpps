@@ -1,0 +1,17 @@
+extends ../layouts/layout.pug
+
+block content
+  if status === 'root'
+    .row
+      .any.items.u-text-center
+        a.button(href='/notebook/add-note') Add Note
+  .row
+    .any.items.u-text-center
+      h3 Notebook
+      p A collection of notes for Competitive Programming and Problem Solving.
+  .row.u-flex
+    .any.items
+      h5 # Number Theory
+      ul
+        li <a href='/hasdlf'>Boom</a>
+      h5 # Data Structure
