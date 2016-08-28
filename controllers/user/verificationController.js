@@ -27,7 +27,36 @@ function get_verify(req, res) {
 }
 
 function post_verify(req, res) {
-  return myRender(req, res, 'user/verify');
+  if (req.session.verified) {
+    req.flash('info', 'Email already verified');
+    return res.redirect('/');
+  }
+  const code = req.body.code;
+
+  if (code !== req.session.verificationValue) {
+    req.flash('error', 'Wrong verification code');
+    return res.redirect('/user/verify');
+  }
+
+  User.findOne({
+    email: req.session.email
+  }).exec(function(err, user) {
+    if (err) {
+      req.flash('error', 'Some error occured. Try again.');
+      return res.redirect('/user/verify');
+    }
+    user.verified = true;
+    user.verificationValue = undefined;
+    user.save(function(err) {
+      if (err) {
+        req.flash('error', 'Some error occured. Try again.');
+        return res.redirect('/user/verify');
+      }
+      req.session.verified = true;
+      req.flash('success', 'Verification successful');
+      return res.redirect('/');
+    });
+  });
 }
 
 function get_send_code(req, res) {
@@ -40,8 +69,8 @@ function get_send_code(req, res) {
     to: [req.session.email],
     from: 'no-reply@forthright48.com',
     subject: 'Verfication Code for CPPS',
-    text: `Here is your verification code: ${req.session.verificationValue}`,
-    html: `Here is your verification code: <b> ${req.session.verificationValue} </b>`
+    text: `Here is your verification code: "${req.session.verificationValue}"`,
+    html: `Here is your verification code: "<b> ${req.session.verificationValue}</b>"`
   };
 
   mailer.sendMail(email, function(err) {
