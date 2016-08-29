@@ -7,11 +7,11 @@ block content
       form(action='/notebook/add-note', method='post')
         label
           .label-body Title:
-          input.u-full-width(name='title',type='text',required)
+          input.u-full-width(name='title',type='text',required, value=title)
         label
           .label-body Slug:
-          input.u-full-width(name='slug',type='text', pattern='[a-z0-9\-]+', title='Small letters, digits and hyphens only',required)
+          input.u-full-width(name='slug',type='text', pattern='[a-z0-9\-]+', title='Small letters, digits and hyphens only',required, value=slug)
         label
           .label-body Body:
-          textarea.u-full-width(name='body')
+          textarea.u-full-width(name='body')= body
         input(type='submit', value='Add Note')
