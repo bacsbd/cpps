@@ -15,7 +15,7 @@ const noteSchema = new mongoose.Schema({
     }
   },
   body: {
-    trype: String
+    type: String
   }
 }, {
   timestamps: true
