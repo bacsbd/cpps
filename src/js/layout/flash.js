@@ -1,5 +1,5 @@
 const $ = require('jquery');
-const notify = require('notifyjs-browser')(null, $);
+const notify = require('notifyjs-browser')(this, $);
 
 $.notify.defaults({
   autoHideDelay: 15000

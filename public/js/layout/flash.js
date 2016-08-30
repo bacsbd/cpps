@@ -2,7 +2,7 @@
 'use strict';
 
 var $ = require('jquery');
-var notify = require('notifyjs-browser')(null, $);
+var notify = require('notifyjs-browser')(undefined, $);
 
 $.notify.defaults({
   autoHideDelay: 15000
