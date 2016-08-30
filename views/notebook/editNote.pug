@@ -3,8 +3,8 @@ extends ../layouts/layout.pug
 block content
   .row.u-flex.u-flex-center
     .any.items.u-text-center
-      h3 Add New Note
-      form(action='/notebook/add-note', method='post')
+      h3 Edit Note: #{slug}
+      form(action=`/notebook/edit-note/${slug}`, method='post')
         label
           .label-body Title:
           input.u-full-width(name='title',type='text',required, value=title)
@@ -14,5 +14,5 @@ block content
         label
           .label-body Body:
           textarea.u-full-width(name='body')= body
-        input.button-primary(type='submit', value='Add Note')
-        a.button.left-margin(href='/notebook') Done
+        input.button-primary(type='submit', value='Edit Note')
+        a.button.left-margin(href=`/notebook/view-note/${slug}`) Done
