@@ -16,3 +16,6 @@ textarea {
   height: 50rem;
   resize: none;
 }
+.left-margin {
+  margin-left: 1rem;
+}
