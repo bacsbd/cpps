@@ -16,10 +16,9 @@ module.exports = {
     css: './public/css/vendors'
   },
   browsersync: ['./public/**/*.css', './public/**/*.js', './views/**/*.pug'],
-  sassInclude: ['./public', './bower_components'],
+  sassInclude: ['./public', './node_modules'],
   vendorInput: {
-    js: ['jquery', 'notifyjs-browser'],
-    css: []
+    js: ['jquery', 'notifyjs-browser']
   },
   browserifyPath: ['./node_modules', './src/js/']
 };
