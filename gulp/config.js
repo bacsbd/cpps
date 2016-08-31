@@ -18,7 +18,8 @@ module.exports = {
   browsersync: ['./public/**', './views/**/*.pug'],
   sassInclude: ['./public', './node_modules'],
   vendorInput: {
-    js: ['jquery', 'notifyjs-browser', 'jquery-modal']
+    js: ['jquery', 'notifyjs-browser', 'jquery-modal'],
+    css: ['./node_modules/jquery-modal/jquery-modal.css']
   },
   browserifyPath: ['./node_modules', './src/js/']
 };

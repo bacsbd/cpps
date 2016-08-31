@@ -5,12 +5,14 @@ const changed = require('gulp-changed');
 const del = require('del');
 
 const sassConfig = {
-  includePaths: config.sassInclude,
-  outputStyle: 'compressed'
+  outputStyle: 'compressed',
+  // sourceMapEmbed: true,
+  includePaths: config.sassInclude
 };
 
 module.exports = function(gulp) {
   //Changes all relative urls inside css file to absolute urls
+
   gulp.task('build:css', function() {
     return gulp.src(config.css)
       .pipe(changed(config.dirs.css_build))
