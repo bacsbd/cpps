@@ -1,11 +1,13 @@
 const path = require('path');
 const rootPath = require('forthright48/world').rootPath;
 const config = require('./config.js');
+const changed = require('gulp-changed');
 
 module.exports = function(gulp) {
   gulp.task('copy:src', function() {
     // Copy everything except css, scss and image
     return gulp.src(['./src/**', '!./src/**/*.css', '!./src/**/*.scss', `!${config.image}`])
+      .pipe(changed(config.dirs.public))
       .pipe(gulp.dest(config.dirs.public));
   });
 
