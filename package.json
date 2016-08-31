@@ -36,6 +36,7 @@
     "express-recaptcha": "^2.1.0",
     "express-session": "^1.14.0",
     "jquery": "^3.1.0",
+    "jquery-modal": "^0.7.1",
     "mongoose": "^4.5.10",
     "nodemailer": "^2.5.0",
     "nodemailer-sendgrid-transport": "^0.2.0",
