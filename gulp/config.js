@@ -12,8 +12,8 @@ module.exports = {
   js: './src/**/*.js',
   pdf: './src/**/*.pdf',
   vendorOutput: {
-    js: './public/js/vendors',
-    css: './public/css/vendors'
+    js: './public/js/vendor',
+    css: './public/css/vendor'
   },
   browsersync: ['./public/**/*.css', './public/**/*.js', './views/**/*.pug'],
   sassInclude: ['./public', './node_modules'],
