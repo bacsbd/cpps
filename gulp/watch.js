@@ -2,7 +2,7 @@ const config = require('./config.js');
 
 module.exports = function(gulp) {
   gulp.task('watch:css', function() {
-    return gulp.watch(config.css, gulp.series('build:css', 'style:scss'));
+    return gulp.watch(config.css, gulp.series('build:css', 'copy', 'style:scss'));
   });
   gulp.task('watch:scss', function() {
     return gulp.watch(config.scss, gulp.series('style:scss'));

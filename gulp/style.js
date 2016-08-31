@@ -1,8 +1,8 @@
-const cleanCSS = require('gulp-clean-css');
 const config = require('./config');
 const sass = require('gulp-sass');
 const absUrl = require('gulp-css-url-to-absolute');
 const changed = require('gulp-changed');
+const del = require('del');
 
 const sassConfig = {
   includePaths: config.sassInclude,
@@ -20,9 +20,9 @@ module.exports = function(gulp) {
       .pipe(gulp.dest(config.dirs.css_build));
   });
 
-  gulp.task('style:scss', function() {
+  gulp.task('style:scss', gulp.series(function() {
     return gulp.src(config.scss)
       .pipe(sass.sync(sassConfig).on('error', sass.logError))
       .pipe(gulp.dest(config.dirs.public));
-  });
+  }));
 };
