@@ -1,22 +1,25 @@
 module.exports = {
-  path: {
-    dirs: {
-      public: './public',
-      temp: './temp',
-      output: './public'
-    },
-    pug: './views/**/*.pug',
-    image: './src/**/*.{JPG,jpg,png,gif}',
-    css: [
-      './node_modules/@forthright48/simplecss/dist/*.css',
-      './src/**/*.css'
-    ],
-    js: './src/**/*.js',
-    pdf: './src/**/*.pdf',
-    vendor: {
-      js: './src/js/vendors'
-    },
-    browsersync: ['./public/**/*.css', './public/**/*.js', 'views/**/*.pug']
+  dirs: {
+    public: './public',
+    temp: './temp',
+    output: './public',
+    css_build: './css_build'
   },
-  vendors: ['jquery', 'notifyjs-browser']
+  pug: './views/**/*.pug',
+  image: './src/**/*.{JPG,jpg,png,gif}',
+  css: './src/**/*.css',
+  scss: './src/**/*.scss',
+  js: './src/**/*.js',
+  pdf: './src/**/*.pdf',
+  vendorOutput: {
+    js: './public/js/vendors',
+    css: './public/css/vendors'
+  },
+  browsersync: ['./public/**/*.css', './public/**/*.js', './views/**/*.pug'],
+  sassInclude: ['./public', './bower_components'],
+  vendorInput: {
+    js: ['jquery', 'notifyjs-browser'],
+    css: []
+  },
+  browserifyPath: ['./node_modules', './src/js/']
 };

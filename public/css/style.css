@@ -1,0 +1,26 @@
+.navitem-pullright {
+  float: right;
+}
+
+.footer {
+  font-size: 1.2rem;
+  color: gray;
+}
+
+.footer a {
+  text-decoration: none;
+}
+
+.recaptcha div {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+textarea {
+  height: 50rem;
+  resize: none;
+}
+
+.left-margin {
+  margin-left: 1rem;
+}

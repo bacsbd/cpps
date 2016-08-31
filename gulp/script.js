@@ -9,13 +9,13 @@ const buffer = require('vinyl-buffer');
 const fs = require('fs');
 const config = require('./config.js');
 
-const vendors = config.vendors;
+const vendors = config.vendorInput.js;
 
 module.exports = function(gulp) {
   gulp.task('build:vendor', function() {
     const b = browserify({
       debug: true,
-      paths: ['./node_modules', './src/js/']
+      paths: config.browserifyPath
     });
 
     // require all libs specified in vendors array
@@ -33,20 +33,20 @@ module.exports = function(gulp) {
 
     return b.bundle()
       .pipe(source('vendor.js'))
-      .pipe(gulp.dest('./public/js/vendor/'))
+      .pipe(gulp.dest(config.vendorOutput.js))
       .pipe(rename({
         suffix: '.min'
       }))
       .pipe(buffer())
       .pipe(uglify())
-      .pipe(gulp.dest('./public/js/vendor/'));
+      .pipe(gulp.dest(config.vendorOutput.js));
   });
 
   function browserified(filePath) {
     const fileName = path.basename(filePath);
     return browserify({
         entries: [filePath],
-        paths: ['./node_modules', './src/js/']
+        paths: config.browserifyPath
       })
       .external(vendors)
       .transform('babelify', {
