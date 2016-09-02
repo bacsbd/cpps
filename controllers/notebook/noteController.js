@@ -13,6 +13,7 @@ router.get('/add-note', rootMiddleware, get_addNote);
 router.post('/add-note', rootMiddleware, post_addNote);
 router.get('/edit-note/:slug', get_editNote_Slug);
 router.post('/edit-note/:slug', post_editNote_Slug);
+router.post('/delete-note/:slug', post_deleteNote_Slug);
 
 module.exports = {
   addRouter(app) {
@@ -31,7 +32,7 @@ function get_addNote(req, res) {
   return myRender(req, res, 'notebook/addNote');
 }
 
-function post_addNote(req, res, next) {
+function post_addNote(req, res) {
   const note = new Notebook({
     title: req.body.title,
     slug: req.body.slug,
@@ -63,6 +64,11 @@ function get_editNote_Slug(req, res, next) {
     if (err) {
       return next(err);
     }
+    if (!note) {
+      req.flash('error', 'No such note found');
+      return res.redirect('/notebook');
+    }
+
     return myRender(req, res, 'notebook/editNote', {
       title: note.title,
       slug: note.slug,
@@ -86,6 +92,11 @@ function post_editNote_Slug(req, res, next) {
     if (err) {
       return next(err);
     }
+    if (!note) {
+      req.flash('error', 'No such note found');
+      return res.redirect('/notebook');
+    }
+
     note.title = title;
     note.slug = slug;
     note.body = body;
@@ -105,4 +116,27 @@ function post_editNote_Slug(req, res, next) {
       return res.redirect(`/notebook/edit-note/${req.body.slug}`);
     });
   });
+}
+
+function post_deleteNote_Slug(req, res) {
+  const pslug = req.params.slug;
+  const slug = req.body.slug;
+
+  if (slug !== pslug) {
+    req.flash('error', 'Slug did not match for deletion');
+    return res.redirect(`/edit-note/${pslug}`);
+  }
+
+  Notebook.findOne({
+      slug: pslug
+    }).remove()
+    .exec(function(err) {
+      if (err) {
+        req.flash('error', 'Delete failed. Try again.');
+        return res.redirect(`/edit-note/${pslug}`);
+      }
+      console.log('here');
+      req.flash('success', 'Successfully deleted');
+      return res.redirect('/notebook');
+    });
 }

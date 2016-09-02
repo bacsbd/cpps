@@ -14,7 +14,7 @@ block content
         label
           .label-body Body:
           textarea.u-full-width(name='body')= body
-        input.button-primary(type='submit', value='Edit Note')
+        input.button-primary(type='submit', value='Update')
         a.button.left-margin(href=`/notebook/view-note/${slug}`) Done
         a.button.button-danger.left-margin(href=`#delete`, rel="modal:open") Delete
 
@@ -23,5 +23,5 @@ block content
     form.u-text-center(action=`/notebook/delete-note/${slug}`,method='post')
       label
         .label-body Enter Slug:&nbsp
-        input.u-full-width(name='slug',type='text',required)
+        input.u-full-width(name='slug',type='text',required,pattern=slug,title='Slug entered must match the note to be deleted')
       input.button-danger(type='submit', value='Delete Note')
