@@ -7,7 +7,11 @@ module.exports = {
   },
   pug: './views/**/*.pug',
   image: './src/**/*.{JPG,jpg,png,gif}',
-  css: './src/**/*.css',
+  css: {
+    all: ['./src/**/*.css', './client_module/**/*.css'],
+    src: './src/**/*.css',
+    client_module: './client_module/**/*.css'
+  },
   scss: './src/**/*.scss',
   js: './src/**/*.js',
   pdf: './src/**/*.pdf',
@@ -16,10 +20,11 @@ module.exports = {
     css: './public/css/vendor'
   },
   browsersync: ['./public/**', './views/**/*.pug'],
-  sassInclude: ['./public', './node_modules'],
+  sassInclude: ['./public'],
   vendorInput: {
     js: ['jquery', 'notifyjs-browser', 'jquery-modal'],
-    css: ['./node_modules/jquery-modal/jquery-modal.css']
+    css: [],
+    all: ['jquery', 'notifyjs-browser', 'jquery-modal']
   },
   browserifyPath: ['./node_modules', './src/js/']
 };

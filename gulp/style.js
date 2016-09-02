@@ -13,14 +13,25 @@ const sassConfig = {
 module.exports = function(gulp) {
   //Changes all relative urls inside css file to absolute urls
 
-  gulp.task('build:css', function() {
-    return gulp.src(config.css)
+  gulp.task('cssAbsPath:src', function() {
+    return gulp.src(config.css.src)
       .pipe(changed(config.dirs.css_build))
       .pipe(absUrl({
         root: './src'
       }))
       .pipe(gulp.dest(config.dirs.css_build));
   });
+
+  gulp.task('cssAbsPath:client_module', function() {
+    return gulp.src(config.css.client_module)
+      .pipe(changed(config.dirs.css_build))
+      .pipe(absUrl({
+        root: './client_module'
+      }))
+      .pipe(gulp.dest(config.dirs.css_build));
+  });
+
+  gulp.task('build:css', gulp.parallel('cssAbsPath:src', 'cssAbsPath:client_module'));
 
   gulp.task('style:scss', gulp.series(function() {
     return gulp.src(config.scss)

@@ -4,17 +4,33 @@ const config = require('./config.js');
 const changed = require('gulp-changed');
 
 module.exports = function(gulp) {
-  gulp.task('copy:src', function() {
+
+  function copyRest(folder) {
     // Copy everything except css, scss and image
-    return gulp.src(['./src/**', '!./src/**/*.css', '!./src/**/*.scss', `!${config.image}`])
+    return gulp.src([`./${folder}/**`, `!./${folder}/**/*.{css,scss,JPG,jpg,png,gif}`])
       .pipe(changed(config.dirs.public))
       .pipe(gulp.dest(config.dirs.public));
+  }
+
+  gulp.task('copy:src', function() {
+    return copyRest('src');
+  });
+
+  gulp.task('copy:client_module', function() {
+    return copyRest('client_module');
   });
 
   gulp.task('copy:css_build', function() {
     return gulp.src('./css_build/**')
+      .pipe(changed(config.dirs.public))
       .pipe(gulp.dest(config.dirs.public));
   });
 
-  gulp.task('copy', gulp.parallel('copy:src', 'copy:css_build'));
+  gulp.task('client_module', function() {
+    const x = `./node_modules/{${config.vendorInput.all.join(',')}}/**`;
+    return gulp.src(x)
+      .pipe(gulp.dest(config.dirs.client_module));
+  });
+
+  gulp.task('copy', gulp.parallel('copy:src', 'copy:client_module', 'copy:css_build'));
 };
