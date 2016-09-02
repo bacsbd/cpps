@@ -16,4 +16,12 @@ block content
           textarea.u-full-width(name='body')= body
         input.button-primary(type='submit', value='Edit Note')
         a.button.left-margin(href=`/notebook/view-note/${slug}`) Done
-        a.button.button-danger.left-margin(href=`/notebook/delete-note/${slug}`) Delete
+        a.button.button-danger.left-margin(href=`#delete`, rel="modal:open") Delete
+
+  #delete(style="display:none;")
+    p Are you sure you want to <b>delete</b> this? If so, please enter the slug of the note below:
+    form.u-text-center(action=`/notebook/delete-note/${slug}`,method='post')
+      label
+        .label-body Enter Slug:&nbsp
+        input.u-full-width(name='slug',type='text',required)
+      input.button-danger(type='submit', value='Delete Note')
