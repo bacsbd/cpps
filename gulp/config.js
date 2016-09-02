@@ -3,14 +3,15 @@ module.exports = {
     public: './public',
     temp: './temp',
     output: './public',
-    css_build: './css_build'
+    css_build: './css_build',
+    client_module: './client_module'
   },
   pug: './views/**/*.pug',
   image: './src/**/*.{JPG,jpg,png,gif}',
   css: {
-    all: ['./src/**/*.css', './client_module/**/*.css'],
     src: './src/**/*.css',
-    client_module: './client_module/**/*.css'
+    client_module: './client_module/**/*.css',
+    all: ['./src/**/*.css', './client_module/**/*.css']
   },
   scss: './src/**/*.scss',
   js: './src/**/*.js',
@@ -23,8 +24,8 @@ module.exports = {
   sassInclude: ['./public'],
   vendorInput: {
     js: ['jquery', 'notifyjs-browser', 'jquery-modal'],
-    css: [],
-    all: ['jquery', 'notifyjs-browser', 'jquery-modal']
+    css: ['@forthright48/simplecss'],
+    all: ['jquery', 'notifyjs-browser', 'jquery-modal', '@forthright48/simplecss']
   },
   browserifyPath: ['./node_modules', './src/js/']
 };

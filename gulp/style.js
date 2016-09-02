@@ -2,7 +2,6 @@ const config = require('./config');
 const sass = require('gulp-sass');
 const absUrl = require('gulp-css-url-to-absolute');
 const changed = require('gulp-changed');
-const del = require('del');
 
 const sassConfig = {
   outputStyle: 'compressed',
@@ -14,7 +13,9 @@ module.exports = function(gulp) {
   //Changes all relative urls inside css file to absolute urls
 
   gulp.task('cssAbsPath:src', function() {
-    return gulp.src(config.css.src)
+    return gulp.src(config.css.src, {
+        nodir: true
+      })
       .pipe(changed(config.dirs.css_build))
       .pipe(absUrl({
         root: './src'
@@ -23,7 +24,9 @@ module.exports = function(gulp) {
   });
 
   gulp.task('cssAbsPath:client_module', function() {
-    return gulp.src(config.css.client_module)
+    return gulp.src(config.css.client_module, {
+        nodir: true
+      })
       .pipe(changed(config.dirs.css_build))
       .pipe(absUrl({
         root: './client_module'

@@ -56,6 +56,7 @@
     "gulp-clean-css": "^2.0.12",
     "gulp-concat": "^2.6.0",
     "gulp-css-url-to-absolute": "^1.0.1",
+    "gulp-debug": "^2.1.2",
     "gulp-imagemin": "^3.0.3",
     "gulp-nodemon": "^2.1.0",
     "gulp-recursive-concat": "^0.2.0",

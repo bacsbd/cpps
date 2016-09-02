@@ -1,5 +1,6 @@
 node_modules/*
 !node_modules/forthright48
+client_module
 css_build
 public
 .eslintrc
