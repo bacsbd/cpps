@@ -7,7 +7,7 @@ module.exports = function(gulp) {
 
   function copyRest(folder) {
     // Copy everything except css, scss and image
-    return gulp.src([`./${folder}/**`, `!./${folder}/**/*.{css,scss,JPG,jpg,png,gif}`])
+    return gulp.src([`./${folder}/**`, `!./${folder}/**/*.{css,scss,JPG,jpg,png,gif,js}`])
       .pipe(changed(config.dirs.public))
       .pipe(gulp.dest(config.dirs.public));
   }
