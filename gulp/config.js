@@ -23,7 +23,7 @@ module.exports = {
   browsersync: ['./public/**', './views/**/*.pug'],
   sassInclude: ['./public'],
   vendorInput: {
-    js: ['jquery', 'notifyjs-browser', 'jquery-modal'],
+    js: ['jquery', 'notifyjs-browser', 'jquery-modal', 'moment'],
     css: ['@forthright48/simplecss'],
     all: ['jquery', 'notifyjs-browser', 'jquery-modal', '@forthright48/simplecss']
   },

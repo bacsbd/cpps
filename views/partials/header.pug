@@ -8,8 +8,11 @@
     ul.nav
       li
         a(href="/") Home
-      li
-        a(href='/notebook') Notebook
+      li.dropdown
+        a.dropbtn(href='/notebook') Notebook
+        ul.dropdown-content
+          li
+            a(href='/notebook/recent') Recent
       li
         a(href='/gateway') Gateway
       li

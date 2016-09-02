@@ -1,0 +1,20 @@
+extends ../layouts/layout.pug
+
+block content
+  .row.u-flex
+    .any.items.u-text-center
+      h3 Recently Added/Modified
+      table.u-margin-center
+        thead
+          tr
+            th Modified
+            th Created
+            th Slug
+            th Title
+        tbody
+        each note in notes
+          tr
+            td.moment-date= note.updatedAt
+            td.moment-date= note.createdAt
+            td= note.slug
+            td= note.title
