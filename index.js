@@ -29,6 +29,7 @@ recaptcha.init(secret.recaptcha.site, secret.recaptcha.secret);
 /*Models*/
 require('./models/userModel.js');
 require('./models/notebookModel.js');
+require('./models/gateModel.js');
 /****/
 
 /*Middleware*/
