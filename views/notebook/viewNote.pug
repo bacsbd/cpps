@@ -6,5 +6,6 @@ block content
       if ( status === 'root' )
         .u-text-center
           a(href=`/notebook/edit-note/${note.slug}`) #[i.fa.fa-edit] Edit
-      h1= note.title
-      div !{note.body}
+      .markdown-body.
+        <h1> #{note.title} </h1>
+        !{note.body}
