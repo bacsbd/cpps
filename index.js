@@ -12,7 +12,7 @@ app.set('port', 8002);
 app.set('view engine', 'pug');
 app.set('views', path.join(rootPath, './views'));
 
-app.use('/public', express.static(path.join(rootPath, '/public')));
+app.use('/', express.static(path.join(rootPath, '/public')));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({
   extended: true

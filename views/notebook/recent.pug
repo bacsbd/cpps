@@ -11,6 +11,8 @@ block content
             th Created
             th Slug
             th Title
+            if ( status === 'root' )
+              th Edit
         tbody
         each note in notes
           tr
@@ -18,3 +20,7 @@ block content
             td.moment-date= note.createdAt
             td= note.slug
             td= note.title
+            if ( status === 'root' )
+              td.u-text-center
+                a(href=`/notebook/edit-note/${note.slug}`)
+                  i.fa.fa-edit
