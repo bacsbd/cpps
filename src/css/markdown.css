@@ -290,8 +290,8 @@
 }
 .markdown-body blockquote {
   padding: 0 15px;
-  color: #777;
-  border-left: 4px solid #ddd;
+  color: #001f3f;
+  border-left: 4px solid #85144b;
 }
 .markdown-body blockquote>:first-child {
   margin-top: 0;
