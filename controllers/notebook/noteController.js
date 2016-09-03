@@ -6,6 +6,7 @@ const {
 const rootMiddleware = grabMiddleware('root');
 const Notebook = require('mongoose').model('Notebook');
 const marked = require('marked');
+const escapeLatex = require('forthright48/escapeLatex');
 
 const router = express.Router();
 
@@ -137,13 +138,12 @@ function post_deleteNote_Slug(req, res) {
         req.flash('error', 'Delete failed. Try again.');
         return res.redirect(`/edit-note/${pslug}`);
       }
-      console.log('here');
       req.flash('success', 'Successfully deleted');
       return res.redirect('/notebook');
     });
 }
 
-function get_viewNote_Slug(req, res) {
+function get_viewNote_Slug(req, res, next) {
   const slug = req.params.slug;
 
   Notebook.findOne({
@@ -156,12 +156,14 @@ function get_viewNote_Slug(req, res) {
         return res.redirect('/notebook');
       }
 
-      marked(note.body, function(err, content) {
+      const body = escapeLatex(note.body);
+
+      marked(body, function(err, content) {
         if (err) return next(err);
         note.body = content;
         return myRender(req, res, 'notebook/viewNote', {
           note
         });
-      })
+      });
     });
 }
