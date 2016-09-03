@@ -2,6 +2,9 @@ extends ../layouts/layout.pug
 
 block content
   .row.u-flex
-    .any.items.u-text-center
-      h3= note.title
+    .any.items
+      if ( status === 'root' )
+        .u-text-center
+          a(href=`/notebook/edit-note/${note.slug}`) #[i.fa.fa-edit] Edit
+      h1= note.title
       div !{note.body}

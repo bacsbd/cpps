@@ -5,6 +5,7 @@ const {
 } = require('forthright48/world');
 const rootMiddleware = grabMiddleware('root');
 const Notebook = require('mongoose').model('Notebook');
+const marked = require('marked');
 
 const router = express.Router();
 
@@ -154,8 +155,13 @@ function get_viewNote_Slug(req, res) {
         req.flash('error', 'No such note found');
         return res.redirect('/notebook');
       }
-      return myRender(req, res, 'notebook/viewNote', {
-        note
-      });
+
+      marked(note.body, function(err, content) {
+        if (err) return next(err);
+        note.body = content;
+        return myRender(req, res, 'notebook/viewNote', {
+          note
+        });
+      })
     });
 }
