@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
 
-  /// folder vs item
+  /// items: folder, text, problem
   type: {
     type: String,
     set: removeNullOrBlank,
@@ -53,7 +53,7 @@ const schema = new mongoose.Schema({
   timestamps: true
 });
 
-const Gate = mongoose.model('Gateway', schema);
+mongoose.model('Gate', schema);
 
 /*
  * Implementation
