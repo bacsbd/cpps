@@ -13,9 +13,9 @@ const router = express.Router();
 router.get('/', get_index);
 router.get('/add-note', rootMiddleware, get_addNote);
 router.post('/add-note', rootMiddleware, post_addNote);
-router.get('/edit-note/:slug', get_editNote_Slug);
-router.post('/edit-note/:slug', post_editNote_Slug);
-router.post('/delete-note/:slug', post_deleteNote_Slug);
+router.get('/edit-note/:slug', rootMiddleware, get_editNote_Slug);
+router.post('/edit-note/:slug', rootMiddleware, post_editNote_Slug);
+router.post('/delete-note/:slug', rootMiddleware, post_deleteNote_Slug);
 router.get('/view-note/:slug', get_viewNote_Slug);
 
 module.exports = {
