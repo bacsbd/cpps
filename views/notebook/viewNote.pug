@@ -5,7 +5,9 @@ block content
     .any.items
       if ( status === 'root' )
         .u-text-center
-          a(href=`/notebook/edit-note/${note.slug}`) #[i.fa.fa-edit] Edit
+          a(href='/notebook/add-note') #[i.fa.fa-plus] Add
+          a.left-margin(href=`/notebook/edit-note/${note.slug}`) #[i.fa.fa-edit] Edit
+
       .markdown-body.
         <h1> #{note.title} </h1>
         !{note.body}

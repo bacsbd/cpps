@@ -28,7 +28,7 @@ module.exports = {
  *Implementation
  */
 function get_index(req, res) {
-  return myRender(req, res, 'notebook/index');
+  return res.redirect('/notebook/view-note/notebook');
 }
 
 function get_addNote(req, res) {
