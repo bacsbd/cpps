@@ -14,6 +14,7 @@ router.post('/add-note', rootMiddleware, post_addNote);
 router.get('/edit-note/:slug', get_editNote_Slug);
 router.post('/edit-note/:slug', post_editNote_Slug);
 router.post('/delete-note/:slug', post_deleteNote_Slug);
+router.get('/view-note/:slug', get_viewNote_Slug);
 
 module.exports = {
   addRouter(app) {
@@ -138,5 +139,23 @@ function post_deleteNote_Slug(req, res) {
       console.log('here');
       req.flash('success', 'Successfully deleted');
       return res.redirect('/notebook');
+    });
+}
+
+function get_viewNote_Slug(req, res) {
+  const slug = req.params.slug;
+
+  Notebook.findOne({
+      slug
+    })
+    .exec(function(err, note) {
+      if (err) return next(err);
+      if (!note) {
+        req.flash('error', 'No such note found');
+        return res.redirect('/notebook');
+      }
+      return myRender(req, res, 'notebook/viewNote', {
+        note
+      });
     });
 }
