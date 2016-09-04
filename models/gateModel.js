@@ -53,6 +53,10 @@ const schema = new mongoose.Schema({
   timestamps: true
 });
 
+schema.statics.getRoot = function() {
+  return mongoose.Types.ObjectId('000000000000000000000000');
+};
+
 mongoose.model('Gate', schema);
 
 /*
