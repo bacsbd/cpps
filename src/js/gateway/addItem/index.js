@@ -7,7 +7,7 @@ function hideEverything() {
 
 hideEverything();
 
-$('select').change(function() {
+$('#type').change(function() {
   hideEverything();
 
   const val = $('select option:selected').val();

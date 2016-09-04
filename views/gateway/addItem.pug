@@ -4,7 +4,7 @@ block content
   .row.u-flex
     .any.items.u-text-center
       h3 Add Item
-      form.tower(action='/gateway/add-item', method='post')
+      form(action='/gateway/add-item', method='post')
         .row
           .six.items
             label
@@ -22,7 +22,7 @@ block content
           .six.items
             label
               .label-body Type:
-              select.u-full-width(name='type',required)
+              select#type.u-full-width(name='type',required)
                 option(disabled, selected, value=undefined) Select a Type
                 option(value='folder') Folder
                 option(value='problem') Problem
@@ -40,12 +40,12 @@ block content
             .six.items
               label
                 .label-body Problem ID:
-                input.u-full-width(type='text', name='pid', required)
+                input.u-full-width(type='text', name='pid')
           .row
             .any.items
               label
                 .label-body Link:
-                input.u-full-width(type='url', name='link', required)
+                input.u-full-width(type='url', name='link')
 
         #body.row
           .any.items
@@ -55,7 +55,7 @@ block content
 
         .row
           .any.items
-            input.right-margin(type='submit', value='Insert')
+            input.right-margin.button-primary(type='submit', value='Insert')
             a.button(href=`/gateway/view-item/${parentId}`) Cancel
 
 block scripts
