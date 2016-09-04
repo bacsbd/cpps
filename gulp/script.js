@@ -53,6 +53,12 @@ module.exports = function(gulp) {
         presets: ['es2015']
       })
       .bundle()
+      .on('error', function(err) {
+        // print the error (can replace with gulp-util)
+        console.log(err.message);
+        // end this stream
+        this.emit('end');
+      })
       .pipe(source(fileName));
   }
 
