@@ -8,8 +8,7 @@ const {
 const rootMiddleware = grabMiddleware('root');
 const Gate = require('mongoose').model('Gate');
 const ojnames = require(path.join(rootPath, 'models/ojnames.js'));
-const rootStr = '000000000000000000000000';
-const rootObj = Gate.getRoot();
+const async = require('async');
 
 const router = express.Router();
 
@@ -58,23 +57,23 @@ function post_addItem(req, res, next) {
   ///Need to calculate the ancestor of this item.
   ///For that we need ancestor list of the parent
 
-  if (item.parentId === rootStr) item.ancestor = [rootObj];
-  else {
-    Gate.findOne({
-        _id: item.parentId
-      })
-      .select('ancestor')
-      .exec(function(err, x) {
+  Gate.findOne({
+      _id: item.parentId
+    })
+    .select('ancestor')
+    .exec(function(err, x) {
+      if (err) return next(err);
+      if (!x) {
+        req.flash('error', `No such parent with id ${item.parentId}`);
+        return res.redirect(`/gateway/add-item/${item.parentId}`);
+      }
+      item.ancestor = x.ancestor.concat(item.parentId);
+
+      /// Ready to save our item
+      const itemModel = new Gate(item);
+      itemModel.save(function(err) {
         if (err) return next(err);
-        item.ancestor = x.ancestor.concat(rootObj);
-
-        ///With all prepared, we are ready to save it
-        const itemModel = new Gate(item);
-
-        itemModel.save(function(err) {
-          if (err) return next(err);
-          return res.redirect(`/gateway/get-children/${item.parentId}`);
-        });
+        return res.redirect(`/gateway/get-children/${item.parentId}`);
       });
-  }
+    });
 }

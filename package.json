@@ -27,6 +27,7 @@
   "private": true,
   "dependencies": {
     "@forthright48/simplecss": "^1.3.0",
+    "async": "^2.0.1",
     "bcryptjs": "^2.3.0",
     "body-parser": "^1.15.2",
     "connect-flash": "^0.1.1",
