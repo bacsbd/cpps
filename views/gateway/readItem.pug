@@ -1,0 +1,13 @@
+extends ../layouts/layout.pug
+
+block content
+  .row.u-flex
+    .any.items
+      if ( status === 'root' )
+        .u-text-center
+          a(href=`/gateway/edit-item/${item._id}`) #[i.fa.fa-edit] Edit
+      .u-text-center
+        a(href=`/gateway/get-children/${item.parentId}`) #[i.fa.fa-level-up] Go Up
+      .markdown-body.
+        <h1> #{item.title} </h1>
+        !{item.body}

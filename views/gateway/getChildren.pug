@@ -4,7 +4,7 @@ block content
   if (status === 'root')
     .box
       .any.items.u-text-center
-        a.button(href="/gateway/add-item/"+root._id) Insert
+        a(href="/gateway/add-item/"+root._id) #[i.fa.fa-plus] Insert
 
   .row.u-flex
     .any.items.u-text-center
@@ -15,10 +15,9 @@ block content
           th Title
           th Type
           th Action
-          th Done
           if (status === 'root')
             th Admin
-        tbody
+        tbody.u-text-small
           each val, index in items
             tr
               td
@@ -43,18 +42,6 @@ block content
                   if val.body
                     span= " | "
                     a(href="/gateway/get-hint/"+val._id) Hints
-
-              if ( val.type === "problem" || val.type === "text" ) && login
-                if doneList.indexOf(val._id.toString()) >= 0
-                  td
-                    a(href="/gateway/done-stat/remove-done-list/" + val._id+"?redirect="+root._id)
-                      i.fa.fa-star
-                else
-                  td
-                    a(href="/gateway/done-stat/add-done-list/" + val._id+"?redirect="+root._id)
-                      i.fa.fa-star-o
-              else
-                td ---
 
               if (status === 'root')
                 td #[a(href="/gateway/edit-item/"+val._id) Edit]

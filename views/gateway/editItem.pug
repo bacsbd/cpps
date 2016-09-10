@@ -55,7 +55,7 @@ block content
           .any.items
             input.right-margin.button-primary(type='submit', value='Update')
             a.button.right-margin.button-danger(href='#delete', rel="modal:open") Delete
-            a.button(href=`/gateway/view-item/${item._id}`) Cancel
+            a.button(href=`/gateway/get-children/${item.parentId}`) Cancel
 
 
   #delete(style="display:none;")

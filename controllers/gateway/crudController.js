@@ -9,6 +9,8 @@ const rootMiddleware = grabMiddleware('root');
 const Gate = require('mongoose').model('Gate');
 const ojnames = require(path.join(rootPath, 'models/ojnames.js'));
 const rootStr = '000000000000000000000000';
+const marked = require('marked');
+const escapeLatex = require('forthright48/escapeLatex');
 const async = require('async');
 
 const router = express.Router();
@@ -18,8 +20,8 @@ router.get('/add-item/:parentId', rootMiddleware, get_addItem_ParentId);
 router.get('/edit-item/:id', rootMiddleware, get_editItem_Id);
 router.post('/add-item', rootMiddleware, post_addItem);
 router.get('/get-children/:parentId', get_getChildren_ParentId);
-router.post('/delete-item/:id', get_deleteItem_Id);
-
+router.post('/delete-item/:id', rootMiddleware, get_deleteItem_Id);
+router.get('/read-item/:id', get_readItem_Id);
 
 module.exports = {
   addRouter(app) {
@@ -154,5 +156,30 @@ function get_deleteItem_Id(req, res, next) {
       if (err) return next(err);
       req.flash('success', 'Successfully deleted');
       return res.redirect(`/gateway/get-children/${parentId}`);
+    });
+}
+
+function get_readItem_Id(req, res, next) {
+  const id = req.params.id;
+
+  Gate.findOne({
+      _id: id
+    })
+    .select('title body parentId')
+    .exec(function(err, item) {
+      if (err) return next(err);
+      if (!item) {
+        req.flash('No item with such id');
+        return res.redirect(`/gateway/get-children/${rootStr}`);
+      }
+
+      item.body = escapeLatex(item.body);
+      marked(item.body, function(err, content) {
+        if (err) return next(err);
+        item.body = content;
+        return myRender(req, res, 'gateway/readItem', {
+          item
+        });
+      });
     });
 }
