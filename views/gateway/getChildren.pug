@@ -1,0 +1,60 @@
+extends ../layouts/layout.pug
+
+block content
+  if (status === 'root')
+    .box
+      .any.items.u-text-center
+        a.button(href="/gateway/add-item/"+root._id) Insert
+
+  .row.u-flex
+    .any.items.u-text-center
+      h4= root.title
+      table.u-full-width(align="center")
+        thead
+          th Index
+          th Title
+          th Type
+          th Action
+          th Done
+          if (status === 'root')
+            th Admin
+        tbody
+          each val, index in items
+            tr
+              td
+                span= index + 1
+                if adminMode
+                  span= " | " + val.ind
+              if val.type !== "problem" && val.type !== "text"
+                td= val.title
+                td
+                  i.fa.fa-folder-o(aria-hidden="true")
+                  // span &nbsp; #{val.userCount}/#{val.totalCount}
+                td #[a(href="/gateway/get-children/"+val._id) Open]
+              else if val.type === "text"
+                td= val.title
+                td #[i.fa.fa-file-text-o(aria-hidden="true")]
+                td #[a(href="/gateway/read-item/"+val._id) Read]
+              else if val.type === "problem"
+                td= val.platform + " " + val.pid + " - " + val.title
+                td #[i.fa.fa-link(aria-hidden="true") ]
+                td
+                  a(target="_blank", href=val.link) Solve
+                  if val.body
+                    span= " | "
+                    a(href="/gateway/get-hint/"+val._id) Hints
+
+              if ( val.type === "problem" || val.type === "text" ) && login
+                if doneList.indexOf(val._id.toString()) >= 0
+                  td
+                    a(href="/gateway/done-stat/remove-done-list/" + val._id+"?redirect="+root._id)
+                      i.fa.fa-star
+                else
+                  td
+                    a(href="/gateway/done-stat/add-done-list/" + val._id+"?redirect="+root._id)
+                      i.fa.fa-star-o
+              else
+                td ---
+
+              if (status === 'root')
+                td #[a(href="/admin/gateway/edit/"+val._id) Edit]
