@@ -54,8 +54,19 @@ block content
         .row
           .any.items
             input.right-margin.button-primary(type='submit', value='Update')
-            a.button.right-margin.button-danger(href='/gateway/delete-item/'+item._id) Delete
+            a.button.right-margin.button-danger(href='#delete', rel="modal:open") Delete
             a.button(href=`/gateway/view-item/${item._id}`) Cancel
+
+
+  #delete(style="display:none;")
+    p Are you sure you want to <b>delete</b> this? If so, please enter the text "<b>Delete</b>" below:
+    form.u-text-center(action=`/gateway/delete-item/${item._id}`,method='post')
+      label
+        .label-body Enter Word:&nbsp
+        input.u-full-width(name='delete',type='text',required,pattern='Delete',title='Please type the word: Delete')
+      input(type="hidden" value=item.parentId name='parentId')
+      input.button-danger.right-margin(type='submit', value='Delete')
+      a.button(href='#', rel="modal:close") Cancel
 
 block scripts
   script(src='/js/gateway/addItem/index.js')

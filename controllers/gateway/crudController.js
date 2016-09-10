@@ -18,6 +18,7 @@ router.get('/add-item/:parentId', rootMiddleware, get_addItem_ParentId);
 router.get('/edit-item/:id', rootMiddleware, get_editItem_Id);
 router.post('/add-item', rootMiddleware, post_addItem);
 router.get('/get-children/:parentId', get_getChildren_ParentId);
+router.post('/delete-item/:id', get_deleteItem_Id);
 
 
 module.exports = {
@@ -42,7 +43,7 @@ function get_addItem_ParentId(req, res) {
   });
 }
 
-function get_editItem_Id(req, res) {
+function get_editItem_Id(req, res, next) {
   const id = req.params.id;
   Gate.findOne({
       _id: id
@@ -114,7 +115,7 @@ function get_getChildren_ParentId(req, res, next) {
         .exec(function(err, root) {
           if (err) return cb(err);
           return cb(null, root);
-        })
+        });
     },
     items(cb) {
       Gate.find({
@@ -133,4 +134,25 @@ function get_getChildren_ParentId(req, res, next) {
       doneList: []
     });
   });
+}
+
+function get_deleteItem_Id(req, res, next) {
+  const id = req.params.id;
+  const parentId = req.body.parentId;
+  if (req.body.delete !== 'Delete') {
+    req.flash('error', 'Wrong word typed during Delete');
+    return res.redirect(`gateway/edit-item/${id}`);
+  }
+
+  // TODO: cpps Issue 29
+
+  Gate.findOne({
+      _id: id
+    })
+    .remove()
+    .exec(function(err) {
+      if (err) return next(err);
+      req.flash('success', 'Successfully deleted');
+      return res.redirect(`/gateway/get-children/${parentId}`);
+    });
 }
