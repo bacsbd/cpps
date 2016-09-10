@@ -24,7 +24,8 @@ function get_recent(req, res, next) {
     .select('updatedAt createdAt title slug')
     .sort({
       updatedAt: -1
-    }).limit(25)
+    })
+    .limit(25)
     .exec(function(err, notes) {
       if (err) {
         return next(err);
