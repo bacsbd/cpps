@@ -15,6 +15,7 @@ const router = express.Router();
 
 router.get('/', get_index);
 router.get('/add-item/:parentId', rootMiddleware, get_addItem_ParentId);
+router.get('/edit-item/:id', rootMiddleware, get_editItem_Id);
 router.post('/add-item', rootMiddleware, post_addItem);
 router.get('/get-children/:parentId', get_getChildren_ParentId);
 
@@ -39,6 +40,24 @@ function get_addItem_ParentId(req, res) {
     parentId,
     ojnames
   });
+}
+
+function get_editItem_Id(req, res) {
+  const id = req.params.id;
+  Gate.findOne({
+      _id: id
+    })
+    .exec(function(err, item) {
+      if (err) return next(err);
+      if (!item) {
+        req.flash('error', 'No such item found for edit');
+        return res.redirect('/gateway');
+      }
+      return myRender(req, res, 'gateway/editItem', {
+        item,
+        ojnames
+      });
+    });
 }
 
 function syncModel(target, source) {
@@ -108,6 +127,10 @@ function get_getChildren_ParentId(req, res, next) {
     }
   }, function(err, result) {
     if (err) return next(err);
-    return myRender(req, res, 'gateway/getChildren', result);
+    return myRender(req, res, 'gateway/getChildren', {
+      root: result.root,
+      items: result.items,
+      doneList: []
+    });
   });
 }

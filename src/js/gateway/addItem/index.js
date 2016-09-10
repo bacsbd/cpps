@@ -1,13 +1,17 @@
 const $ = require('jquery');
 
+hideEverything();
+showFormParts();
+
+$('#type').change(showFormParts);
+
+/*Implementation*/
 
 function hideEverything() {
   $('input[type="submit"], #body, #problem').hide();
 }
 
-hideEverything();
-
-$('#type').change(function() {
+function showFormParts() {
   hideEverything();
 
   const val = $('select option:selected').val();
@@ -18,4 +22,4 @@ $('#type').change(function() {
     $('#body').show();
   }
   $('input[type="submit"]').show();
-});
+}

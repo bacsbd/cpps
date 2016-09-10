@@ -1,0 +1,61 @@
+extends ../layouts/layout.pug
+
+block content
+  .row.u-flex
+    .any.items.u-text-center
+      h3 Edit Item
+      form(action='/gateway/edit-item', method='post')
+        .row
+          .six.items
+            label
+              .label-body Parent ID:
+              input.u-full-width(type='text', value=item.parentId.toString(), name='parentId', required)
+          .six.items
+            label
+              .label-body Title:
+              input.u-full-width(type='text', name='title', value=item.title, required)
+        .row
+          .six.items
+            label
+              .label-body Index:
+              input.u-full-width(type='number', name='ind', step=0.1, value=item.ind, required)
+          .six.items
+            label
+              .label-body Type:
+              select#type.u-full-width(name='type',required)
+                option(value='folder', selected=item.type==="folder") Folder
+                option(value='problem', selected=item.type==="problem") Problem
+                option(value='text', selected=item.type==="text") Text
+
+        #problem
+          .row
+            .six.items
+              label
+                .label-body Platform:
+                select.u-full-width(name="platform")
+                  each val in ojnames.data
+                    option(value=val, selected=item.platform===val)= val
+            .six.items
+              label
+                .label-body Problem ID:
+                input.u-full-width(type='text', name='pid', value=item.pid)
+          .row
+            .any.items
+              label
+                .label-body Link:
+                input.u-full-width(type='url', name='link', value=item.pid)
+
+        #body.row
+          .any.items
+            label
+              .label-body Body:
+              textarea.u-full-width(name='body')= item.body
+
+        .row
+          .any.items
+            input.right-margin.button-primary(type='submit', value='Update')
+            a.button.right-margin.button-danger(href='/gateway/delete-item/'+item._id) Delete
+            a.button(href=`/gateway/view-item/${item._id}`) Cancel
+
+block scripts
+  script(src='/js/gateway/addItem/index.js')
