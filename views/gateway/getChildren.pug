@@ -41,7 +41,7 @@ block content
                   a(target="_blank", href=val.link) Solve
                   if val.body
                     span= " | "
-                    a(href="/gateway/get-hint/"+val._id) Hints
+                    a(href="/gateway/read-item/"+val._id) Hints
 
               if (status === 'root')
                 td #[a(href="/gateway/edit-item/"+val._id) Edit]

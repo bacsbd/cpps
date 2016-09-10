@@ -19,6 +19,7 @@ router.get('/', get_index);
 router.get('/add-item/:parentId', rootMiddleware, get_addItem_ParentId);
 router.get('/edit-item/:id', rootMiddleware, get_editItem_Id);
 router.post('/add-item', rootMiddleware, post_addItem);
+router.post('/edit-item', rootMiddleware, post_editItem);
 router.get('/get-children/:parentId', get_getChildren_ParentId);
 router.post('/delete-item/:id', rootMiddleware, get_deleteItem_Id);
 router.get('/read-item/:id', get_readItem_Id);
@@ -71,7 +72,7 @@ function syncModel(target, source) {
   target.body = source.body;
   target.platform = source.platform;
   target.pid = source.pid;
-  target.link = source.lin;
+  target.link = source.link;
 }
 
 function post_addItem(req, res, next) {
@@ -100,6 +101,28 @@ function post_addItem(req, res, next) {
         return res.redirect(`/gateway/get-children/${item.parentId}`);
       });
     });
+}
+
+function post_editItem(req, res, next) {
+  const id = req.body.id;
+  ///Need to calculate the ancestor of this item.
+  ///For that we need ancestor list of the parent
+
+  Gate.findOne({
+    _id: id
+  }).exec(function(err, item) {
+    if (err) return next(err);
+    if (!item) {
+      req.flash('error', 'No such item found for edit');
+      return res.redirect(`/gateway/get-children/${rootStr}`);
+    }
+    syncModel(item, req.body);
+    item.save(function(err) {
+      if (err) return next(err);
+      req.flash('success', 'Edit Successful');
+      return res.redirect(`/gateway/edit-item/${id}`);
+    });
+  });
 }
 
 function get_getChildren_ParentId(req, res, next) {

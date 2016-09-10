@@ -5,6 +5,7 @@ block content
     .any.items.u-text-center
       h3 Edit Item
       form(action='/gateway/edit-item', method='post')
+        input(type='hidden', value=item._id, name='id')
         .row
           .six.items
             label
@@ -43,7 +44,7 @@ block content
             .any.items
               label
                 .label-body Link:
-                input.u-full-width(type='url', name='link', value=item.pid)
+                input.u-full-width(type='url', name='link', value=item.link)
 
         #body.row
           .any.items
