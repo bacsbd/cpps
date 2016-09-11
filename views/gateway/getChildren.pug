@@ -7,7 +7,11 @@ block content
         a.right-margin(href=`/gateway/get-children/${root.parentId}`) #[i.fa.fa-level-up] Go Up
       if (status === 'root')
         a(href="/gateway/add-item/"+root._id) #[i.fa.fa-plus] Insert
-      h4= root.title
+      .row
+        .four.items
+          span Solved in this folder: #{root.userCount}/#{root.totalCount}
+        .four.items
+          h4= root.title
       table.u-full-width(align="center")
         thead
           th Index
