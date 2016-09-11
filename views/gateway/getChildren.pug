@@ -27,7 +27,7 @@ block content
                 td= val.title
                 td
                   i.fa.fa-folder-o(aria-hidden="true")
-                  // span &nbsp; #{val.userCount}/#{val.totalCount}
+                  span &nbsp; #{val.userCount}/#{val.totalCount}
                 td #[a(href="/gateway/get-children/"+val._id) Open]
               else if val.type === "text"
                 td= val.title

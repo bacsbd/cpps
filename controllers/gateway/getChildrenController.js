@@ -27,15 +27,17 @@ function get_getChildren_ParentId(req, res, next) {
   ///Both requires async calls
 
   async.parallel({
+    ///Grab the root item
     root(cb) {
       Gate.findOne({
           _id: parentId
         })
         .exec(function(err, root) {
           if (err) return cb(err);
-          return cb(null, root);
+          getItemStats(req, root, cb);
         });
     },
+    ///Grab children under root
     items(cb) {
       Gate.find({
           parentId
@@ -45,7 +47,13 @@ function get_getChildren_ParentId(req, res, next) {
         })
         .exec(function(err, items) {
           if (err) return cb(err);
-          return cb(null, items);
+
+          async.forEach(items, function(item, itemCB) {
+            getItemStats(req, item, itemCB);
+          }, function(err) {
+            if (err) return cb(err);
+            return cb(null, items);
+          });
         });
     }
   }, function(err, result) {
@@ -55,5 +63,53 @@ function get_getChildren_ParentId(req, res, next) {
       items: result.items,
       doneList: []
     });
+  });
+}
+
+///Responsible for getting total number of items under it's folder and how many user has solved
+function getItemStats(req, item, cb) {
+  if (item.type !== 'folder') {
+    ///Nothing to do here
+    return cb(null);
+  }
+
+  async.parallel({
+    totalCount(pcb) {
+      Gate.count({
+          ancestor: item._id,
+          type: {
+            $in: ['problem', 'text']
+          }
+        })
+        .exec(function(err, total) {
+          if (err) return pcb(err);
+          item.totalCount = total;
+          return pcb(null);
+        });
+    },
+    userCount(pcb) {
+      const sess = req.session || {};
+      ///Usercount is '--' if user is not logged in
+      if (!sess.login) {
+        item.userCount = '--';
+        return pcb(null);
+      }
+      const id = sess.userId;
+      Gate.count({
+          ancestor: item._id,
+          type: {
+            $in: ['problem', 'text']
+          },
+          doneList: id
+        })
+        .exec(function(err, total) {
+          if (err) return pcb(err);
+          item.userCount = total;
+          return pcb(null);
+        });
+    }
+  }, function(err) {
+    if (err) return cb(err);
+    return cb(null, item);
   });
 }

@@ -44,6 +44,7 @@ function post_login(req, res, next) {
         if (!user.verified) req.session.verificationValue = user.verificationValue;
         req.session.email = email;
         req.session.status = user.status;
+        req.userId = user._id;
         return res.redirect('/');
       } else {
         req.flash('error', 'Password did not match');
