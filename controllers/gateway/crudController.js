@@ -20,7 +20,6 @@ router.get('/add-item/:parentId', rootMiddleware, get_addItem_ParentId);
 router.get('/edit-item/:id', rootMiddleware, get_editItem_Id);
 router.post('/add-item', rootMiddleware, post_addItem);
 router.post('/edit-item', rootMiddleware, post_editItem);
-router.get('/get-children/:parentId', get_getChildren_ParentId);
 router.post('/delete-item/:id', rootMiddleware, get_deleteItem_Id);
 router.get('/read-item/:id', get_readItem_Id);
 
@@ -121,42 +120,6 @@ function post_editItem(req, res, next) {
       if (err) return next(err);
       req.flash('success', 'Edit Successful');
       return res.redirect(`/gateway/edit-item/${id}`);
-    });
-  });
-}
-
-function get_getChildren_ParentId(req, res, next) {
-  const parentId = req.params.parentId;
-
-  ///Need to send the item with id parentId, so that we can use it's title and other info
-  ///Also need all items whose parent is parentId.
-  ///Both requires async calls
-
-  async.parallel({
-    root(cb) {
-      Gate.findOne({
-          _id: parentId
-        })
-        .exec(function(err, root) {
-          if (err) return cb(err);
-          return cb(null, root);
-        });
-    },
-    items(cb) {
-      Gate.find({
-          parentId
-        })
-        .exec(function(err, items) {
-          if (err) return cb(err);
-          return cb(null, items);
-        });
-    }
-  }, function(err, result) {
-    if (err) return next(err);
-    return myRender(req, res, 'gateway/getChildren', {
-      root: result.root,
-      items: result.items,
-      doneList: []
     });
   });
 }

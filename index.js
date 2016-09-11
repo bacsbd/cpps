@@ -47,6 +47,7 @@ require('./controllers/notebook/noteController.js').addRouter(app);
 require('./controllers/notebook/otherController.js').addRouter(app);
 
 require('./controllers/gateway/crudController.js').addRouter(app);
+require('./controllers/gateway/getChildrenController.js').addRouter(app);
 /****/
 
 app.use(function(err, req, res, next) {

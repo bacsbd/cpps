@@ -1,15 +1,12 @@
 extends ../layouts/layout.pug
 
 block content
-  if (status === 'root')
-    .box
-      .any.items.u-text-center
-        a(href="/gateway/add-item/"+root._id) #[i.fa.fa-plus] Insert
-
   .row.u-flex
     .any.items.u-text-center
       if ( root.parentId )
-        a(href=`/gateway/get-children/${root.parentId}`) #[i.fa.fa-level-up] Go Up
+        a.right-margin(href=`/gateway/get-children/${root.parentId}`) #[i.fa.fa-level-up] Go Up
+      if (status === 'root')
+        a(href="/gateway/add-item/"+root._id) #[i.fa.fa-plus] Insert
       h4= root.title
       table.u-full-width(align="center")
         thead
