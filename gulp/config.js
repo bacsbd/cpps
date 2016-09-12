@@ -24,8 +24,8 @@ module.exports = {
   sassInclude: ['./public'],
   vendorInput: {
     js: ['jquery', 'notifyjs-browser', 'jquery-modal', 'moment'],
-    css: ['@forthright48/simplecss', 'font-awesome'],
-    all: ['jquery', 'notifyjs-browser', 'jquery-modal', '@forthright48/simplecss', 'moment', 'font-awesome']
+    css: ['font-awesome'],
+    all: ['jquery', 'notifyjs-browser', 'jquery-modal', 'moment', 'font-awesome']
   },
   browserifyPath: ['./node_modules', './src/js/']
 };

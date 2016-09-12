@@ -1,13 +1,3 @@
-.navitem-pullright {
-  float: right;
-}
-.footer {
-  font-size: 1.2rem;
-  color: gray;
-}
-.footer a {
-  text-decoration: none;
-}
 .recaptcha div {
   margin-left: auto;
   margin-right: auto;
@@ -15,42 +5,4 @@
 textarea {
   height: 50rem;
   resize: none;
-}
-.left-margin {
-  margin-left: 1rem;
-}
-.right-margin {
-  margin-right: 1rem;
-}
-.u-margin-center {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/*Should go to next simplecss upgrade*/
-
-.button.button-danger, button.button-danger, input[type="submit"].button-danger, input[type="reset"].button-danger, input[type="button"].button-danger {
-  color: #FFF;
-  background-color: tomato;
-  border-color: tomato;
-}
-.button.button-danger:hover, button.button-danger:hover, input[type="submit"].button-danger:hover, input[type="reset"].button-danger:hover, input[type="button"].button-danger:hover, .button.button-danger:focus, button.button-danger:focus, input[type="submit"].button-danger:focus, input[type="reset"].button-danger:focus, input[type="button"].button-danger:focus {
-  color: #FFF;
-  background-color: #FF4136;
-  border-color: #FF4136;
-}
-
-/* Tables
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-
-th, td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #E1E1E1;
-}
-th:first-child, td:first-child {
-  padding-left: 0;
-}
-th:last-child, td:last-child {
-  padding-right: 0;
 }
