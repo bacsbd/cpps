@@ -1,7 +1,14 @@
 const $ = require('jquery');
+window.jQuery = window.$ = $;
+
 const notify = require('notifyjs-browser')(this, $);
-require('jquery-modal');
 const moment = require('moment');
+
+const tether = require('tether');
+window.Tether = tether;
+
+const bootstrap = require('vendor/bootstrap/js/bootstrap.js');
+
 
 /*Add flash messages*/
 require('./flash')($);

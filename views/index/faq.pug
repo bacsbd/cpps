@@ -1,29 +1,42 @@
 extends ../layouts/layout.pug
 
 block content
-  .row.u-flex
-    .any.items
-      h3.u-text-center Frequently Asked Questions
+  .row.flex-items-xs-middle
+    .col-xs
+      h3.text-xs-center Frequently Asked Questions
 
-      ul
-        li
-          h4 Is everything on this site 100% accurate?
-          p Of course not. It's written by a human(me), so there is bound to be errors. Some of the codes I have given are not even tested. Same goes for the hints. Do not assume everything you read to be true/correct. Use your own judgment and logic to decide whether the facts given on the site is right or wrong. If you spot any mistake, please report the <a href='/bugsandhugs'>bug</a>.
-        li
-          h4 Why isn't there any comment/forum section? I want to discuss stuffs.
-          p There are already plenty of places to discuss stuffs. Creating another location will simply dilute the whole thing.
+      .list-group
+        .list-group-item
 
-          p If you have any question about any particular problem, then it is better to go its corresponding online judge and discuss it on their forum.
+          h4.list-group-item-heading Is everything on this site 100% accurate
 
-          p If you have question about some article on this site unrelated to any online judge, then please find some other place ( facebook group, codeforces, topcoder, codechef ) to discuss them. That will give me free publicity :)
+          p.list-group-item-text Of course not. It's written by a human(me), so there is bound to be errors. Some of the codes I have given are not even tested. Same goes for the hints. Do not assume everything you read to be true/correct. Use your own judgment and logic to decide whether the facts given on the site is right or wrong. If you spot any mistake, please report the <a href='/bugsandhugs'>bug</a>.
 
-          p If you want to discuss technical stuffs like mistakes in artcle/code, broken link/css or any kind of bugs, then we have <a href='https://github.com/forthright48/cpps/issues'>Github</a> for that.
-        li
-          h4 I didn't understand the article on topic X. What should I do?
-          p Google to find other resources on topic X. There are plenty of resource over net. If you are unable to find any satisfactory result, then try asking questions on forums/sites like stackoverflow, codeforces, topcoder and etc.
-        li
-          h4 It will be really cool to have the feature X. Can you implement it?
-          p Depends. Feel free to request the feature by raising an issue on <a href='https://github.com/forthright48/cpps/issues'>github</a>. We can discuss about feasibility, relevance and implementation of the issue there and come to a conclusion.
-        li
-          h4 This FAQ isn't enough. I have more questions.
-          p Raise an issue on <a href='https://github.com/forthright48/cpps/issues'>github</a> with a question tag. I will try to answer there.
+        .list-group-item
+
+          h4.list-group-item-heading Why isn't there any comment/forum section? I want to discuss stuffs.
+          p.list-group-item-text There are already plenty of places to discuss stuffs. Creating another location will simply dilute the whole thing.
+
+          p.list-group-item-text.m-t-1 If you have any question about any particular problem, then it is better to go its corresponding online judge and discuss it on their forum.
+
+          p.list-group-item-text.m-t-1 If you have question about some article on this site unrelated to any online judge, then please find some other place ( facebook group, codeforces, topcoder, codechef ) to discuss them. That will give me free publicity :)
+
+          p.list-group-item-text.m-t-1 If you want to discuss technical stuffs like mistakes in artcle/code, broken link/css or any kind of bugs, then we have <a href='https://github.com/forthright48/cpps/issues'>Github</a> for that.
+
+        .list-group-item
+
+          h4.list-group-item-heading I didn't understand the article on topic X. What should I do?
+
+          p.list-group-item-text Google to find other resources on topic X. There are plenty of resource over net. If you are unable to find any satisfactory result, then try asking questions on forums/sites like stackoverflow, codeforces, topcoder and etc.
+
+        .list-group-item
+
+          h4.list-group-item-heading It will be really cool to have the feature X. Can you implement it?
+
+          p.list-group-item-text Depends. Feel free to request the feature by raising an issue on <a href='https://github.com/forthright48/cpps/issues'>github</a>. We can discuss about feasibility, relevance and implementation of the issue there and come to a conclusion.
+
+        .list-group-item
+
+          h4.list-group-item-heading This FAQ isn't enough. I have more questions.
+
+          p.list-group-item-text Raise an issue on <a href='https://github.com/forthright48/cpps/issues'>github</a> with a question tag. I will try to answer there.

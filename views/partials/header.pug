@@ -1,27 +1,30 @@
-.row
-  .any.items.u-text-center
-    h1 CPPS
+h1.text-xs-center CPPS
 
-//Navbar
-.row
-  .twelve.items
-    ul.nav
-      li
-        a(href="/") Home
-      li.dropdown
-        a.dropbtn(href='/notebook') Notebook
-        ul.dropdown-content
-          li
-            a(href='/notebook/recent') Recent
-      li
-        a(href='/gateway') Gateway
-      li
-        a(href='/faq') FAQ
-      li
-        a(href='/bugsandhugs') Bugs & Hugs
-      if login
-        li.navitem-pullright
-          a(href='/user/logout') Logout
-      else
-        li.navitem-pullright
-          a(href='/user/login') Login
+
+ul.nav.nav-tabs.m-b-1
+  li.nav-item
+    a.nav-link(href='/') Home
+  li.nav-item.dropdown
+    .nav-item.d-inline
+      a.nav-link(href='/notebook') Notebook
+    .nav-item.d-inline
+      a.nav-link(data-toggle='dropdown', href='#') &nbsp;#[i.fa.fa-caret-down]
+      .dropdown-menu
+        a.dropdown-item(href='/notebook/recent') Recent
+  li.nav-item.dropdown
+    .nav-item.d-inline
+      a.nav-link(href='/gateway') Gateway
+    .nav-item.d-inline
+      a.nav-link(data-toggle='dropdown', href='#') &nbsp;#[i.fa.fa-caret-down]
+      .dropdown-menu
+        a.dropdown-item(href='#') Coming Soon
+  li.nav-item
+    a.nav-link(href='/faq') FAQ
+  li.nav-item
+    a.nav-link(href='/bugsandhugs') Bugs & Hugs
+  if (login)
+    li.nav-item.pull-sm-right
+      a.nav-link(href='/user/logout') Logout
+  else
+    li.nav-item.pull-sm-right
+      a.nav-link(href='/user/login') Login

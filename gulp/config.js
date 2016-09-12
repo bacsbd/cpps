@@ -27,5 +27,5 @@ module.exports = {
     css: ['font-awesome'],
     all: ['jquery', 'notifyjs-browser', 'jquery-modal', 'moment', 'font-awesome']
   },
-  browserifyPath: ['./node_modules', './src/js/']
+  browserifyPath: ['./node_modules', './src']
 };
