@@ -13,6 +13,8 @@ const bootstrap = require('vendor/bootstrap/js/bootstrap.js');
 /*Add flash messages*/
 require('./flash')($);
 
+require('./fill-view')($);
+
 $('.moment-date').each(function() {
   let date = $(this).html();
   date = moment(date, 'ddd MMM DD YYYY HH:mm:ss ZZ').fromNow();
