@@ -6,7 +6,7 @@ module.exports = function($) {
   if (htmlHeight + 5 < windowHeight) {
     const dif = windowHeight - htmlHeight;
     $('#fill-view').animate({
-      height: fillView + dif
+      "min-height": fillView + dif
     }, 300);
   }
 };

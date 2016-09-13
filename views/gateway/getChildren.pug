@@ -1,18 +1,19 @@
 extends ../layouts/layout.pug
 
 block content
-  .row.u-flex
-    .any.items.u-text-center
-      if ( root.parentId )
-        a.right-margin(href=`/gateway/get-children/${root.parentId}`) #[i.fa.fa-level-up] Go Up
-      if (status === 'root')
-        a(href="/gateway/add-item/"+root._id) #[i.fa.fa-plus] Insert
-      .row
-        .four.items
+  .row#fill-view
+    .col-sm.text-xs-center
+      .small
+        if ( root.parentId )
+          a.m-r-1(href=`/gateway/get-children/${root.parentId}`) #[i.fa.fa-level-up] Go Up
+        if (status === 'root')
+          a(href="/gateway/add-item/"+root._id) #[i.fa.fa-plus] Insert
+      .row.flex-items-xs-middle
+        .col-sm-4
           span Solved in this folder: #{root.userCount}/#{root.totalCount}
-        .four.items
-          h4= root.title
-      table.u-full-width(align="center")
+        .col-sm-4
+          h2= root.title
+      table.table.text-xs-left.table-bordered
         thead
           th Index
           th Title
@@ -20,7 +21,7 @@ block content
           th Action
           if (status === 'root')
             th Admin
-        tbody.u-text-small
+        tbody
           each val, index in items
             tr
               td

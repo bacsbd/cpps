@@ -1,6 +1,8 @@
 const $ = require('jquery');
+const fill_view = require('js/layout/fill-view.js');
 
 hideEverything();
+fill_view($);
 showFormParts();
 
 $('#type').change(showFormParts);
@@ -22,4 +24,5 @@ function showFormParts() {
     $('#body').show();
   }
   $('input[type="submit"]').show();
+  fill_view($);
 }

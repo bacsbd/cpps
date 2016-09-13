@@ -1,28 +1,28 @@
 extends ../layouts/layout.pug
 
 block content
-  .row.u-flex
-    .any.items.u-text-center
+  .row.flex-items-xs-middle#fill-view.m-b-1
+    .col-sm.text-xs-center
       h3 Add Item
       form(action='/gateway/add-item', method='post')
         .row
-          .six.items
-            label
-              .label-body Parent ID:
-              input.u-full-width(type='text', value=parentId, name='parentId', required)
-          .six.items
-            label
-              .label-body Title:
-              input.u-full-width(type='text', name='title', required)
+          .col-sm-6
+            .form-group
+              label(for='parentId') Parent ID
+              input.form-control(id='parentId',type='text', value=parentId, name='parentId', required)
+          .col-sm-6
+            .form-group
+              label(for='title') Title
+              input.form-control(id='title',type='text', name='title', required)
         .row
-          .six.items
-            label
-              .label-body Index:
-              input.u-full-width(type='number', name='ind', step=0.1,required)
-          .six.items
-            label
-              .label-body Type:
-              select#type.u-full-width(name='type',required)
+          .col-sm-6
+            .form-group
+              label(for='ind') Index
+              input.form-control(id='ind',type='number', name='ind', step=0.1,required)
+          .col-sm-6
+            .form-group
+              label(for='type') Type
+              select#type.form-control(name='type',required)
                 option(disabled, selected, value=undefined) Select a Type
                 option(value='folder') Folder
                 option(value='problem') Problem
@@ -30,33 +30,28 @@ block content
 
         #problem
           .row
-            .six.items
-              label
-                .label-body Platform:
-                select.u-full-width(name="platform")
+            .col-sm-6
+              .form-group
+                label(for='platform') Platform
+                select#platform.form-control(name="platform")
                   option(disabled, selected, value=undefined) Select a Platform
                   each val in ojnames.data
                     option(value=val)= val
-            .six.items
-              label
-                .label-body Problem ID:
-                input.u-full-width(type='text', name='pid')
-          .row
-            .any.items
-              label
-                .label-body Link:
-                input.u-full-width(type='url', name='link')
+            .col-sm-6
+              .form-group
+                label(for='pid') Problem ID
+                input#pid.form-control(type='text', name='pid')
+          .form-group
+            label(for='link') Link
+            input#link.form-control(type='url', name='link')
 
-        #body.row
-          .any.items
-            label
-              .label-body Body:
-              textarea.u-full-width(name='body')
+        #body.form-group
+          label(for='body2') Body
+          textarea#body2.form-control(name='body')
 
-        .row
-          .any.items
-            input.right-margin.button-primary(type='submit', value='Insert')
-            a.button(href=`/gateway/get-children/${parentId}`) Cancel
+
+        input.btn.btn-primary.m-r-1(type='submit', value='Insert')
+        a.btn.btn-secondary(href=`/gateway/get-children/${parentId}`) Cancel
 
 block scripts
   script(src='/js/gateway/addItem/index.js')
