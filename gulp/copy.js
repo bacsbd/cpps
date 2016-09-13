@@ -6,7 +6,8 @@ const changed = require('gulp-changed');
 module.exports = function(gulp) {
 
   function copyRest(folder) {
-    // Copy everything except css, scss and image
+    // Copy everything except css, scss, js and image
+    // Unless it is in vendor folder
     return gulp.src([`./${folder}/**`, `!./${folder}/**/*.{css,scss,JPG,jpg,png,gif,js}`])
       .pipe(changed(config.dirs.public))
       .pipe(gulp.dest(config.dirs.public));

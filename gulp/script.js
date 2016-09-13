@@ -8,6 +8,7 @@ const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const fs = require('fs');
 const config = require('./config.js');
+const sourcemaps = require('gulp-sourcemaps');
 
 const vendors = config.vendorInput.js;
 
@@ -38,7 +39,9 @@ module.exports = function(gulp) {
         suffix: '.min'
       }))
       .pipe(buffer())
+      .pipe(sourcemaps.init())
       .pipe(uglify())
+      .pipe(sourcemaps.write())
       .pipe(gulp.dest(config.vendorOutput.js));
   });
 
@@ -70,7 +73,7 @@ module.exports = function(gulp) {
       const destDir = path.dirname(destPath);
 
       // Get Modified Time
-      const mtimeSource = fs.statSync(path.join(rootPath, filePath)).mtime;
+      /*const mtimeSource = fs.statSync(path.join(rootPath, filePath)).mtime;
       let mtimeDest;
       try {
         mtimeDest = fs.statSync(path.join(rootPath, destPath)).mtime;
@@ -78,7 +81,7 @@ module.exports = function(gulp) {
         mtimeDest = mtimeSource;
       }
 
-      if (mtimeSource < mtimeDest) return;
+      if (mtimeSource < mtimeDest) return;*/
 
       browserified(filePath)
         .pipe(gulp.dest(destDir))
@@ -86,7 +89,15 @@ module.exports = function(gulp) {
           suffix: '.min'
         }))
         .pipe(buffer())
+        .pipe(sourcemaps.init())
         .pipe(uglify())
+        .on('error', function(err) {
+          // print the error (can replace with gulp-util)
+          console.log(err.message);
+          // end this stream
+          this.emit('end');
+        })
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest(destDir));
     });
     done();
