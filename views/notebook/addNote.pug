@@ -1,18 +1,18 @@
 extends ../layouts/layout.pug
 
 block content
-  .row.u-flex.u-flex-center
-    .any.items.u-text-center
+  .row.flex-items-xs-middle#fill-view.m-b-1
+    .col-xs.text-xs-center
       h3 Add New Note
       form(action='/notebook/add-note', method='post')
-        label
-          .label-body Title:
-          input.u-full-width(name='title',type='text',required, value=title)
-        label
-          .label-body Slug:
-          input.u-full-width(name='slug',type='text', pattern='[a-z0-9\-]+', title='Small letters, digits and hyphens only',required, value=slug)
-        label
-          .label-body Body:
-          textarea.u-full-width(name='body')= body
-        input.button-primary(type='submit', value='Add Note')
-        a.button.left-margin(href='/notebook') Done
+        .form-group
+          label(id='title') Title
+          input.form-control(id='title', name='title',type='text',required, value=title)
+        .form-group
+          label(id='slug') Slug
+          input.form-control(id='slug',name='slug',type='text', pattern='[a-z0-9\-]+', title='Small letters, digits and hyphens only',required, value=slug)
+        .form-group
+          label(id='body') Body
+          textarea.form-control(id='body',name='body')= body
+        input.btn.btn-primary(type='submit', value='Insert')
+        a.btn.btn-secondary.m-l-1(href='/notebook') Cancel

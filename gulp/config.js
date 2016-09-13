@@ -23,9 +23,9 @@ module.exports = {
   browsersync: ['./public/**', './views/**/*.pug'],
   sassInclude: ['./public'],
   vendorInput: {
-    js: ['jquery', 'notifyjs-browser', 'jquery-modal', 'moment'],
+    js: ['jquery', 'notifyjs-browser', 'moment'],
     css: ['font-awesome'],
-    all: ['jquery', 'notifyjs-browser', 'jquery-modal', 'moment', 'font-awesome']
+    all: ['jquery', 'notifyjs-browser', 'moment', 'font-awesome']
   },
   browserifyPath: ['./node_modules', './src']
 };

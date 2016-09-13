@@ -1,27 +1,35 @@
 extends ../layouts/layout.pug
 
 block content
-  .row.u-flex.u-flex-center
-    .any.items.u-text-center
+  .row.flex-items-xs-middle#fill-view.m-b-1
+    .col-sm.text-xs-center
       h3 Edit Note: #{slug}
       form(action=`/notebook/edit-note/${slug}`, method='post')
-        label
-          .label-body Title:
-          input.u-full-width(name='title',type='text',required, value=title)
-        label
-          .label-body Slug:
-          input.u-full-width(name='slug',type='text', pattern='[a-z0-9\-]+', title='Small letters, digits and hyphens only',required, value=slug)
-        label
-          .label-body Body:
-          textarea.u-full-width(name='body')= body
-        input.button-primary(type='submit', value='Update')
-        a.button.left-margin(href=`/notebook/view-note/${slug}`) Done
-        a.button.button-danger.left-margin(href=`#delete`, rel="modal:open") Delete
+        .form-group
+          label(for='title') Title
+          input.form-control( id='title', name='title',type='text',required, value=title)
+        .form-group
+          label(for='slug') Slug
+          input.form-control(id='slug',name='slug',type='text', pattern='[a-z0-9\-]+', title='Small letters, digits and hyphens only',required, value=slug)
+        .form-group
+          label(for='body') Body
+          textarea.form-control(id='body',name='body')= body
+        input.btn.btn-primary(type='submit', value='Update')
+        a.btn.btn-secondary.m-l-1(href=`/notebook/view-note/${slug}`) Done
+        button.btn.btn-danger.m-l-1(type='button',data-toggle="modal", data-target="#delete") Delete
 
-  #delete(style="display:none;")
-    p Are you sure you want to <b>delete</b> this? If so, please enter the slug of the note below:
-    form.u-text-center(action=`/notebook/delete-note/${slug}`,method='post')
-      label
-        .label-body Enter Slug:&nbsp
-        input.u-full-width(name='slug',type='text',required,pattern=slug,title='Slug entered must match the note to be deleted')
-      input.button-danger(type='submit', value='Delete Note')
+  #delete.modal.fade(tabindex="-1",role='dialog', aria-labelledby="myModalLabel")
+    .modal-dialog(role="document")
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal') &times;
+          h4.modal-title(id='myModalLabel') Delete Slug
+        .modal-body
+          p Are you sure you want to <b>delete</b> this? If so, please enter the slug of the note below:
+          form(action=`/notebook/delete-note/${slug}`,method='post')
+            .form-group
+              input.form-control(placeholder='Enter Slug',name='slug',type='text',required,pattern=slug,title='Slug entered must match the note to be deleted')
+
+        .modal-footer
+          input.btn.btn-danger(type='submit', value='Delete Note')
+          button.btn.btn-secondary.m-l-1(data-dismiss='modal') Cancel

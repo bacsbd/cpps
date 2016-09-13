@@ -5,7 +5,7 @@ const changed = require('gulp-changed');
 
 const sassConfig = {
   outputStyle: 'compressed',
-  // sourceMapEmbed: true,
+  sourceMapEmbed: true,
   includePaths: config.sassInclude
 };
 
