@@ -1,12 +1,12 @@
 extends ../layouts/layout.pug
 
 block content
-  .row.u-flex
-    .any.items
+  .row#fill-view
+    .col-sm
       if ( status === 'root' )
-        .u-text-center
+        .text-xs-center
           a(href='/notebook/add-note') #[i.fa.fa-plus] Add
-          a.left-margin(href=`/notebook/edit-note/${note.slug}`) #[i.fa.fa-edit] Edit
+          a.m-l-1(href=`/notebook/edit-note/${note.slug}`) #[i.fa.fa-edit] Edit
 
       .markdown-body.
         <h1> #{note.title} </h1>
