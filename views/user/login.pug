@@ -1,19 +1,15 @@
 extends ../layouts/layout.pug
 
 block content
-  .row.u-flex.u-flex-center
-    .six.items.offset-by-3.u-text-center
-      h3 Login
+  .row.flex-items-xs-middle(style='min-height: 75vh;')
+    .offset-sm-3.col-sm-6.text-xs-center
+      h2 Login
       form(action='/user/login', method='post')
-        .row
-          .any.items
-            label
-              .label-body Email:
-              input.u-full-width( name='email', type='email', maxlength=256, required)
-            label
-              .label-body Password:
-              input.u-full-width( name='password', type='password', minlength=6, maxlength=256, title='Must be between 6 to 256 characters', required )
-        .row
-          .any.items
-            input(type='submit', value='Login')
-      p New here? Click <a href='/user/register'>here</a> to Register.
+        .form-group
+          label(for='email') Email
+          input.form-control( id='email', name='email', type='email', maxlength=256, required, placeholder='Enter Email')
+        .form-group
+          label(for='password') Password
+          input.form-control( id='password', name='password', type='password', minlength=6, maxlength=256, title='Must be between 6 to 256 characters', required, placeholder='Enter Password' )
+        input.btn.btn-primary(type='submit', value='Login')
+      small New here? Click <a href='/user/register'>here</a> to Register.
