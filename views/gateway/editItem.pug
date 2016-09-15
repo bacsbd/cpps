@@ -1,73 +1,76 @@
 extends ../layouts/layout.pug
 
 block content
-  .row.u-flex
-    .any.items.u-text-center
+  .row.flex-items-xs-middle#fill-view.m-b-1
+    .col-sm.text-xs-center
       h3 Edit Item
       form(action='/gateway/edit-item', method='post')
         input(type='hidden', value=item._id, name='id')
         .row
-          .six.items
-            label
-              .label-body Parent ID:
-              input.u-full-width(type='text', value=item.parentId.toString(), name='parentId', required)
-          .six.items
-            label
-              .label-body Title:
-              input.u-full-width(type='text', name='title', value=item.title, required)
+          .col-sm-6
+            .form-group
+              label(for='parentId') Parent ID
+              input#parentId.form-control(type='text', value=item.parentId.toString(), name='parentId', required)
+          .col-sm-6
+            .form-group
+              label(for='title') Title
+              input#title.form-control(type='text', name='title', value=item.title, required)
         .row
-          .six.items
-            label
-              .label-body Index:
-              input.u-full-width(type='number', name='ind', step=0.1, value=item.ind, required)
-          .six.items
-            label
-              .label-body Type:
-              select#type.u-full-width(name='type',required)
+          .col-sm-6
+            .form-group
+              label(for='ind') Index
+              input#ind.form-control(type='number', name='ind', step=0.1, value=item.ind, required)
+          .col-sm-6
+            .form-group
+              label(for='type') Type
+              select#type.form-control(name='type',required)
                 option(value='folder', selected=item.type==="folder") Folder
                 option(value='problem', selected=item.type==="problem") Problem
                 option(value='text', selected=item.type==="text") Text
 
         #problem
           .row
-            .six.items
-              label
-                .label-body Platform:
-                select.u-full-width(name="platform")
+            .col-sm-6
+              .form-group
+                label(for='platform') Platform
+                select#platform.form-control(name="platform")
                   each val in ojnames.data
                     option(value=val, selected=item.platform===val)= val
-            .six.items
-              label
-                .label-body Problem ID:
-                input.u-full-width(type='text', name='pid', value=item.pid)
-          .row
-            .any.items
-              label
-                .label-body Link:
-                input.u-full-width(type='url', name='link', value=item.link)
+            .col-sm-6
+              .form-group
+                label(for='pid') Problem ID
+                input#pid.form-control(type='text', name='pid', value=item.pid)
 
-        #body.row
-          .any.items
-            label
-              .label-body Body:
-              textarea.u-full-width(name='body')= item.body
+          .form-group
+            label(for='link') Link
+            input#link.form-control(type='url', name='link', value=item.link)
 
-        .row
-          .any.items
-            input.right-margin.button-primary(type='submit', value='Update')
-            a.button.right-margin.button-danger(href='#delete', rel="modal:open") Delete
-            a.button(href=`/gateway/get-children/${item.parentId}`) Cancel
+        #body.form-group
+          label(for='body2')
+          textarea#body2.form-control(name='body')= item.body
 
 
-  #delete(style="display:none;")
-    p Are you sure you want to <b>delete</b> this? If so, please enter the text "<b>Delete</b>" below:
-    form.u-text-center(action=`/gateway/delete-item/${item._id}`,method='post')
-      label
-        .label-body Enter Word:&nbsp
-        input.u-full-width(name='delete',type='text',required,pattern='Delete',title='Please type the word: Delete')
-      input(type="hidden" value=item.parentId name='parentId')
-      input.button-danger.right-margin(type='submit', value='Delete')
-      a.button(href='#', rel="modal:close") Cancel
+        input.btn.btn-primary.m-r-1(type='submit', value='Update')
+        button.btn.btn-danger.m-r-1(type='button', data-target='#delete', data-toggle="modal") Delete
+        a.btn.btn-secondary(href=`/gateway/get-children/${item.parentId}`) Cancel
+
+
+  #delete.modal.fade
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal') &times;
+          h3.modal-title Delete Item
+        .modal-body
+          p Are you sure you want to <b>delete</b> this? If so, please enter the text "<b>Delete</b>" below:
+          form(action=`/gateway/delete-item/${item._id}`,method='post')
+            .form-group
+              label(for='item') Enter Text:
+              input.form-control#item(name='delete',type='text',required,pattern='Delete',title='Please type the word: Delete')
+        .modal-footer
+          input(type="hidden" value=item.parentId name='parentId')
+          input.btn.btn-danger.m-r-1(type='submit', value='Delete')
+          button.btn.btn-secondary(data-dismiss="modal") Cancel
 
 block scripts
   script(src='/js/gateway/addItem/index.js')

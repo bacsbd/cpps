@@ -1,12 +1,12 @@
 extends ../layouts/layout.pug
 
 block content
-  .row.u-flex
-    .any.items
+  .row.flex-items-xs-middle#fill-view
+    .col-xs
       if ( status === 'root' )
-        .u-text-center
+        .text-xs-center.small
           a(href=`/gateway/edit-item/${item._id}`) #[i.fa.fa-edit] Edit
-      .u-text-center
+      .text-xs-center.small
         a(href=`/gateway/get-children/${item.parentId}`) #[i.fa.fa-level-up] Go Up
       .markdown-body.
         <h1> #{item.title} </h1>
