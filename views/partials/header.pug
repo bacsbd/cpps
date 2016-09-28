@@ -3,7 +3,7 @@ h1.text-xs-center CPPS
 
 ul.nav.nav-tabs.m-b-1
   li.nav-item
-    a.nav-link(href='/') Home
+    a.nav-link(href='/') #[i.fa.fa-home] Home
   li.nav-item.dropdown
     .nav-item.d-inline
       a.nav-link(href='/notebook') Notebook
@@ -23,8 +23,11 @@ ul.nav.nav-tabs.m-b-1
   li.nav-item
     a.nav-link(href='/bugsandhugs') Bugs & Hugs
   if (login)
-    li.nav-item.pull-sm-right
-      a.nav-link(href='/user/logout') Logout
+    .pull-sm-right
+      li.nav-item
+        a.nav-link(href='/user/profile') #[i.fa.fa-user] Profile
+      li.nav-item
+        a.nav-link(href='/user/logout') #[i.fa.fa-sign-out] Logout
   else
     li.nav-item.pull-sm-right
-      a.nav-link(href='/user/login') Login
+      a.nav-link(href='/user/login') #[i.fa.fa-sign-in] Login

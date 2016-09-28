@@ -1,0 +1,19 @@
+extends ../layouts/layout.pug
+
+block content
+  .row.flex-items-xs-middle#fill-view
+    .offset-sm-3.col-sm-6.text-xs-center
+      h3 Profile Page
+      ul.list-group
+        .list-group-item
+          .row
+            .col-xs-2
+              i.fa.fa-envelope
+            .col-xs-8
+              span= email
+        .list-group-item
+          .row
+            .col-xs-2
+              i.fa.fa-key
+            .col-xs-8
+              a(href='/user/profile/change-password') Change Password
