@@ -37,6 +37,7 @@
     "express-session": "^1.14.0",
     "font-awesome": "^4.6.3",
     "jquery": "^3.1.0",
+    "jquery-validation": "^1.15.1",
     "marked": "^0.3.6",
     "moment": "^2.14.1",
     "mongoose": "^4.5.10",
