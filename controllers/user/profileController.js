@@ -7,14 +7,15 @@ const loginMiddleware = grabMiddleware('login');
 const User = require('mongoose').model('User');
 const recaptcha = require('express-recaptcha');
 
-const router = express.Router();
+const profileRouter = express.Router(); // '/user/profile'
 
-router.get('/profile', loginMiddleware, get_profile);
-router.get('/profile/change-password', loginMiddleware, recaptcha.middleware.render, get_changePassword);
+profileRouter.get('/', get_profile);
+profileRouter.get('/change-password', recaptcha.middleware.render, get_changePassword);
+profileRouter.post('/change-password', recaptcha.middleware.verify, post_changePassword);
 
 module.exports = {
   addRouter(app) {
-    app.use('/user', router);
+    app.use('/user/profile', loginMiddleware, profileRouter);
   }
 };
 
@@ -30,4 +31,24 @@ function get_changePassword(req, res) {
   return myRender(req, res, 'user/changePassword.pug', {
     recaptcha: req.recaptcha
   });
+}
+
+function post_changePassword(req, res) {
+  if (req.recaptcha.error) {
+    req.flash('error', 'Please complete the captcha');
+    return res.redirect('/user/profile/change-password');
+  }
+
+  const {
+    current,
+    newpass,
+    repeat
+  } = req.body;
+
+  if (newpass !== repeat) {
+    req.flash('error', 'New password does not match with retyped password');
+    return res.redirect('/user/profile/change-password');
+  }
+
+  //Check from db
 }

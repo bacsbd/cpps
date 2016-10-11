@@ -3,7 +3,7 @@ require('jquery-validation');
 $('form').validate({
   rules: {
     repeat: {
-      equalTo: '#new'
+      equalTo: '#newpass'
     }
   },
   messages: {
