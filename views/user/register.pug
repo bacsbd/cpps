@@ -6,12 +6,15 @@ block content
       h2 Register
       form(action='/user/register', method='post')
         .form-group
-          label(for='email') Email
-          input.form-control( id='email', name='email', type='email', maxlength=256, required, placeholder='Enter Email')
+          input.form-control( id='email', name='email', type='email', maxlength=256, required, placeholder='Email')
         .form-group
-          label(for='password') Password
-          input.form-control( id='password', name='password', type='password', minlength=6, maxlength=256, title='Must be between 6 to 256 characters', required, placeholder='Enter Password')
+          input.form-control( id='password', name='password', type='password', minlength=6, maxlength=256, title='Must be between 6 to 256 characters', required, placeholder='Password')
+        .form-group
+          input.form-control( id='repass', name='repass', type='password', minlength=6, maxlength=256, title='Must be between 6 to 256 characters', required, placeholder='Retype Password')
         .recaptcha.m-x-auto.m-b-1.
           !{recaptcha}
         input.btn.btn-primary(type='submit', value='Register')
       small Already a member? Click <a href='/user/login'>here</a> to Login.
+
+block scripts
+  script(src='/js/user/register.min.js')
