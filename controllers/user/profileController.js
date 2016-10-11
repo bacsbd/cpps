@@ -33,7 +33,7 @@ function get_changePassword(req, res) {
   });
 }
 
-function post_changePassword(req, res) {
+function post_changePassword(req, res, next) {
   if (req.recaptcha.error) {
     req.flash('error', 'Please complete the captcha');
     return res.redirect('/user/profile/change-password');
@@ -50,5 +50,23 @@ function post_changePassword(req, res) {
     return res.redirect('/user/profile/change-password');
   }
 
-  //Check from db
+  const email = req.session.email;
+
+  User.findOne({
+      email
+    })
+    .exec(function(err, user) {
+      if (err) return next(err);
+      if (!user) return next(err); //ULK
+      if (!user.comparePassword(current)) {
+        req.flash('error', 'Wrong password');
+        return res.redirect('/user/profile/change-password');
+      }
+      user.password = User.createHash(newpass);
+      user.save(function(err) {
+        if (err) return next(err);
+        req.flash('success', 'Password successfully changed');
+        return res.redirect('/user/profile');
+      });
+    });
 }
