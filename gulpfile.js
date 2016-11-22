@@ -18,3 +18,12 @@ gulp.task('default',
     gulp.parallel('watch', 'browser-sync')
   )
 );
+
+gulp.task('production',
+  gulp.series(
+    gulp.parallel('clean', 'client_module'),
+    'build:css',
+    gulp.parallel('build:vendor', 'copy'),
+    gulp.parallel('style:scss', 'script', 'image')
+  )
+);

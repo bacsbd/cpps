@@ -4,7 +4,7 @@
   "description": "A portal all about competitive programming and problem solving",
   "main": "index.js",
   "scripts": {
-    "run": "node index.js",
+    "run": "gulp production && forever index.js",
     "test": "./node_modules/mocha/bin/mocha --recursive --reporter spec ./tests"
   },
   "repository": {
