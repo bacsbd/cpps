@@ -1,10 +1,11 @@
 {
   "name": "cpps",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "A portal all about competitive programming and problem solving",
   "main": "index.js",
   "scripts": {
-    "start": "gulp production && forever index.js",
+    "prestart": "gulp production",
+    "start": "forever start --uid \"cpps\"index.js",
     "test": "./node_modules/mocha/bin/mocha --recursive --reporter spec ./tests"
   },
   "repository": {
