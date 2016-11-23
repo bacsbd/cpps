@@ -39,9 +39,7 @@ module.exports = function(gulp) {
         suffix: '.min'
       }))
       .pipe(buffer())
-      .pipe(sourcemaps.init())
       .pipe(uglify())
-      .pipe(sourcemaps.write())
       .pipe(gulp.dest(config.vendorOutput.js));
   });
 
