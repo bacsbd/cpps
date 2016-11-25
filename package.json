@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prestart": "gulp production",
-    "start": "forever start --uid \"cpps\"index.js",
+    "start": "forever start --uid \"cpps\" index.js",
     "test": "./node_modules/mocha/bin/mocha --recursive --reporter spec ./tests"
   },
   "repository": {
