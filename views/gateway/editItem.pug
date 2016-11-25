@@ -56,21 +56,21 @@ block content
 
 
   #delete.modal.fade
-    .modal-dialog
-      .modal-content
-        .modal-header
-          button.close(type='button', data-dismiss='modal') &times;
-          h3.modal-title Delete Item
-        .modal-body
-          p Are you sure you want to <b>delete</b> this? If so, please enter the text "<b>Delete</b>" below:
-          form(action=`/gateway/delete-item/${item._id}`,method='post')
+    form(action=`/gateway/delete-item/${item._id}`,method='post')
+      .modal-dialog
+        .modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal') &times;
+            h3.modal-title Delete Item
+          .modal-body
+            p Are you sure you want to <b>delete</b> this? If so, please enter the text "<b>Delete</b>" below:
             .form-group
               label(for='item') Enter Text:
               input.form-control#item(name='delete',type='text',required,pattern='Delete',title='Please type the word: Delete')
-        .modal-footer
-          input(type="hidden" value=item.parentId name='parentId')
-          input.btn.btn-danger.m-r-1(type='submit', value='Delete')
-          button.btn.btn-secondary(data-dismiss="modal") Cancel
+          .modal-footer
+            input(type="hidden" value=item.parentId name='parentId')
+            input.btn.btn-danger.m-r-1(type='submit', value='Delete')
+            button.btn.btn-secondary(data-dismiss="modal") Cancel
 
 block scripts
   script(src='/js/gateway/addItem/index.js')

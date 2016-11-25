@@ -20,7 +20,7 @@ router.get('/add-item/:parentId', rootMiddleware, get_addItem_ParentId);
 router.get('/edit-item/:id', rootMiddleware, get_editItem_Id);
 router.post('/add-item', rootMiddleware, post_addItem);
 router.post('/edit-item', rootMiddleware, post_editItem);
-router.post('/delete-item/:id', rootMiddleware, get_deleteItem_Id);
+router.post('/delete-item/:id', rootMiddleware, post_deleteItem_Id);
 router.get('/read-item/:id', get_readItem_Id);
 
 module.exports = {
@@ -124,7 +124,7 @@ function post_editItem(req, res, next) {
   });
 }
 
-function get_deleteItem_Id(req, res, next) {
+function post_deleteItem_Id(req, res, next) {
   const id = req.params.id;
   const parentId = req.body.parentId;
   if (req.body.delete !== 'Delete') {

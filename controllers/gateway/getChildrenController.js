@@ -34,6 +34,8 @@ function get_getChildren_ParentId(req, res, next) {
         })
         .exec(function(err, root) {
           if (err) return cb(err);
+          if (!root) return cb(new Error('No such document found'));
+
           getItemStats(req, root, cb);
         });
     },
