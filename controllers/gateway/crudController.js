@@ -115,12 +115,35 @@ function post_editItem(req, res, next) {
       req.flash('error', 'No such item found for edit');
       return res.redirect(`/gateway/get-children/${rootStr}`);
     }
-    syncModel(item, req.body);
-    item.save(function(err) {
-      if (err) return next(err);
-      req.flash('success', 'Edit Successful');
-      return res.redirect(`/gateway/edit-item/${id}`);
-    });
+
+    if (item.parentId !== req.body.parentId) {
+      ///Update ancestor
+      syncModel(item, req.body);
+      Gate.findOne({
+          _id: item.parentId
+        })
+        .select('ancestor')
+        .exec(function(err, x) {
+          if (err) return next(err);
+          if (!x) {
+            req.flash('error', `No such parent with id ${item.parentId}`);
+            return res.redirect(`/gateway/add-item/${item.parentId}`);
+          }
+          item.ancestor = x.ancestor.concat(item.parentId);
+          item.save(function(err) {
+            if (err) return next(err);
+            req.flash('success', 'Edit Successful');
+            return res.redirect(`/gateway/edit-item/${id}`);
+          });
+        });
+    } else {
+      syncModel(item, req.body);
+      item.save(function(err) {
+        if (err) return next(err);
+        req.flash('success', 'Edit Successful');
+        return res.redirect(`/gateway/edit-item/${id}`);
+      });
+    }
   });
 }
 
