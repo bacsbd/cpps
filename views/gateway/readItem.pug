@@ -1,7 +1,7 @@
 extends ../layouts/layout.pug
 
 block content
-  .row.flex-items-xs-middle#fill-view
+  .row#fill-view
     .col-xs
       if ( status === 'root' )
         .text-xs-center.small
@@ -9,5 +9,5 @@ block content
       .text-xs-center.small
         a(href=`/gateway/get-children/${item.parentId}`) #[i.fa.fa-level-up] Go Up
       .markdown-body.
-        <h1> #{item.title} </h1>
+        <h1> #{item.title} - Hints </h1>
         !{item.body}

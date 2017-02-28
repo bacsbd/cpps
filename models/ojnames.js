@@ -3,6 +3,7 @@ module.exports = {
     'CF',
     'HR',
     'HDU',
+    'LeetCode',
     'LOJ',
     'POJ',
     'SPOJ',
