@@ -6,9 +6,9 @@ const recaptcha = require('express-recaptcha');
 const app = express();
 const server = require('http').createServer(app);
 const rootPath = world.rootPath;
-const secret = require('./secret.js');
+const secret = require('forthright48/world').secretModule;
 
-app.set('port', 8002);
+app.set('port', process.env.PORT || 8002);
 app.set('view engine', 'pug');
 app.set('views', path.join(rootPath, './views'));
 

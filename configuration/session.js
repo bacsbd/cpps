@@ -1,6 +1,6 @@
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
-const secret = require('../secret.js').secret;
+const secret = require('forthright48/world').secretModule.secret;
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 

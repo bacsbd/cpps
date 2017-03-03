@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const dburl = require('../secret.js').dburl;
+const dburl = require('forthright48/world').secretModule.dburl;
 
 mongoose.Promise = global.Promise;
 mongoose.connect(dburl, function(err) {
