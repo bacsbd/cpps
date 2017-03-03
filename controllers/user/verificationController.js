@@ -69,8 +69,8 @@ function get_send_code(req, res) {
     to: [req.session.email],
     from: 'no-reply@forthright48.com',
     subject: 'Verfication Code for CPPS',
-    text: `Here is your verification code: "${req.session.verificationValue}"`,
-    html: `Here is your verification code: "<b> ${req.session.verificationValue}</b>"`
+    text: `Here is your verification code: ${req.session.verificationValue}`,
+    html: `Here is your verification code: <b>${req.session.verificationValue}</b>`
   };
 
   mailer.sendMail(email, function(err) {
