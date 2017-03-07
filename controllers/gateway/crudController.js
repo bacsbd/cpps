@@ -5,7 +5,10 @@ const {
   grabMiddleware,
   rootPath
 } = require('forthright48/world');
-const rootMiddleware = grabMiddleware('root');
+const {
+  isRoot,
+  isAdmin
+} = grabMiddleware('userGroup');
 const Gate = require('mongoose').model('Gate');
 const ojnames = require(path.join(rootPath, 'models/ojnames.js'));
 const rootStr = '000000000000000000000000';
@@ -16,11 +19,11 @@ const async = require('async');
 const router = express.Router();
 
 router.get('/', get_index);
-router.get('/add-item/:parentId', rootMiddleware, get_addItem_ParentId);
-router.get('/edit-item/:id', rootMiddleware, get_editItem_Id);
-router.post('/add-item', rootMiddleware, post_addItem);
-router.post('/edit-item', rootMiddleware, post_editItem);
-router.post('/delete-item/:id', rootMiddleware, post_deleteItem_Id);
+router.get('/add-item/:parentId', isAdmin, get_addItem_ParentId);
+router.get('/edit-item/:id', isAdmin, get_editItem_Id);
+router.post('/add-item', isAdmin, post_addItem);
+router.post('/edit-item', isAdmin, post_editItem);
+router.post('/delete-item/:id', isRoot, post_deleteItem_Id);
 router.get('/read-item/:id', get_readItem_Id);
 
 module.exports = {
