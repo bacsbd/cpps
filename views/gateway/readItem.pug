@@ -3,7 +3,7 @@ extends ../layouts/layout.pug
 block content
   .row#fill-view
     .col-xs
-      if ( status === 'root' )
+      if ( superUser )
         .text-xs-center.small
           a(href=`/gateway/edit-item/${item._id}`) #[i.fa.fa-edit] Edit
       .text-xs-center.small

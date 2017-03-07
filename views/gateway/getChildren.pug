@@ -6,7 +6,7 @@ block content
       .small
         if ( root.parentId )
           a.m-r-1(href=`/gateway/get-children/${root.parentId}`) #[i.fa.fa-level-up] Go Up
-        if (status === 'root')
+        if (superUser)
           a(href="/gateway/add-item/"+root._id) #[i.fa.fa-plus] Insert
       .row.flex-items-xs-middle
         .col-sm-4
@@ -19,14 +19,14 @@ block content
           th Title
           th Type
           th Action
-          if (status === 'root')
+          if (superUser)
             th Admin
         tbody
           each val, index in items
             tr
               td
                 span= index + 1
-                if (status === 'root')
+                if (superUser)
                   span= " | " + val.ind
               if val.type !== "problem" && val.type !== "text"
                 td= val.title
@@ -47,5 +47,5 @@ block content
                     span= " | "
                     a(href="/gateway/read-item/"+val._id) Hints
 
-              if (status === 'root')
+              if (superUser)
                 td #[a(href="/gateway/edit-item/"+val._id) Edit]

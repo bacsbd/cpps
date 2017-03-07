@@ -3,7 +3,7 @@ extends ../layouts/layout.pug
 block content
   .row#fill-view
     .col-sm
-      if ( status === 'root' )
+      if ( superUser )
         .text-xs-center
           a(href='/notebook/add-note') #[i.fa.fa-plus] Add
           a.m-l-1(href=`/notebook/edit-note/${note.slug}`) #[i.fa.fa-edit] Edit
