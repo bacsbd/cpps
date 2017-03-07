@@ -1,14 +1,18 @@
 const express = require('express');
-const myRender = require('forthright48/world').myRender;
+const {
+  myRender,
+  grabMiddleware
+} = require('forthright48/world');
 const User = require('mongoose').model('User');
 const recaptcha = require('express-recaptcha');
+const allowSignUp = grabMiddleware('allowSignUp');
 
 const router = express.Router();
 
 router.get('/login', get_login);
 router.post('/login', post_login);
-router.get('/register', recaptcha.middleware.render, get_register);
-router.post('/register', recaptcha.middleware.verify, post_register);
+router.get('/register', [recaptcha.middleware.render, allowSignUp], get_register);
+router.post('/register', [recaptcha.middleware.verify, allowSignUp], post_register);
 router.get('/logout', get_logout);
 
 module.exports = {
