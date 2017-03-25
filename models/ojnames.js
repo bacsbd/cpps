@@ -1,6 +1,7 @@
 module.exports = {
   data: [
     'CF',
+    'CodeChef',
     'HR',
     'HDU',
     'LeetCode',
