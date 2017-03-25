@@ -18,20 +18,27 @@ const noteSchema = new mongoose.Schema({
     type: String
   },
   createdBy: {
-    type: String,
-    required: true
+    type: String
+    // required: true enforced by system
   },
   lastUpdatedBy: {
-    type: String,
-    required: true
+    type: String
+    // required: true enforced by system
   }
 }, {
   timestamps: true
 });
 
-mongoose.model('Notebook', noteSchema);
-
 function matchSlug(val) {
-  const re = new RegExp('a-z0-9-+');
+  const re = new RegExp('[a-z0-9-]+');
   return re.test(val);
 }
+
+noteSchema.pre('save', function(next, req) {
+  const doc = this;
+  if (!doc.createdBy) doc.createdBy = req.session.email;
+  doc.lastUpdatedBy = req.session.email;
+  next();
+});
+
+mongoose.model('Notebook', noteSchema);

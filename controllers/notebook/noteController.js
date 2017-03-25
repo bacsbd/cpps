@@ -45,7 +45,7 @@ function post_addNote(req, res) {
     body: req.body.body
   });
 
-  note.save(function(err) {
+  note.save(req, function(err) {
     if (err) {
       if (err.code === 11000) {
         req.flash('error', 'Slug name already exists');
@@ -107,7 +107,7 @@ function post_editNote_Slug(req, res, next) {
     note.slug = slug;
     note.body = body;
 
-    note.save(function(err) {
+    note.save(req, function(err) {
       if (err) {
         if (err.code === 11000) {
           req.flash('error', 'Slug name already exists');

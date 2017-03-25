@@ -98,7 +98,7 @@ function post_addItem(req, res, next) {
 
       /// Ready to save our item
       const itemModel = new Gate(item);
-      itemModel.save(function(err) {
+      itemModel.save(req, function(err) {
         if (err) return next(err);
         return res.redirect(`/gateway/get-children/${item.parentId}`);
       });
@@ -133,7 +133,7 @@ function post_editItem(req, res, next) {
             return res.redirect(`/gateway/add-item/${item.parentId}`);
           }
           item.ancestor = x.ancestor.concat(item.parentId);
-          item.save(function(err) {
+          item.save(req, function(err) {
             if (err) return next(err);
             req.flash('success', 'Edit Successful');
             return res.redirect(`/gateway/edit-item/${id}`);
@@ -141,7 +141,7 @@ function post_editItem(req, res, next) {
         });
     } else {
       syncModel(item, req.body);
-      item.save(function(err) {
+      item.save(req, function(err) {
         if (err) return next(err);
         req.flash('success', 'Edit Successful');
         return res.redirect(`/gateway/edit-item/${id}`);

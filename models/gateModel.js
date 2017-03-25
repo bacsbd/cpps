@@ -48,7 +48,15 @@ const schema = new mongoose.Schema({
     set: removeNullOrBlank,
     trim: true
   },
-  doneList: [mongoose.Schema.ObjectId] ///Stores the userID who solved the problem
+  doneList: [mongoose.Schema.ObjectId], ///Stores the userID who solved the problem
+  createdBy: {
+    type: String
+    // required: true enforced by system
+  },
+  lastUpdatedBy: {
+    type: String
+    // required: true enforced by system
+  }
 }, {
   timestamps: true
 });
@@ -56,6 +64,13 @@ const schema = new mongoose.Schema({
 schema.statics.getRoot = function() {
   return mongoose.Types.ObjectId('000000000000000000000000');
 };
+
+schema.pre('save', function(next, req) {
+  const doc = this;
+  if (!doc.createdBy) doc.createdBy = req.session.email;
+  doc.lastUpdatedBy = req.session.email;
+  next();
+});
 
 mongoose.model('Gate', schema);
 
