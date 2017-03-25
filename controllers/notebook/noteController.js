@@ -111,10 +111,10 @@ function post_editNote_Slug(req, res, next) {
       if (err) {
         if (err.code === 11000) {
           req.flash('error', 'Slug name already exists');
-          req.body.slug = pslug;
         } else {
-          req.flash('error', `Some error with code ${err.code}`);
+          req.flash('error', err.toString());
         }
+        req.body.slug = pslug;
       } else {
         req.flash('success', 'Edited successfully');
       }

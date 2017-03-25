@@ -7,7 +7,9 @@ block content
         .text-xs-center
           a(href='/notebook/add-note') #[i.fa.fa-plus] Add
           a.m-l-1(href=`/notebook/edit-note/${note.slug}`) #[i.fa.fa-edit] Edit
-
       .markdown-body.
         <h1> #{note.title} </h1>
+        <small><b> Created By: #{note.createdBy} &nbsp;&nbsp;&nbsp; Created At: #{note.createdAt.toDateString()} &nbsp;&nbsp;&nbsp; Updated By: #{note.updatedBy} &nbsp;&nbsp;&nbsp; Updated At: #{note.updatedAt.toDateString()} </b></small>
+        <br/>
+        <br/>
         !{note.body}

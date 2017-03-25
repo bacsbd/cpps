@@ -9,13 +9,21 @@ const noteSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    validator: {
-      validate: matchSlug,
-      message: 'Small letters, digits and hyphens only'
+    validate: {
+      validator: matchSlug,
+      message: 'Invalid Slug - Small letters, digits and hyphens only'
     }
   },
   body: {
     type: String
+  },
+  createdBy: {
+    type: String,
+    required: true
+  },
+  lastUpdatedBy: {
+    type: String,
+    required: true
   }
 }, {
   timestamps: true
@@ -24,6 +32,6 @@ const noteSchema = new mongoose.Schema({
 mongoose.model('Notebook', noteSchema);
 
 function matchSlug(val) {
-  const re = /a-z0-9\-+/;
+  const re = new RegExp('a-z0-9-+');
   return re.test(val);
 }
