@@ -119,9 +119,11 @@ function post_editItem(req, res, next) {
       return res.redirect(`/gateway/get-children/${rootStr}`);
     }
 
+    syncModel(item, req.body);
+
+    // Relocation of item
     if (item.parentId !== req.body.parentId) {
       ///Update ancestor
-      syncModel(item, req.body);
       Gate.findOne({
           _id: item.parentId
         })
@@ -132,15 +134,17 @@ function post_editItem(req, res, next) {
             req.flash('error', `No such parent with id ${item.parentId}`);
             return res.redirect(`/gateway/add-item/${item.parentId}`);
           }
-          item.ancestor = x.ancestor.concat(item.parentId);
-          item.save(req, function(err) {
+          async.series([ ///Fix subtree
+            function(callback) {
+              fixAncestorOfNode(req, x, item, callback);
+            }
+          ], function(err) {
             if (err) return next(err);
             req.flash('success', 'Edit Successful');
             return res.redirect(`/gateway/edit-item/${id}`);
           });
         });
-    } else {
-      syncModel(item, req.body);
+    } else { // Just save it
       item.save(req, function(err) {
         if (err) return next(err);
         req.flash('success', 'Edit Successful');
@@ -148,6 +152,28 @@ function post_editItem(req, res, next) {
       });
     }
   });
+
+  /** A recursive function to update ancestor of a subtree
+
+      Useful when relocating folders
+  */
+  function fixAncestorOfNode(req, parent, node, done) {
+    node.ancestor = parent.ancestor.concat(parent._id); //Update ancestor
+    node.save(req, function(err) { //Save node
+      if (err) return done(err);
+      Gate.find({ ///Update children
+        parentId: node._id
+      }).exec(function(err, items) {
+        if (err) return done(err);
+        async.forEach(items, function(item, itemCB) {
+          fixAncestorOfNode(req, node, item, itemCB);
+        }, function(err) {
+          if (err) return done(err);
+          return done();
+        });
+      });
+    });
+  }
 }
 
 function post_deleteItem_Id(req, res, next) {
