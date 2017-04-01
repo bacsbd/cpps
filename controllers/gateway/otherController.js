@@ -2,7 +2,7 @@ const express = require('express');
 const {
   myRender
 } = require('forthright48/world');
-const Notebook = require('mongoose').model('Notebook');
+const Gate = require('mongoose').model('Gate');
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ router.get('/recent', get_recent);
 
 module.exports = {
   addRouter(app) {
-    app.use('/notebook', router);
+    app.use('/gateway', router);
   }
 };
 
@@ -18,19 +18,23 @@ module.exports = {
  *Implementation
  */
 function get_recent(req, res, next) {
-  Notebook
-    .find()
-    .select('updatedAt createdAt title slug')
+  /**Responsible for showing recent problem list to user*/
+
+  Gate
+    .find({
+      type: 'problem'
+    })
+    .select('updatedAt createdAt title platform pid parentId')
     .sort({
       updatedAt: -1
     })
     .limit(25)
-    .exec(function(err, notes) {
+    .exec(function(err, problems) {
       if (err) {
         return next(err);
       }
-      return myRender(req, res, 'notebook/recent', {
-        notes
+      return myRender(req, res, 'gateway/recent', {
+        problems
       });
     });
 }

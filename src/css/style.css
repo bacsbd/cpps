@@ -2,7 +2,13 @@
   margin-left: auto;
   margin-right: auto;
 }
+
 textarea {
   height: 50rem;
   resize: none;
+}
+
+.table-cell-center td, .table-cell-center th {
+  text-align: center;
+  vertical-align: middle;
 }

@@ -1,0 +1,19 @@
+extends ../layouts/layout.pug
+
+block content
+  .row.flex-items-xs-middle#fill-view
+    .col-xs
+      h3.text-xs-center Recently Added/Modified
+      table.table.table-cell-center
+        thead
+          tr
+            th Modified
+            th Created
+            th Title
+        tbody
+        each p in problems
+          tr
+            td.moment-date= p.updatedAt
+            td.moment-date= p.createdAt
+            td
+              a(href=`/gateway/get-children/${p.parentId}`) #{p.platform} #{p.pid} #{p.title}
