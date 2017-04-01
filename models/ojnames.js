@@ -2,6 +2,8 @@ module.exports = {
   data: [
     'CF',
     'CodeChef',
+    'FHC',
+    'GCJ',
     'HR',
     'HE',
     'HDU',
@@ -9,8 +11,10 @@ module.exports = {
     'LOJ',
     'POJ',
     'SPOJ',
+    'TJU',
     'Toph',
     'URAL',
+    'URI',
     'UVa',
     'UVaLive',
     'ZOJ'
