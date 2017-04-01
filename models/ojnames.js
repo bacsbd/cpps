@@ -2,7 +2,8 @@ module.exports = {
   data: [
     'CF',
     'CodeChef',
-    'HR',
+    'HackerRank',
+    'HackerEarth',
     'HDU',
     'LeetCode',
     'LOJ',

@@ -14,8 +14,8 @@ module.exports = {
       saveUninitialized: false,
       store: new MongoStore({
         mongooseConnection: mongoose.connection,
-        ttl: 24 * 60 * 60,
-        touchAfter: 24 * 3600
+        ttl: 2 * 60 * 60,
+        touchAfter: 2 * 3600
       })
     }));
   }
