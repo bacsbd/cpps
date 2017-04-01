@@ -7,8 +7,8 @@ block content
       table.table.table-cell-center
         thead
           tr
-            th Modified
             th Created
+            th Modified
             th Slug
             th Title
             if ( superUser )
@@ -16,8 +16,8 @@ block content
         tbody
         each note in notes
           tr
-            td.moment-date= note.updatedAt
             td.moment-date= note.createdAt
+            td.moment-date= note.updatedAt
             td #[a(href=`/notebook/view-note/${note.slug}`) #{note.slug}]
             td= note.title
             if ( superUser )
