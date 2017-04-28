@@ -43,6 +43,7 @@ require('./controllers/index/indexController.js').addRouter(app);
 require('./controllers/user/loginController.js').addRouter(app);
 require('./controllers/user/verificationController.js').addRouter(app);
 require('./controllers/user/profileController.js').addRouter(app);
+require('./controllers/user/inviteController.js').addRouter(app);
 
 require('./controllers/notebook/noteController.js').addRouter(app);
 require('./controllers/notebook/otherController.js').addRouter(app);
