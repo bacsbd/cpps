@@ -23,7 +23,7 @@ Implementation
 function addDoneList(req, res, next) {
   const ID = req.params.ID;
   const redirect = req.query.redirect || '000000000000000000000000';
-  const userID = req.session.userID;
+  const userId = req.session.userId;
 
   if (!req.session.login) {
     req.flash('error', 'Login required');
@@ -34,7 +34,7 @@ function addDoneList(req, res, next) {
     _id: ID
   }, {
     $addToSet: {
-      doneList: userID
+      doneList: userId
     }
   }, function(err) {
     if (err) return next(err);
@@ -46,7 +46,7 @@ function addDoneList(req, res, next) {
 function removeDoneList(req, res, next) {
   const ID = req.params.ID;
   const redirect = req.query.redirect || '000000000000000000000000';
-  const userID = req.session.userID;
+  const userId = req.session.userId;
 
   if (!req.session.login) {
     req.flash('error', 'Login required');
@@ -57,7 +57,7 @@ function removeDoneList(req, res, next) {
     _id: ID
   }, {
     $pull: {
-      doneList: userID
+      doneList: userId
     }
   }, function(err) {
     if (err) return next(err);
