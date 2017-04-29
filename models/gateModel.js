@@ -62,7 +62,7 @@ const schema = new mongoose.Schema({
 });
 
 schema.statics.getRoot = function() {
-  return mongoose.Types.ObjectId('000000000000000000000000');
+  return mongoose.Types.ObjectId('000000000000000000000000'); // eslint-disable-line
 };
 
 schema.pre('save', function(next, req) {

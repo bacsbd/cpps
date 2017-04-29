@@ -64,7 +64,7 @@ function post_invite(req, res) {
       if (err) {
         req.flash('error', 'There was some error while sending verification code. Try again.');
       } else {
-        req.flash('success', 'Verification Code sent to your email');
+        req.flash('success', 'Verification Code sent to User');
       }
       return res.redirect('/user/invite');
     });

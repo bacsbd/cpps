@@ -19,6 +19,8 @@ block content
           th Title
           th Type
           th Action
+          if (login)
+            th Done
           if (superUser)
             th Admin
         tbody
@@ -46,6 +48,8 @@ block content
                   if val.body
                     span= " | "
                     a(href="/gateway/read-item/"+val._id) Hints
-
+              if (login)
+                td
+                  a(href=`/gateway/doneStat/add-done-list/${val._id}?redirect=${root._id}`) #[i.fa.fa-square-o(aria-hidden="true")]
               if (superUser)
                 td #[a(href="/gateway/edit-item/"+val._id) Edit]
