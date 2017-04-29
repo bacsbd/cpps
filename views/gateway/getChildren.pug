@@ -49,7 +49,16 @@ block content
                     span= " | "
                     a(href="/gateway/read-item/"+val._id) Hints
               if (login)
-                td
-                  a(href=`/gateway/doneStat/add-done-list/${val._id}?redirect=${root._id}`) #[i.fa.fa-square-o(aria-hidden="true")]
+                if ( val.type === "problem" || val.type === "text" )
+                  if doneList.indexOf(val._id.toString()) > -1
+                    td
+                      a(href=`/gateway/doneStat/remove-done-list/${val._id}?redirect=${root._id}`)
+                        i.fa.fa-check-square(aria-hidden="true")
+                  else
+                    td
+                      a(href=`/gateway/doneStat/add-done-list/${val._id}?redirect=${root._id}`)
+                        i.fa.fa-square-o(aria-hidden="true")
+                else
+                  td ---
               if (superUser)
                 td #[a(href="/gateway/edit-item/"+val._id) Edit]

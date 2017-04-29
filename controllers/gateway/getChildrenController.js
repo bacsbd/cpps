@@ -57,13 +57,36 @@ function get_getChildren_ParentId(req, res, next) {
             return cb(null, items);
           });
         });
+    },
+    doneList(cb) {
+      ///Get done list from user
+      if (req.session.login) {
+        const userId = req.session.userId;
+        Gate
+          .find({
+            parentId,
+            doneList: userId
+          })
+          .select('_id')
+          .exec(function(err, arr) {
+            if (err) return cb(err);
+
+            const brr = arr.map(function(val) {
+              return val._id.toString();
+            });
+
+            return cb(null, brr);
+          });
+      } else {
+        return cb(null, []);
+      }
     }
   }, function(err, result) {
     if (err) return next(err);
     return myRender(req, res, 'gateway/getChildren', {
       root: result.root,
       items: result.items,
-      doneList: []
+      doneList: result.doneList
     });
   });
 }
