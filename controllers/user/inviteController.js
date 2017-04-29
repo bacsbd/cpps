@@ -1,5 +1,6 @@
 /**
   URL Path: /user/invite
+  Logic for inviting new users directly, bypassing the registration
 */
 
 const express = require('express');
@@ -51,7 +52,7 @@ function post_invite(req, res) {
     req.flash('success', 'Successfully registered');
 
     //Send activation email
-    const email = {
+    const emailMail = {
       to: [email],
       from: 'no-reply@nsups.com',
       subject: 'You are invited to join NSUPS Gateway',
@@ -59,7 +60,7 @@ function post_invite(req, res) {
       html: `Your password is <b>${req.body.password}</b>. Please make sure that you change it. Here is your verification code: <b>${user.verificationValue}</b>`
     };
 
-    mailer.sendMail(email, function(err) {
+    mailer.sendMail(emailMail, function(err) {
       if (err) {
         req.flash('error', 'There was some error while sending verification code. Try again.');
       } else {
