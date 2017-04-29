@@ -50,14 +50,16 @@ block content
                     a(href="/gateway/read-item/"+val._id) Hints
               if (login)
                 if ( val.type === "problem" || val.type === "text" )
-                  if doneList.indexOf(val._id.toString()) > -1
-                    td
+                  td
+                    if doneList.indexOf(val._id.toString()) > -1
                       a(href=`/gateway/doneStat/remove-done-list/${val._id}?redirect=${root._id}`)
                         i.fa.fa-check-square(aria-hidden="true")
-                  else
-                    td
+                    else
                       a(href=`/gateway/doneStat/add-done-list/${val._id}?redirect=${root._id}`)
                         i.fa.fa-square-o(aria-hidden="true")
+                    span &nbsp; &nbsp;
+                    i.fa.fa-user-times(aria-hidden="true")
+                    span= val.userSolved
                 else
                   td ---
               if (superUser)

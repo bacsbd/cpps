@@ -93,13 +93,12 @@ function get_getChildren_ParentId(req, res, next) {
 
 ///Responsible for getting total number of items under it's folder and how many user has solved
 function getItemStats(req, item, cb) {
-  if (item.type !== 'folder') {
-    ///Nothing to do here
-    return cb(null);
-  }
-
   async.parallel({
     totalCount(pcb) {
+      if (item.type !== 'folder') {
+        ///Nothing to do here
+        return pcb(null);
+      }
       Gate.count({
           ancestor: item._id,
           type: {
@@ -113,6 +112,10 @@ function getItemStats(req, item, cb) {
         });
     },
     userCount(pcb) {
+      if (item.type !== 'folder') {
+        ///Nothing to do here
+        return pcb(null);
+      }
       const sess = req.session || {};
       ///Usercount is '--' if user is not logged in
       if (!sess.login) {
@@ -130,6 +133,29 @@ function getItemStats(req, item, cb) {
         .exec(function(err, total) {
           if (err) return pcb(err);
           item.userCount = total;
+          return pcb(null);
+        });
+    },
+    totalSolved(pcb) {
+      if (item.type === 'folder') {
+        ///Nothing to do here
+        return pcb(null);
+      }
+      Gate
+        .aggregate([{
+          $match: {
+            _id: item._id
+          }
+        }, {
+          $project: {
+            userSolved: {
+              $size: '$doneList'
+            }
+          }
+        }])
+        .exec(function(err, result) {
+          if (err) return pcb(err);
+          item.userSolved = result[0].userSolved;
           return pcb(null);
         });
     }
