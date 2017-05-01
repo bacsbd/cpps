@@ -4,7 +4,7 @@ block content
   .row.align-items-center#fill-view
     .offset-sm-3.col-sm-6.text-center
       h2 Invite User
-      form(action='/user/invite', method='post')
+      form(action='/admin/invite-user', method='post')
         .form-group
           label(for='email') Email
           input.form-control( id='email', name='email', type='email', maxlength=256, required, placeholder='Enter Email')
