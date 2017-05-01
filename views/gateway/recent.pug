@@ -8,12 +8,10 @@ block content
         thead
           tr
             th Created
-            th Modified
             th Title
         tbody
         each p in problems
           tr
             td.moment-date= p.createdAt
-            td.moment-date= p.updatedAt
             td
               a(href=`/gateway/get-children/${p.parentId}`) #{p.platform} #{p.pid} #{p.title}

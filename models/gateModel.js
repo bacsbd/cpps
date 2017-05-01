@@ -67,6 +67,7 @@ schema.statics.getRoot = function() {
 
 schema.pre('save', function(next, req) {
   const doc = this;
+  if (doc.isModified('doneList')) return next(); // Don't update when doneList gets changed
   if (!doc.createdBy) doc.createdBy = req.session.email;
   doc.lastUpdatedBy = req.session.email;
   next();

@@ -24,9 +24,9 @@ function get_recent(req, res, next) {
     .find({
       type: 'problem'
     })
-    .select('updatedAt createdAt title platform pid parentId')
+    .select('createdAt title platform pid parentId')
     .sort({
-      updatedAt: -1
+      createdAt: -1
     })
     .limit(25)
     .exec(function(err, problems) {
