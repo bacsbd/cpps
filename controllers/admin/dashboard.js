@@ -1,6 +1,6 @@
 /**
-  URL Path: /user/invite
-  Logic for inviting new users directly, bypassing the registration
+  URL Path: /admin
+  Dashboard for admins
 */
 
 const express = require('express');
@@ -14,20 +14,25 @@ const mailer = require('forthright48/mailer').mailer;
 
 const router = express.Router();
 
-router.get('/', userGroup.isAdmin, get_invite);
-router.post('/', userGroup.isAdmin, post_invite);
+router.get('/dashboard', get_dashboard);
+router.get('/invite-user', get_invite);
+router.post('/invite-user', post_invite);
 
 module.exports = {
   addRouter(app) {
-    app.use('/user/invite', router);
+    app.use('/admin', userGroup.isAdmin, router);
   }
 };
 
 /**
  *Implementation
  */
+function get_dashboard(req, res) {
+  return myRender(req, res, 'admin/dashboard');
+}
+
 function get_invite(req, res) {
-  return myRender(req, res, 'user/invite');
+  return myRender(req, res, 'admin/invite');
 }
 
 function post_invite(req, res) {
@@ -47,7 +52,7 @@ function post_invite(req, res) {
       } else {
         req.flash('error', `An error occured. Error code: ${err.code}`);
       }
-      return res.redirect('/user/invite');
+      return res.redirect('/admin/invite-user');
     }
     req.flash('success', 'Successfully registered');
 
@@ -57,7 +62,7 @@ function post_invite(req, res) {
       from: 'no-reply@nsups.com',
       subject: 'You are invited to join NSUPS Gateway',
       text: `Welcome to NSUPS Gateway (nsups.herokuapp.com). Your password is ${req.body.password}. Please make sure that you change it. Here is your verification code: ${user.verificationValue}`,
-      html: `Welcome to NSUPS Gateway (<a href="https://nsups.herokuapp.com/">nsups.herokuapp.com</a>). 
+      html: `Welcome to NSUPS Gateway (<a href="https://nsups.herokuapp.com/">nsups.herokuapp.com</a>).
       Your password is <b>${req.body.password}</b>. Please make sure that you change it. Here is your verification code: <b>${user.verificationValue}</b>`
     };
 
@@ -67,7 +72,7 @@ function post_invite(req, res) {
       } else {
         req.flash('success', 'Verification Code sent to User');
       }
-      return res.redirect('/user/invite');
+      return res.redirect('/admin/invite-user');
     });
   });
 }

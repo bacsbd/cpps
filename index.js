@@ -38,12 +38,13 @@ app.use(require('./middlewares/verification.js'));
 /****/
 
 /*Routers*/
+require('./controllers/admin/dashboard.js').addRouter(app);
+
 require('./controllers/index/indexController.js').addRouter(app);
 
 require('./controllers/user/loginController.js').addRouter(app);
 require('./controllers/user/verificationController.js').addRouter(app);
 require('./controllers/user/profileController.js').addRouter(app);
-require('./controllers/user/inviteController.js').addRouter(app);
 
 require('./controllers/notebook/noteController.js').addRouter(app);
 require('./controllers/notebook/otherController.js').addRouter(app);
@@ -57,6 +58,7 @@ require('./controllers/gateway/doneStat.js').addRouter(app);
 app.use(function(err, req, res, next) {
   console.error(err.stack);
   res.status(500).send('Something broke!');
+  next();
 });
 
 app.get('*', function(req, res) {

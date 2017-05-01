@@ -24,6 +24,9 @@ ul.nav.nav-tabs.m-b-1
     a.nav-link(href='/bugsandhugs') Bugs & Hugs
   if (login)
     .pull-sm-right
+      if (superUser)
+        li.nav-item
+          a.nav-link(href='/admin/dashboard') #[i.fa.fa-user-plus] Admin
       li.nav-item
         a.nav-link(href='/user/profile') #[i.fa.fa-user] Profile
       li.nav-item
