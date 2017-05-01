@@ -2,7 +2,7 @@ extends ../layouts/layout.pug
 
 block content
   .row#fill-view
-    .col-xs
+    .col
       if ( superUser )
         .text-center.small
           a(href=`/gateway/edit-item/${item._id}`) #[i.fa.fa-edit] Edit

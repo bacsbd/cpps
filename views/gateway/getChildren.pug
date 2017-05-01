@@ -8,7 +8,7 @@ block content
           a.m-r-1(href=`/gateway/get-children/${root.parentId}`) #[i.fa.fa-level-up] Go Up
         if (superUser)
           a(href="/gateway/add-item/"+root._id) #[i.fa.fa-plus] Insert
-      .row.flex-items-xs-middle
+      .row.align-items-center
         .col-sm-4
           span Solved in this folder: #{root.userCount}/#{root.totalCount}
         .col-sm-4

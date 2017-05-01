@@ -1,25 +1,25 @@
 extends ../layouts/layout.pug
 
 block content
-  .row.flex-items-xs-middle#fill-view
+  .row.align-items-center#fill-view
     .offset-sm-3.col-sm-6.text-center
       h3 Profile Page
       ul.list-group
         .list-group-item
           .row
-            .col-xs-2
+            .col-2
               i.fa.fa-envelope
-            .col-xs-8
+            .col-8
               span= email
         .list-group-item
           .row
-            .col-xs-2
+            .col-2
               i.fa.fa-key
-            .col-xs-8
+            .col-8
               a(href='/user/profile/change-password') Change Password
         .list-group-item
           .row
-            .col-xs-2
+            .col-2
               i.fa.fa-users
-            .col-xs-8
+            .col-8
               span= status[0].toUpperCase() + status.slice(1)
