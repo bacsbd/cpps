@@ -13,6 +13,11 @@ textarea {
   vertical-align: middle;
 }
 
+.list-group-item:hover {
+  color: #292b2c;
+  background-color: #eceeef;
+}
+
 .debug {
   border: 1px red solid;
 }

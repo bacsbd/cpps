@@ -3,17 +3,18 @@ extends ../layouts/layout.pug
 block content
   .row#fill-view
     .col-sm.text-center
-      .small
-        if ( root.parentId )
-          a.m-r-1(href=`/gateway/get-children/${root.parentId}`) #[i.fa.fa-level-up] Go Up
-        if (superUser)
-          a(href="/gateway/add-item/"+root._id) #[i.fa.fa-plus] Insert
+      .row.small.mb-2
+        .col
+          if ( root.parentId )
+            a.mr-1(href=`/gateway/get-children/${root.parentId}`) #[i.fa.fa-level-up] Go Up
+          if (superUser)
+            a(href="/gateway/add-item/"+root._id) #[i.fa.fa-plus] Insert
       .row.align-items-center
         .col-sm-4
           span Solved in this folder: #{root.userCount}/#{root.totalCount}
         .col-sm-4
           h2= root.title
-      table.table.text-xs-left.table-bordered
+      table.table.text-center.table-bordered
         thead
           th Index
           th Title

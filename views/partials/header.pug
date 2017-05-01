@@ -1,9 +1,8 @@
 h1.text-center CPPS
 
-.row
+.row.mb-2
   .col.d-inline-flex.justify-content-between.nav-tabs
-
-    ul.nav.m-b-1
+    ul.nav
       li.nav-item
         a.nav-link(href='/') #[i.fa.fa-home] Home
       li.nav-item.dropdown.d-inline-flex
@@ -25,7 +24,7 @@ h1.text-center CPPS
       li.nav-item
         a.nav-link(href='/bugsandhugs') Bugs & Hugs
 
-    ul.nav.m-b-1
+    ul.nav
       if (login)
         if (superUser)
           li.nav-item
