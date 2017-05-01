@@ -1,11 +1,10 @@
 extends ../layouts/layout.pug
 
 block content
-  .row.align-items-center#fill-view
-    .offset-sm-3.col-sm-6.text-center
+  .row.align-items-center#fill-view.justify-content-center
+    .col-3.text-center
       h2 Dashboard
       .list-group
-        a(href='/admin/invite-user').list-group-item.list-group-item-action
-          .d-inline-flex.justify-content-start
-            span Invite User
-            i.fa.fa-user-plus
+        a(href='/admin/invite-user').list-group-item.list-group-item-action.d-inline-flex.justify-content-between
+          span Invite User
+          i.fa.fa-user-plus
