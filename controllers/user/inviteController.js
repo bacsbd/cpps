@@ -56,8 +56,9 @@ function post_invite(req, res) {
       to: [email],
       from: 'no-reply@nsups.com',
       subject: 'You are invited to join NSUPS Gateway',
-      text: `Your password is ${req.body.password}. Please make sure that you change it. Here is your verification code: ${user.verificationValue}`,
-      html: `Your password is <b>${req.body.password}</b>. Please make sure that you change it. Here is your verification code: <b>${user.verificationValue}</b>`
+      text: `Welcome to NSUPS Gateway (nsups.herokuapp.com). Your password is ${req.body.password}. Please make sure that you change it. Here is your verification code: ${user.verificationValue}`,
+      html: `Welcome to NSUPS Gateway (<a href="https://nsups.herokuapp.com/">nsups.herokuapp.com</a>). 
+      Your password is <b>${req.body.password}</b>. Please make sure that you change it. Here is your verification code: <b>${user.verificationValue}</b>`
     };
 
     mailer.sendMail(emailMail, function(err) {
