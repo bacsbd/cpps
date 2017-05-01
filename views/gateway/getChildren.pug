@@ -2,7 +2,7 @@ extends ../layouts/layout.pug
 
 block content
   .row#fill-view
-    .col-sm.text-xs-center
+    .col-sm.text-center
       .small
         if ( root.parentId )
           a.m-r-1(href=`/gateway/get-children/${root.parentId}`) #[i.fa.fa-level-up] Go Up

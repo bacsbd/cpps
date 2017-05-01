@@ -12,3 +12,7 @@ textarea {
   text-align: center;
   vertical-align: middle;
 }
+
+.debug {
+  border: 1px red solid;
+}

@@ -1,36 +1,39 @@
-h1.text-xs-center CPPS
+h1.text-center CPPS
 
+.row
+  .col.d-inline-flex.justify-content-between
 
-ul.nav.nav-tabs.m-b-1
-  li.nav-item
-    a.nav-link(href='/') #[i.fa.fa-home] Home
-  li.nav-item.dropdown
-    .nav-item.d-inline
-      a.nav-link(href='/notebook') Notebook
-    .nav-item.d-inline
-      a.nav-link(data-toggle='dropdown', href='#') &nbsp;#[i.fa.fa-caret-down]
-      .dropdown-menu
-        a.dropdown-item(href='/notebook/recent') Recent
-  li.nav-item.dropdown
-    .nav-item.d-inline
-      a.nav-link(href='/gateway') Gateway
-    .nav-item.d-inline
-      a.nav-link(data-toggle='dropdown', href='#') &nbsp;#[i.fa.fa-caret-down]
-      .dropdown-menu
-        a.dropdown-item(href='/gateway/recent') Recent
-  li.nav-item
-    a.nav-link(href='/faq') FAQ
-  li.nav-item
-    a.nav-link(href='/bugsandhugs') Bugs & Hugs
-  if (login)
-    .pull-sm-right
-      if (superUser)
+    ul.nav.nav-tabs.m-b-1
+      li.nav-item
+        a.nav-link(href='/') #[i.fa.fa-home] Home
+      li.nav-item.dropdown.d-inline-flex
+        .nav-item
+          a.nav-link(href='/notebook') Notebook
+        .nav-item
+          a.nav-link(data-toggle='dropdown', href='#') &nbsp;#[i.fa.fa-caret-down]
+          .dropdown-menu
+            a.dropdown-item(href='/notebook/recent') Recent
+      li.nav-item.dropdown.d-inline-flex
+        .nav-item
+          a.nav-link(href='/gateway') Gateway
+        .nav-item
+          a.nav-link(data-toggle='dropdown', href='#') &nbsp;#[i.fa.fa-caret-down]
+          .dropdown-menu
+            a.dropdown-item(href='/gateway/recent') Recent
+      li.nav-item
+        a.nav-link(href='/faq') FAQ
+      li.nav-item
+        a.nav-link(href='/bugsandhugs') Bugs & Hugs
+
+    ul.nav.nav-tabs.m-b-1
+      if (login)
+        if (superUser)
+          li.nav-item
+            a.nav-link(href='/admin/dashboard') #[i.fa.fa-dashboard] Admin
         li.nav-item
-          a.nav-link(href='/admin/dashboard') #[i.fa.fa-user-plus] Admin
-      li.nav-item
-        a.nav-link(href='/user/profile') #[i.fa.fa-user] Profile
-      li.nav-item
-        a.nav-link(href='/user/logout') #[i.fa.fa-sign-out] Logout
-  else
-    li.nav-item.pull-sm-right
-      a.nav-link(href='/user/login') #[i.fa.fa-sign-in] Login
+          a.nav-link(href='/user/profile') #[i.fa.fa-user] Profile
+        li.nav-item
+          a.nav-link(href='/user/logout') #[i.fa.fa-sign-out] Logout
+      else
+        li.nav-item
+          a.nav-link(href='/user/login') #[i.fa.fa-sign-in] Login

@@ -6,7 +6,6 @@ const browserify = require('browserify');
 const glob = require('glob');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
-const fs = require('fs');
 const config = require('./config.js');
 const sourcemaps = require('gulp-sourcemaps');
 

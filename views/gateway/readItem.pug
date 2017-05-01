@@ -4,9 +4,9 @@ block content
   .row#fill-view
     .col-xs
       if ( superUser )
-        .text-xs-center.small
+        .text-center.small
           a(href=`/gateway/edit-item/${item._id}`) #[i.fa.fa-edit] Edit
-      .text-xs-center.small
+      .text-center.small
         a(href=`/gateway/get-children/${item.parentId}`) #[i.fa.fa-level-up] Go Up
       .markdown-body.
         <h1> #{item.title} - Hints </h1>

@@ -4,7 +4,7 @@ block content
   .row#fill-view
     .col-sm
       if ( superUser )
-        .text-xs-center
+        .text-center
           a(href='/notebook/add-note') #[i.fa.fa-plus] Add
           a.m-l-1(href=`/notebook/edit-note/${note.slug}`) #[i.fa.fa-edit] Edit
       .markdown-body.
