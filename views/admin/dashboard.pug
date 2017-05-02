@@ -2,13 +2,12 @@ extends ../layouts/layout.pug
 
 block content
   .row.align-items-center#fill-view.justify-content-center
-    .col-3.text-center
+    .col.text-center
       h2 Dashboard
-      .list-group
-        a(href='/admin/invite-user').list-group-item.list-group-item-action.d-inline-flex.justify-content-between
+      .list-group.d-inline-flex
+        a(href='/admin/invite-user').list-group-item.list-group-item-action
+          i.fa.fa-user-plus.mr-2
           span Invite User
-          i.fa.fa-user-plus
-      .list-group
-        a(href='/admin/user-list').list-group-item.list-group-item-action.d-inline-flex.justify-content-between
+        a(href='/admin/user-list').list-group-item.list-group-item-action
+          i.fa.fa-vcard.mr-2
           span User List
-          i.fa.fa-vcard
