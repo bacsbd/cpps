@@ -64,6 +64,7 @@
     "marked": "^0.3.6",
     "moment": "^2.14.1",
     "mongoose": "^4.5.10",
+    "mongoose-paginate": "^5.0.3",
     "nodemailer": "^4.0.1",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "notifyjs-browser": "git+https://github.com/notifyjs/notifyjs.git",
@@ -72,8 +73,5 @@
     "validator": "^7.0.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
-  },
-  "devDependencies": {
-    "mongoose-paginate": "^5.0.3"
   }
 }
