@@ -17,6 +17,7 @@ const router = express.Router();
 router.get('/dashboard', get_dashboard);
 router.get('/invite-user', get_invite);
 router.post('/invite-user', post_invite);
+router.get('/user-list', get_userList);
 
 module.exports = {
   addRouter(app) {
@@ -73,6 +74,18 @@ function post_invite(req, res) {
         req.flash('success', 'Verification Code sent to User');
       }
       return res.redirect('/admin/invite-user');
+    });
+  });
+}
+
+function get_userList(req, res) {
+  User.paginate({}, {
+    select: 'createdAt email status verified',
+    sorted: '-createdAt',
+    limit: 100
+  }, function(err, users) {
+    return myRender(req, res, 'admin/userList', {
+      users: users.docs
     });
   });
 }

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
@@ -36,6 +37,8 @@ const userSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
+
+userSchema.plugin(mongoosePaginate);
 
 userSchema.statics.createSalt = function() {
   return bcrypt.genSaltSync(10);

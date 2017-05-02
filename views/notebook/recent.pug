@@ -14,13 +14,13 @@ block content
             if ( superUser )
               th Edit
         tbody
-        each note in notes
-          tr
-            td.moment-date= note.createdAt
-            td.moment-date= note.updatedAt
-            td #[a(href=`/notebook/view-note/${note.slug}`) #{note.slug}]
-            td= note.title
-            if ( superUser )
-              td.u-text-center
-                a(href=`/notebook/edit-note/${note.slug}`)
-                  i.fa.fa-edit
+          each note in notes
+            tr
+              td.moment-date= note.createdAt
+              td.moment-date= note.updatedAt
+              td #[a(href=`/notebook/view-note/${note.slug}`) #{note.slug}]
+              td= note.title
+              if ( superUser )
+                td.u-text-center
+                  a(href=`/notebook/edit-note/${note.slug}`)
+                    i.fa.fa-edit

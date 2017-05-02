@@ -1,0 +1,22 @@
+extends ../layouts/layout.pug
+
+block content
+  .row#fill-view
+    .col
+      h3.text-center User List
+      table.table.table-cell-center
+        thead
+          tr
+            th Index
+            th Email
+            th Status
+            th Verified
+            th Created
+        tbody
+          each user, index in users
+            tr
+              td= index + 1
+              td= user.email
+              td= user.status
+              td= user.verified
+              td.moment-date= user.createdAt
