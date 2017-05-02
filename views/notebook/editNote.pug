@@ -15,8 +15,8 @@ block content
           label(for='body') Body
           textarea.form-control(id='body',name='body')= body
         input.btn.btn-primary(type='submit', value='Update')
-        a.btn.btn-secondary.m-l-1(href=`/notebook/view-note/${slug}`) Done
-        button.btn.btn-danger.m-l-1(type='button',data-toggle="modal", data-target="#delete") Delete
+        a.btn.btn-secondary.ml-1(href=`/notebook/view-note/${slug}`) Done
+        button.btn.btn-danger.ml-1(type='button',data-toggle="modal", data-target="#delete") Delete
 
   #delete.modal.fade(tabindex="-1",role='dialog', aria-labelledby="myModalLabel")
     form(action=`/notebook/delete-note/${slug}`,method='post')
@@ -32,4 +32,4 @@ block content
 
           .modal-footer
             input.btn.btn-danger(type='submit', value='Delete Note')
-            button.btn.btn-secondary.m-l-1(data-dismiss='modal') Cancel
+            button.btn.btn-secondary.ml-1(data-dismiss='modal') Cancel

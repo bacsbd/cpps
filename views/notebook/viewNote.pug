@@ -6,7 +6,7 @@ block content
       if ( superUser )
         .text-center
           a(href='/notebook/add-note') #[i.fa.fa-plus] Add
-          a.m-l-1(href=`/notebook/edit-note/${note.slug}`) #[i.fa.fa-edit] Edit
+          a.ml-1(href=`/notebook/edit-note/${note.slug}`) #[i.fa.fa-edit] Edit
       .markdown-body.
         <h1 style="margin-bottom: 8px;"> #{note.title} </h1>
         <small>

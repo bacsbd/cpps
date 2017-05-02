@@ -81,7 +81,7 @@ function post_invite(req, res) {
 function get_userList(req, res) {
   User.paginate({}, {
     select: 'createdAt email status verified',
-    sorted: '-createdAt',
+    sort: '-createdAt',
     limit: 100
   }, function(err, users) {
     return myRender(req, res, 'admin/userList', {
