@@ -9,9 +9,13 @@ block content
           tr
             th Created
             th Title
+            if (status == 'root')
+              th Created By*
         tbody
         each p in problems
           tr
             td.moment-date= p.createdAt
             td
               a(href=`/gateway/get-children/${p.parentId}`) #{p.platform} #{p.pid} #{p.title}
+            if ( status == 'root' )
+              td= p.createdBy

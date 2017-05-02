@@ -24,7 +24,7 @@ function get_recent(req, res, next) {
     .find({
       type: 'problem'
     })
-    .select('createdAt title platform pid parentId')
+    .select('createdAt createdBy title platform pid parentId')
     .sort({
       createdAt: -1
     })
