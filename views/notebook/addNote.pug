@@ -14,5 +14,19 @@ block content
         .form-group
           label(for='body') Body
           textarea.form-control(id='body',name='body')= body
-        input.btn.btn-primary(type='submit', value='Insert')
+        button.btn.btn-success.ml-1#previewButton(type='button',data-toggle="modal", data-target="#preview") Preview
+        input.btn.btn-primary.ml-1(type='submit', value='Insert')
         a.btn.btn-secondary.ml-1(href='/notebook') Cancel
+
+  #preview.modal.fade(tabindex="-1",role='dialog', aria-labelledby="previewLabel")
+    .modal-dialog(role="document", style="max-width: 70%;")
+      .modal-content
+        .modal-header
+          h4.modal-title(id='previewLabel') Preview
+          button.close(type='button', data-dismiss='modal') &times;
+        .modal-body#previewBody
+        .modal-footer
+          button.btn.btn-secondary.ml-1(data-dismiss='modal') Cancel
+
+block scripts
+  script( defer src="/js/notebook/previewNote.js")

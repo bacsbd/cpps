@@ -4,7 +4,6 @@ const escapeLatex = require('forthright48/escapeLatex');
 
 $('#previewButton').click(previewTextArea);
 
-
 function previewTextArea() {
   const text = escapeLatex($('textarea').val());
   marked(text, function(err, html) {
