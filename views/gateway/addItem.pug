@@ -50,8 +50,8 @@ block content
           textarea#body2.form-control(name='body')
 
 
-        input.btn.btn-primary.mr-1#disableOnClick(type='submit', value='Insert')
+        input.btn.btn-primary.mr-1.disableOnClick(type='submit', value='Insert')
         a.btn.btn-secondary(href=`/gateway/get-children/${parentId}`) Cancel
 
 block scripts
-  script(src='/js/gateway/addItem/index.js')
+  script( src='/js/gateway/addItem/index.min.js')

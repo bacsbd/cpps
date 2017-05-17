@@ -7,18 +7,6 @@ function main() {
   showFormParts();
 
   $('#type').change(showFormParts);
-
-  /*Prevent user from clicking submit button twice*/
-
-  $('#disableOnClick').on('click', (function() {
-    let alreadyClicked = false;
-    return function() {
-      if (alreadyClicked) return false;
-      alreadyClicked = true;
-      $(this).addClass('disabled');
-      return true;
-    };
-  }()));
 }
 
 main();

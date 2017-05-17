@@ -16,7 +16,7 @@ block content
           textarea.form-control(id='body',name='body')= body
 
         button.btn.btn-success.ml-1#previewButton(type='button',data-toggle="modal", data-target="#preview") Preview
-        input.btn.btn-primary.ml-1(type='submit', value='Update')
+        input.btn.btn-primary.ml-1.disableOnClick(type='submit', value='Update')
         a.btn.btn-secondary.ml-1(href=`/notebook/view-note/${slug}`) Done
         button.btn.btn-danger.ml-1(type='button',data-toggle="modal", data-target="#delete") Delete
 
@@ -43,7 +43,7 @@ block content
               input.form-control(placeholder='Enter Slug',name='slug',type='text',required,pattern=slug,title='Slug entered must match the note to be deleted')
 
           .modal-footer
-            input.btn.btn-danger(type='submit', value='Delete Note')
+            input.btn.btn-danger.disableOnClick(type='submit', value='Delete Note')
             button.btn.btn-secondary.ml-1(data-dismiss='modal') Cancel
 
 block scripts

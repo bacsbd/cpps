@@ -13,7 +13,7 @@ block content
           input.form-control( id='repass', name='repass', type='password', minlength=6, maxlength=256, title='Must be between 6 to 256 characters', required, placeholder='Retype Password')
         .recaptcha.m-x-auto.m-b-1.
           !{recaptcha}
-        input.btn.btn-primary(type='submit', value='Register')
+        input.btn.btn-primary.disableOnClick(type='submit', value='Register')
       small Already a member? Click <a href='/user/login'>here</a> to Login.
 
 block scripts

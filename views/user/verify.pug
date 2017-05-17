@@ -9,5 +9,5 @@ block content
         .form-group
           label(for='code') Code
           input.form-control( id='code', name='code', type='text', maxlength=256, required)
-        input.btn.btn-primary(type='submit', value='Verify')
+        input.btn.btn-primary.disableOnClick(type='submit', value='Verify')
       small Did not receive your verification code? Click <a href='/user/send-code'>here</a>.

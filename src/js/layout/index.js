@@ -20,3 +20,14 @@ $('.moment-date').each(function() {
   date = moment(date, 'ddd MMM DD YYYY HH:mm:ss ZZ').fromNow();
   $(this).html(date);
 });
+
+/*Prevent user from clicking submit button twice*/
+$('.disableOnClick').on('click', (function() {
+  const clickedItems = {};
+  return function() {
+    if (clickedItems[this]) return false;
+    clickedItems[this] = true;
+    $(this).addClass('disabled');
+    return true;
+  };
+}()));

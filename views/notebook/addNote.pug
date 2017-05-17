@@ -15,7 +15,7 @@ block content
           label(for='body') Body
           textarea.form-control(id='body',name='body')= body
         button.btn.btn-success.ml-1#previewButton(type='button',data-toggle="modal", data-target="#preview") Preview
-        input.btn.btn-primary.ml-1(type='submit', value='Insert')
+        input.btn.btn-primary.ml-1.disableOnClick(type='submit', value='Insert')
         a.btn.btn-secondary.ml-1(href='/notebook') Cancel
 
   #preview.modal.fade(tabindex="-1",role='dialog', aria-labelledby="previewLabel")

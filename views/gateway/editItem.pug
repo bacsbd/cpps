@@ -50,7 +50,7 @@ block content
           textarea#body2.form-control(name='body')= item.body
 
 
-        input.btn.btn-primary.mr-1(type='submit', value='Update')
+        input.btn.btn-primary.mr-1.disableOnClick(type='submit', value='Update')
         button.btn.btn-danger.mr-1(type='button', data-target='#delete', data-toggle="modal") Delete
         a.btn.btn-secondary(href=`/gateway/get-children/${item.parentId}`) Cancel
 
@@ -69,7 +69,7 @@ block content
               input.form-control#item(name='delete',type='text',required,pattern='Delete',title='Please type the word: Delete')
           .modal-footer
             input(type="hidden" value=item.parentId name='parentId')
-            input.btn.btn-danger.mr-1(type='submit', value='Delete')
+            input.btn.btn-danger.mr-1.disableOnClick(type='submit', value='Delete')
             button.btn.btn-secondary(data-dismiss="modal") Cancel
 
 block scripts
