@@ -1,5 +1,9 @@
 # Change Log
 
+## Version 1.3.1
+- Added preview of notes during add/edit (Issue 24).
+- Disable Submit button on click in gateway/add 
+
 ## Version 1.2.2
 - Added "createdBy" and "lastUpdateBy" properties to model. #35
 - Fixed folder relocation bug #37

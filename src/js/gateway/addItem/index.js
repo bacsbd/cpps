@@ -1,11 +1,27 @@
 const $ = require('jquery');
 const fill_view = require('js/layout/fill-view.js');
 
-hideEverything();
-fill_view($);
-showFormParts();
+function main() {
+  hideEverything();
+  fill_view($);
+  showFormParts();
 
-$('#type').change(showFormParts);
+  $('#type').change(showFormParts);
+
+  /*Prevent user from clicking submit button twice*/
+
+  $('#disableOnClick').on('click', (function() {
+    let alreadyClicked = false;
+    return function() {
+      if (alreadyClicked) return false;
+      alreadyClicked = true;
+      $(this).addClass('disabled');
+      return true;
+    };
+  }()));
+}
+
+main();
 
 /*Implementation*/
 
