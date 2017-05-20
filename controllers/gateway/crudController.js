@@ -98,10 +98,28 @@ function post_addItem(req, res, next) {
 
       /// Ready to save our item
       const itemModel = new Gate(item);
-      itemModel.save(req, function(err) {
-        if (err) return next(err);
-        return res.redirect(`/gateway/get-children/${item.parentId}`);
-      });
+      if (itemModel.type === 'problem') { // Need to ensure uniquensess of problem
+        Gate.findOneAndUpdate({
+          platform: itemModel.platform,
+          pid: itemModel.pid
+        }, {
+          $setOnInsert: itemModel
+        }, {
+          upsert: true,
+          fields: '_id'
+        }).exec(function(err, oldDoc) {
+          if (err) return next(err);
+          if (oldDoc) { //Some doc already exists
+            req.flash('error', 'Problem already exists');
+          }
+          return res.redirect(`/gateway/get-children/${item.parentId}`);
+        });
+      } else {
+        itemModel.save(req, function(err) {
+          if (err) return next(err);
+          return res.redirect(`/gateway/get-children/${item.parentId}`);
+        });
+      }
     });
 }
 
