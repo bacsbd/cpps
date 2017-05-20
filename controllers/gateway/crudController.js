@@ -98,7 +98,7 @@ function post_addItem(req, res, next) {
 
       /// Ready to save our item
       const itemModel = new Gate(item);
-      if (itemModel.type === 'problem') { // Need to ensure uniquensess of problem
+      if (itemModel.type.toString() === 'problem') { // Need to ensure uniquensess of problem
         Gate.findOneAndUpdate({
           platform: itemModel.platform,
           pid: itemModel.pid
@@ -140,7 +140,7 @@ function post_editItem(req, res, next) {
     syncModel(item, req.body);
 
     // Relocation of item
-    if (item.parentId !== req.body.parentId) {
+    if (item.parentId.toString() !== req.body.parentId) {
       ///Update ancestor
       Gate.findOne({
           _id: item.parentId

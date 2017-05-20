@@ -95,7 +95,7 @@ function get_getChildren_ParentId(req, res, next) {
 function getItemStats(req, item, cb) {
   async.parallel({
     totalCount(pcb) {
-      if (item.type !== 'folder') {
+      if (item.type.toString() !== 'folder') {
         ///Nothing to do here
         return pcb(null);
       }
@@ -112,7 +112,7 @@ function getItemStats(req, item, cb) {
         });
     },
     userCount(pcb) {
-      if (item.type !== 'folder') {
+      if (item.type.toString() !== 'folder') {
         ///Nothing to do here
         return pcb(null);
       }
@@ -137,7 +137,7 @@ function getItemStats(req, item, cb) {
         });
     },
     totalSolved(pcb) {
-      if (item.type === 'folder') {
+      if (item.type.toString() === 'folder') {
         ///Nothing to do here
         return pcb(null);
       }
