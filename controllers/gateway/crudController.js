@@ -137,10 +137,17 @@ function post_editItem(req, res, next) {
       return res.redirect(`/gateway/get-children/${rootStr}`);
     }
 
+    if (item.type.toString() !== req.body.type) {
+      req.flash('error', 'Item type cannot be changed');
+      return res.redirect(`/gateway/edit-item/${id}`);
+    }
+
+    const originalParentId = item.parentId.toString();
     syncModel(item, req.body);
 
-    // Relocation of item
-    if (item.parentId.toString() !== req.body.parentId) {
+    // Relocation of item, only if its a folder
+    // TODO: Check if relocating folder
+    if (originalParentId !== req.body.parentId) {
       ///Update ancestor
       Gate.findOne({
           _id: item.parentId
@@ -150,7 +157,7 @@ function post_editItem(req, res, next) {
           if (err) return next(err);
           if (!x) {
             req.flash('error', `No such parent with id ${item.parentId}`);
-            return res.redirect(`/gateway/add-item/${item.parentId}`);
+            return res.redirect(`/gateway/edit-item/${id}`);
           }
           async.series([ ///Fix subtree
             function(callback) {
@@ -171,11 +178,14 @@ function post_editItem(req, res, next) {
     }
   });
 
-  /** A recursive function to update ancestor of a subtree
-
-      Useful when relocating folders
-  */
   function fixAncestorOfNode(req, parent, node, done) {
+    /** A recursive function to update ancestor of a subtree
+
+        Useful when relocating folders
+
+        First you need to choose a node and update its parent. Then calling this
+        function will update the subtree.
+    */
     node.ancestor = parent.ancestor.concat(parent._id); //Update ancestor
     node.save(req, function(err) { //Save node
       if (err) return done(err);

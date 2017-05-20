@@ -23,7 +23,7 @@ block content
           .col-sm-6
             .form-group
               label(for='type') Type
-              select#type.form-control(name='type',required)
+              select#type.form-control(name='type',required,disabled)
                 option(value='folder', selected=item.type==="folder") Folder
                 option(value='problem', selected=item.type==="problem") Problem
                 option(value='text', selected=item.type==="text") Text
