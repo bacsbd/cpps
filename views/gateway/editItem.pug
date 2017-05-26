@@ -82,5 +82,7 @@ block scripts
 
     function addPattern(pattern) {
       if ( !pattern ) pattern = ".+";
-      $('#pid').attr('pattern', pattern);
+      $('#pid')
+      .attr('pattern', pattern)
+        [0].setCustomValidity(`You need to match the RegExp: ${pattern}`);
     }
