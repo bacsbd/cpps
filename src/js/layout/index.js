@@ -21,13 +21,4 @@ $('.moment-date').each(function() {
   $(this).html(date);
 });
 
-/*Prevent user from clicking submit button twice*/
-$('.disableOnClick').on('click', (function() {
-  const clickedItems = {};
-  return function() {
-    if (clickedItems[this]) return false;
-    clickedItems[this] = true;
-    $(this).addClass('disabled');
-    return true;
-  };
-}()));
+require('./formLogic');
