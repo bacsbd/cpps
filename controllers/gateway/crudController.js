@@ -99,7 +99,15 @@ function post_addItem(req, res, next) {
       /// Ready to save our item
       const itemModel = new Gate(item);
       if (itemModel.type.toString() === 'problem') { // Need to ensure uniquensess of problem
-        return addUniqueProblem(req, res, next, itemModel);
+        return addUniqueProblem(itemModel, function(err, oldDoc){
+            if (err) return next(err);
+            if (oldDoc) { //Some doc already exists
+              req.flash('error', 'Problem already exists');
+            } else {
+              req.flash('success', 'Problem successfully inserted');
+            }
+            return res.redirect(`/gateway/get-children/${itemModel.parentId}`);
+          });
       } else {
         itemModel.save(req, function(err) {
           if (err) return next(err);
@@ -109,7 +117,11 @@ function post_addItem(req, res, next) {
     });
 }
 
-function addUniqueProblem(req, res, next, itemModel) {
+function addUniqueProblem(itemModel, callback) {
+  /* Adds item to db
+
+  @callback (err, oldDoc)
+  */
   Gate.findOneAndUpdate({
     platform: itemModel.platform,
     pid: itemModel.pid
@@ -118,13 +130,7 @@ function addUniqueProblem(req, res, next, itemModel) {
   }, {
     upsert: true,
     fields: '_id'
-  }).exec(function(err, oldDoc) {
-    if (err) return next(err);
-    if (oldDoc) { //Some doc already exists
-      req.flash('error', 'Problem already exists');
-    }
-    return res.redirect(`/gateway/get-children/${itemModel.parentId}`);
-  });
+  }).exec(callback);
 }
 
 function post_editItem(req, res, next) {
@@ -141,7 +147,7 @@ function post_editItem(req, res, next) {
       return res.redirect(`/gateway/get-children/${rootStr}`);
     }
 
-    if (item.type.toString() !== req.body.type) {
+    if (item.type.toString() !== req.body.type){
       req.flash('error', 'Item type cannot be changed');
       return res.redirect(`/gateway/edit-item/${id}`);
     }
@@ -196,7 +202,26 @@ function post_editItem(req, res, next) {
         if (original.platform !== item.platform.toString() ||
           original.pid !== item.pid.toString()
         ) { //Problem ID is being changed. Need to ensure uniquensess
-          return addUniqueProblem(req, res, next, item);
+          const toBeDeleted = item._id;
+          item.createdAt = item.updatedAt = item._id = undefined;
+          return addUniqueProblem(item,function(err,oldDoc){
+            if ( err ) return next(err);
+            if (oldDoc) { //Some doc already exists
+              req.flash('error', 'Problem already exists');
+              return res.redirect(`/gateway/edit-item/${toBeDeleted}`);
+            } else {
+              req.flash('success', 'Problem successfully inserted');
+              // Delete the old one before moving on
+              deleteItem(toBeDeleted,function(err){
+                if ( err ) {
+                  //TODO: Log this somewhere. Failed to delete this item
+                  req.flash('error', 'Failed to remove previous item')
+                }
+                req.flash('success', 'Successfully removed previous item');
+                return res.redirect(`/gateway/get-children/${item.parentId}`);
+              })
+            }
+          });
         } else { // Ancestor is ok. Problem ID is ok.
           return justSaveItem();
         }
@@ -238,6 +263,18 @@ function post_editItem(req, res, next) {
   }
 }
 
+function deleteItem(itemId, callback){
+  /* Deletes the item with @itemId provided
+
+  @callback (err)
+  */
+  Gate.findOne({
+      _id: itemId
+    })
+    .remove()
+    .exec(callback);
+}
+
 function post_deleteItem_Id(req, res, next) {
   const id = req.params.id;
   const parentId = req.body.parentId;
@@ -247,16 +284,11 @@ function post_deleteItem_Id(req, res, next) {
   }
 
   // TODO: cpps Issue 29
-
-  Gate.findOne({
-      _id: id
-    })
-    .remove()
-    .exec(function(err) {
-      if (err) return next(err);
-      req.flash('success', 'Successfully deleted');
-      return res.redirect(`/gateway/get-children/${parentId}`);
-    });
+  deleteItem(id,function(err) {
+    if (err) return next(err);
+    req.flash('success', 'Successfully deleted');
+    return res.redirect(`/gateway/get-children/${parentId}`);
+  })
 }
 
 function get_readItem_Id(req, res, next) {
