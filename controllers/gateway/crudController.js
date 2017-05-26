@@ -184,7 +184,7 @@ function post_editItem(req, res, next) {
             });
           } else { //If not folder, then we simply update item's ancestor and continue modification
             item.ancestor = x.ancestor.concat(x._id); //Update ancestor
-            saveItemWithProperAncestor();
+            return saveItemWithProperAncestor();
           }
         });
     }
