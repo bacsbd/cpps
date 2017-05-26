@@ -23,19 +23,21 @@ block content
           .col-sm-6
             .form-group
               label(for='type') Type
-              select#type.form-control(name='type',required,disabled)
-                option(value='folder', selected=item.type==="folder") Folder
-                option(value='problem', selected=item.type==="problem") Problem
-                option(value='text', selected=item.type==="text") Text
+              select#type.form-control(required,disabled)
+                option(value="folder",selected=item.type==="folder") Folder
+                option(value="problem",selected=item.type==="problem") Problem
+                option(value="text",selected=item.type==="text") Text
+              input(type="hidden", name="type", value=item.type)
 
         #problem
           .row
             .col-sm-6
               .form-group
                 label(for='platform') Platform
-                select#platform.form-control(name="platform")
+                select#platform.form-control(name="platform", onchange="addPattern(this.selectedOptions[0].dataset.pattern);")
                   each val in ojnames.data
-                    option(value=val, selected=item.platform===val)= val
+                    - if(!val.format) val.format=".+";
+                    option(value=val.name, selected=item.platform===val.name, data-pattern=val.format)= val.name
             .col-sm-6
               .form-group
                 label(for='pid') Problem ID
@@ -74,3 +76,11 @@ block content
 
 block scripts
   script(src='/js/gateway/addItem/index.js')
+  script.
+    var pattern = $("#platform").find(":selected")[0].dataset.pattern;
+    addPattern(pattern);
+
+    function addPattern(pattern) {
+      if ( !pattern ) pattern = ".+";
+      $('#pid').attr('pattern', pattern);
+    }
