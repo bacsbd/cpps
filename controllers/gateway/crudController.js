@@ -99,21 +99,7 @@ function post_addItem(req, res, next) {
       /// Ready to save our item
       const itemModel = new Gate(item);
       if (itemModel.type.toString() === 'problem') { // Need to ensure uniquensess of problem
-        Gate.findOneAndUpdate({
-          platform: itemModel.platform,
-          pid: itemModel.pid
-        }, {
-          $setOnInsert: itemModel
-        }, {
-          upsert: true,
-          fields: '_id'
-        }).exec(function(err, oldDoc) {
-          if (err) return next(err);
-          if (oldDoc) { //Some doc already exists
-            req.flash('error', 'Problem already exists');
-          }
-          return res.redirect(`/gateway/get-children/${item.parentId}`);
-        });
+        return addUniqueProblem(req, res, next, itemModel);
       } else {
         itemModel.save(req, function(err) {
           if (err) return next(err);
@@ -121,6 +107,24 @@ function post_addItem(req, res, next) {
         });
       }
     });
+}
+
+function addUniqueProblem(req, res, next, itemModel) {
+  Gate.findOneAndUpdate({
+    platform: itemModel.platform,
+    pid: itemModel.pid
+  }, {
+    $setOnInsert: itemModel
+  }, {
+    upsert: true,
+    fields: '_id'
+  }).exec(function(err, oldDoc) {
+    if (err) return next(err);
+    if (oldDoc) { //Some doc already exists
+      req.flash('error', 'Problem already exists');
+    }
+    return res.redirect(`/gateway/get-children/${itemModel.parentId}`);
+  });
 }
 
 function post_editItem(req, res, next) {
@@ -142,13 +146,18 @@ function post_editItem(req, res, next) {
       return res.redirect(`/gateway/edit-item/${id}`);
     }
 
-    const originalParentId = item.parentId.toString();
+    const original = {};
+    syncModel(original, item);
     syncModel(item, req.body);
 
-    // Relocation of item, only if its a folder
-    // TODO: Check if relocating folder
-    if (originalParentId !== req.body.parentId) {
-      ///Update ancestor
+    // Update ancestor if necessary
+    if (original.parentId.toString() !== req.body.parentId) {
+      return updateAncestorOfItem(saveItemWithProperAncestor);
+    } else {
+      return saveItemWithProperAncestor();
+    }
+
+    function updateAncestorOfItem(saveItemWithProperAncestor) {
       Gate.findOne({
           _id: item.parentId
         })
@@ -159,17 +168,42 @@ function post_editItem(req, res, next) {
             req.flash('error', `No such parent with id ${item.parentId}`);
             return res.redirect(`/gateway/edit-item/${id}`);
           }
-          async.series([ ///Fix subtree
-            function(callback) {
-              fixAncestorOfNode(req, x, item, callback);
-            }
-          ], function(err) {
-            if (err) return next(err);
-            req.flash('success', 'Edit Successful');
-            return res.redirect(`/gateway/edit-item/${id}`);
-          });
+
+          /** Folders are simple. It is safe to modify them anyway we want
+              The followin block updates the ancestor and saves our item
+          */
+          if (original.type.toString() === 'folder') {
+            async.series([ ///Fix subtree
+              function(callback) {
+                fixAncestorOfNode(req, x, item, callback);
+              }
+            ], function(err) {
+              if (err) return next(err);
+              req.flash('success', 'Edit Successful');
+              return res.redirect(`/gateway/edit-item/${id}`);
+            });
+          } else { //If not folder, then we simply update item's ancestor and continue modification
+            item.ancestor = x.ancestor.concat(x._id); //Update ancestor
+            saveItemWithProperAncestor();
+          }
         });
-    } else { // Just save it
+    }
+
+    function saveItemWithProperAncestor() {
+      if (item.type.toString() === 'folder') {
+        return justSaveItem();
+      } else {
+        if (original.platform !== item.platform.toString() ||
+          original.pid !== item.pid.toString()
+        ) { //Problem ID is being changed. Need to ensure uniquensess
+          return addUniqueProblem(req, res, next, item);
+        } else { // Ancestor is ok. Problem ID is ok.
+          return justSaveItem();
+        }
+      }
+    }
+
+    function justSaveItem() {
       item.save(req, function(err) {
         if (err) return next(err);
         req.flash('success', 'Edit Successful');
