@@ -33,10 +33,10 @@ block content
             .col-sm-6
               .form-group
                 label(for='platform') Platform
-                select#platform.form-control(name="platform")
+                select#platform.form-control(name="platform", onchange="addPattern(this.selectedOptions[0].dataset.pattern);")
                   option(disabled, selected, value=undefined) Select a Platform
                   each val in ojnames.data
-                    option(value=val)= val
+                    option(value=val.name, data-pattern=val.format )= val.name
             .col-sm-6
               .form-group
                 label(for='pid') Problem ID
@@ -55,3 +55,9 @@ block content
 
 block scripts
   script( src='/js/gateway/addItem/index.min.js')
+  script.
+    function addPattern(pattern) {
+      if ( !pattern ) pattern = ".+";
+      console.log(pattern);
+      $('#pid').attr('pattern', pattern);
+    }
