@@ -1,3 +1,6 @@
+const digits = '^\\d+$';
+const fourDigits = '^\\d{4}$';
+
 module.exports = {
   data: [
     {
@@ -5,20 +8,39 @@ module.exports = {
       format: '^\\d+[A-Z]$',
     },
     {name: 'CodeChef'},
+    {name: 'CSA'},
     {name: 'FHC'},
     {name: 'GCJ'},
     {name: 'HR'},
     {name: 'HE'},
-    {name: 'HDU'},
+    {
+      name: 'HDU',
+      format: fourDigits,
+    },
     {name: 'LeetCode'},
-    {name: 'LOJ'},
-    {name: 'POJ'},
-    {name: 'SPOJ'},
+    {
+      name: 'LOJ',
+      format: fourDigits,
+    },
+    {
+      name: 'POJ',
+      format: fourDigits,
+    },
+    {
+      name: 'SPOJ',
+      format: '^[A-Z0-9_]+$',
+    },
     {name: 'TJU'},
     {name: 'Toph'},
-    {name: 'URAL'},
+    {
+      name: 'URAL',
+      format: fourDigits,
+    },
     {name: 'URI'},
-    {name: 'UVa'},
+    {
+      name: 'UVa',
+      format: '^\\d{3,5}$', //3 to 5 digits
+    },
     {name: 'UVaLive'},
     {name: 'ZOJ'},
   ],
