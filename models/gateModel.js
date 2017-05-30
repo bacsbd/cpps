@@ -2,63 +2,64 @@ const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
 
-  /// items: folder, text, problem
+  // items: folder, text, problem
   type: {
     type: String,
     set: removeNullOrBlank,
     required: true,
-    enum: ['folder', 'text', 'problem']
+    enum: ['folder', 'text', 'problem'],
   },
-  /// For children query
+  // For children query
   parentId: {
     type: mongoose.Schema.ObjectId,
     set: removeNullOrBlank,
-    required: true
+    required: true,
   },
-  /// For subtree query
+  // For subtree query
   ancestor: [mongoose.Schema.ObjectId],
-  ///To reorder items inside same folder
+  // To reorder items inside same folder
   ind: {
     type: Number,
-    set: removeNullOrBlank
+    set: removeNullOrBlank,
   },
   title: {
     type: String,
     set: removeNullOrBlank,
-    trim: true
+    trim: true,
   },
-  /// Contains text body
+  // Contains text body
   body: {
     type: String,
     set: removeNullOrBlank,
-    trim: true
+    trim: true,
   },
   platform: {
     type: String,
-    set: removeNullOrBlank
+    set: removeNullOrBlank,
   },
   pid: {
     type: String,
     set: removeNullOrBlank,
-    trim: true
+    trim: true,
   },
-  /// Link for problem or text
+  // Link for problem or text
   link: {
     type: String,
     set: removeNullOrBlank,
-    trim: true
+    trim: true,
   },
-  doneList: [mongoose.Schema.ObjectId], ///Stores the userID who solved the problem
+  // Stores the userID who solved the problem
+  doneList: [mongoose.Schema.ObjectId],
   createdBy: {
-    type: String
+    type: String,
     // required: true enforced by system
   },
   lastUpdatedBy: {
-    type: String
+    type: String,
     // required: true enforced by system
-  }
+  },
 }, {
-  timestamps: true
+  timestamps: true,
 });
 
 schema.statics.getRoot = function() {
@@ -67,7 +68,8 @@ schema.statics.getRoot = function() {
 
 schema.pre('save', function(next, req) {
   const doc = this;
-  if (doc.isModified('doneList')) return next(); // Don't update when doneList gets changed
+  // Don't update when doneList gets changed
+  if (doc.isModified('doneList')) return next();
   if (!doc.createdBy) doc.createdBy = req.session.email;
   doc.lastUpdatedBy = req.session.email;
   next();

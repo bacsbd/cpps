@@ -1,5 +1,4 @@
-const digits = '^\\d+$';
-const fourDigits = '^\\d{4}$';
+const fourDigits = '\\d{4}';
 
 module.exports = {
   data: [
