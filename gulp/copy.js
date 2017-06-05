@@ -1,14 +1,14 @@
-const path = require('path');
-const rootPath = require('forthright48/world').rootPath;
 const config = require('./config.js');
 const changed = require('gulp-changed');
 
 module.exports = function(gulp) {
-
   function copyRest(folder) {
     // Copy everything except css, scss, js and image
     // Unless it is in vendor folder
-    return gulp.src([`./${folder}/**`, `!./${folder}/**/*.{css,scss,JPG,jpg,png,gif,js}`])
+    return gulp.src(
+        [`./${folder}/**`,
+          `!./${folder}/**/*.{css,scss,JPG,jpg,png,gif,js}`,
+        ])
       .pipe(changed(config.dirs.public))
       .pipe(gulp.dest(config.dirs.public));
   }
@@ -33,5 +33,8 @@ module.exports = function(gulp) {
       .pipe(gulp.dest(config.dirs.client_module));
   });
 
-  gulp.task('copy', gulp.parallel('copy:src', 'copy:client_module', 'copy:css_build'));
+  gulp.task(
+    'copy',
+    gulp.parallel('copy:src', 'copy:client_module', 'copy:css_build'
+  ));
 };

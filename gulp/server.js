@@ -7,7 +7,7 @@ module.exports = function(gulp) {
     let callbackCalled = false;
     return nodemon({
       script: './index.js',
-      ignore: ['./src', './public', './views']
+      ignore: ['./src', './public', './views'],
     }).on('start', function() {
       if (!callbackCalled) {
         callbackCalled = true;
@@ -19,7 +19,7 @@ module.exports = function(gulp) {
   gulp.task('browser-sync', gulp.series('nodemon', function() {
     return browsersync.init({
       proxy: 'http://localhost:8002',
-      files: config.browsersync
+      files: config.browsersync,
     });
   }));
 };

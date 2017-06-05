@@ -6,35 +6,37 @@ const changed = require('gulp-changed');
 const sassConfig = {
   outputStyle: 'compressed',
   sourceMapEmbed: true,
-  includePaths: config.sassInclude
+  includePaths: config.sassInclude,
 };
 
 module.exports = function(gulp) {
-  //Changes all relative urls inside css file to absolute urls
+  // Changes all relative urls inside css file to absolute urls
 
   gulp.task('cssAbsPath:src', function() {
     return gulp.src(config.css.src, {
-        nodir: true
+        nodir: true,
       })
       .pipe(changed(config.dirs.css_build))
       .pipe(absUrl({
-        root: './src'
+        root: './src',
       }))
       .pipe(gulp.dest(config.dirs.css_build));
   });
 
   gulp.task('cssAbsPath:client_module', function() {
     return gulp.src(config.css.client_module, {
-        nodir: true
+        nodir: true,
       })
       .pipe(changed(config.dirs.css_build))
       .pipe(absUrl({
-        root: './client_module'
+        root: './client_module',
       }))
       .pipe(gulp.dest(config.dirs.css_build));
   });
 
-  gulp.task('build:css', gulp.parallel('cssAbsPath:src', 'cssAbsPath:client_module'));
+  gulp.task('build:css',
+    gulp.parallel('cssAbsPath:src', 'cssAbsPath:client_module'
+  ));
 
   gulp.task('style:scss', gulp.series(function() {
     return gulp.src(config.scss)

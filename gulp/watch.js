@@ -5,7 +5,9 @@ module.exports = function(gulp) {
     return gulp.watch(config.scss, gulp.series('style:scss'));
   });
   gulp.task('watch:css', function() {
-    return gulp.watch(config.css.all, gulp.series('build:css', 'copy:css_build', 'style:scss'));
+    return gulp.watch(
+      config.css.all, gulp.series('build:css', 'copy:css_build', 'style:scss'
+    ));
   });
   gulp.task('watch:js', function() {
     return gulp.watch(config.js, gulp.series('script'));
@@ -14,5 +16,7 @@ module.exports = function(gulp) {
     return gulp.watch(config.image, gulp.series('image'));
   });
 
-  gulp.task('watch', gulp.parallel('watch:css', 'watch:scss', 'watch:js', 'watch:image'));
+  gulp.task(
+    'watch', gulp.parallel('watch:css', 'watch:scss', 'watch:js', 'watch:image'
+  ));
 };

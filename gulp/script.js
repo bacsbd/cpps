@@ -15,19 +15,19 @@ module.exports = function(gulp) {
   gulp.task('build:vendor', function() {
     const b = browserify({
       debug: true,
-      paths: config.browserifyPath
+      paths: config.browserifyPath,
     });
 
     // require all libs specified in vendors array
     vendors.forEach(function(lib) {
       let expose = lib;
       if (lib[0] === '.') {
-        //Relative path
+        // Relative path
         expose = path.basename(lib, '.js');
       }
 
       b.require(lib, {
-        expose
+        expose,
       });
     });
 
@@ -35,7 +35,7 @@ module.exports = function(gulp) {
       .pipe(source('vendor.js'))
       .pipe(gulp.dest(config.vendorOutput.js))
       .pipe(rename({
-        suffix: '.min'
+        suffix: '.min',
       }))
       .pipe(buffer())
       .pipe(uglify())
@@ -46,11 +46,11 @@ module.exports = function(gulp) {
     const fileName = path.basename(filePath);
     return browserify({
         entries: [filePath],
-        paths: config.browserifyPath
+        paths: config.browserifyPath,
       })
       .external(vendors)
       .transform('babelify', {
-        presets: ['es2015']
+        presets: ['es2015'],
       })
       .bundle()
       .on('error', function(err) {
@@ -70,7 +70,7 @@ module.exports = function(gulp) {
       const destDir = path.dirname(destPath);
 
       // Get Modified Time
-      /*const mtimeSource = fs.statSync(path.join(rootPath, filePath)).mtime;
+      /* const mtimeSource = fs.statSync(path.join(rootPath, filePath)).mtime;
       let mtimeDest;
       try {
         mtimeDest = fs.statSync(path.join(rootPath, destPath)).mtime;
@@ -83,7 +83,7 @@ module.exports = function(gulp) {
       browserified(filePath)
         .pipe(gulp.dest(destDir))
         .pipe(rename({
-          suffix: '.min'
+          suffix: '.min',
         }))
         .pipe(buffer())
         .pipe(sourcemaps.init())
