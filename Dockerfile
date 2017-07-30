@@ -7,4 +7,8 @@ RUN npm install
 
 ADD . .
 
+RUN npm install -g gulpjs/gulp.git#4.0
+
 EXPOSE 8002
+EXPOSE 3000 # For browser sync
+EXPOSE 465 # For node mailer
