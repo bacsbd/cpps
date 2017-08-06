@@ -6,7 +6,7 @@ services:
     networks:
       - ntw
     volumes:
-      - db:/root/src/volume/cpps_db
+      - db:/root/volumes/cpps_db
     restart: always
   app:
     build: .
@@ -19,7 +19,8 @@ services:
     networks:
       - ntw
     volumes:
-      - app:/root/src/volume/cpps_app
+      - app:/home/volumes/cpps_app
+      - ./:/root/src/
     command: tail -f /dev/null
 
 networks:
