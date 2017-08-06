@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+  db:
+    image: mongo:3.4
+    networks:
+      - ntw
+    volumes:
+      - db:/root/src/volume/cpps_db
+    restart: always
+  app:
+    build: .
+    image: cpps
+    depends_on:
+      - db
+    ports:
+      - "8000:8002"
+      - "3000:3000"
+    networks:
+      - ntw
+    volumes:
+      - app:/root/src/volume/cpps_app
+    command: tail -f /dev/null
+
+networks:
+  ntw:
+
+volumes:
+  db:
+  app:

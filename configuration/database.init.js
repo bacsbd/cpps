@@ -1,6 +1,5 @@
 /** Database initialization using mongo shell script **/
 
-
 conn = new Mongo();
 db = conn.getDB("cpps");
 
