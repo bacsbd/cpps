@@ -7,6 +7,7 @@ services:
       - ntw
     volumes:
       - db:/root/volumes/cpps_db
+      - db_data:/data/db
     restart: always
   app:
     build: .
@@ -27,5 +28,6 @@ networks:
   ntw:
 
 volumes:
+  db_data:
   db:
   app:
