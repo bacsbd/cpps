@@ -15,7 +15,7 @@ services:
     depends_on:
       - db
     ports:
-      - "8000:8002"
+      - "80:8002"
       - "3000:3000"
     networks:
       - ntw
@@ -23,6 +23,8 @@ services:
       - app:/home/volumes/cpps_app
       - ./:/root/src/
     command: tail -f /dev/null
+    environment:
+      - NO_SIGN_UP=1 
 
 networks:
   ntw:
