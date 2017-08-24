@@ -2,7 +2,7 @@
 
 A portal all about competitive programming and problem solving.
 
-You can visit the site [nsups.herokuapp.com](http://nsups.herokuapp.com) to view the project.
+You can visit the site [cpps.bacsbd.org](http://cpps.bacsbd.org) to view the project.
 
 # Features
 

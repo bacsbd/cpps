@@ -1,12 +1,13 @@
 const fourDigits = '\\d{4}';
 
+// TODO: Show full names in bracket
 module.exports = {
   data: [
     {
       name: 'CF',
       format: '^\\d+[A-Z]$',
     },
-    {name: 'CodeChef'},
+    {name: 'CC'},
     {name: 'CSA'},
     {name: 'FHC'},
     {name: 'GCJ'},
@@ -16,7 +17,7 @@ module.exports = {
       name: 'HDU',
       format: fourDigits,
     },
-    {name: 'LeetCode'},
+    {name: 'LC'},
     {
       name: 'LOJ',
       format: fourDigits,
