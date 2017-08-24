@@ -61,9 +61,9 @@ function post_invite(req, res) {
     const emailMail = {
       to: [email],
       from: 'CPPS BACS <no-reply@bacsbd.org>',
-      subject: 'You are invited to join NSUPS Gateway',
-      text: `Welcome to NSUPS Gateway (nsups.herokuapp.com). Your password is ${req.body.password}. Please make sure that you change it. Here is your verification code: ${user.verificationValue}`,
-      html: `Welcome to NSUPS Gateway (<a href="https://nsups.herokuapp.com/">nsups.herokuapp.com</a>).
+      subject: 'You are invited to join CPPS-BACS Gateway',
+      text: `Welcome to CPPS Gateway (cpps.bacsbd.org). Your password is ${req.body.password}. Please make sure that you change it. Here is your verification code: ${user.verificationValue}`,
+      html: `Welcome to CPPS Gateway (<a href="http://cpps.bacsbd.org/">cpps.bacsbd.org</a>).
       Your password is <b>${req.body.password}</b>. Please make sure that you change it. Here is your verification code: <b>${user.verificationValue}</b>`
     };
 
