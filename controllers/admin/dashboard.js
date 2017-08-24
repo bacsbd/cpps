@@ -17,7 +17,9 @@ const router = express.Router();
 router.get('/dashboard', get_dashboard);
 router.get('/invite-user', get_invite);
 router.post('/invite-user', post_invite);
-router.get('/user-list', get_userList);
+
+router.get('/user/list', get_user_list);
+router.get('/user/change-status/:userMail/:status', userGroup.isRoot, get_user_changeStatus);
 
 module.exports = {
   addRouter(app) {
@@ -78,7 +80,7 @@ function post_invite(req, res) {
   });
 }
 
-function get_userList(req, res) {
+function get_user_list(req, res) {
   User.paginate({}, {
     select: 'createdAt email status verified',
     sort: '-createdAt',
@@ -87,5 +89,18 @@ function get_userList(req, res) {
     return myRender(req, res, 'admin/userList', {
       users: users.docs
     });
+  });
+}
+
+function get_user_changeStatus(req, res, next){
+  const { userMail, status } = req.params;
+
+  User.update({email: userMail}, {
+    $set: {
+      status
+    }
+  }).exec( function(err) {
+    if ( err ) return next (err);
+    return res.redirect('/admin/user/list');
   });
 }

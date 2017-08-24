@@ -17,6 +17,13 @@ block content
             tr
               td= index + 1
               td= user.email
-              td= user.status
+              td
+                .dropdown
+                  button.btn.btn-secondary.dropdown-toggle#dropdownStatusButton(data-toggle="dropdown",aria-haspopup="true", aria-expanded="false")= user.status
+                  .dropdown-menu(aria-labelledby="dropdownStatusButton")
+                    a.dropdown-item(href=`/admin/user/change-status/${email}/root`) root
+                    a.dropdown-item(href=`/admin/user/change-status/${email}/admin`) admin
+                    a.dropdown-item(href=`/admin/user/change-status/${email}/user`) user
+
               td= user.verified
               td.moment-date= user.createdAt
