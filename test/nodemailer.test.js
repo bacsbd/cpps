@@ -11,7 +11,7 @@ const email = args[0];
 
 const emailMail = {
   to: [email],
-  from: 'samiul@sparkpostbox.com',
+  from: 'CPPS BACS <no-reply@bacsbd.org>',
   subject: 'Testing email subject',
   text: `Testing email text`,
   html: `Test email <b>html</b>`
