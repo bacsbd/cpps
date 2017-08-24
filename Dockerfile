@@ -8,8 +8,6 @@ RUN npm install -g gulpjs/gulp.git#4.0
 COPY package.json .
 RUN npm install
 
-COPY secret.js .
-
 ADD . .
 
 EXPOSE 8002
