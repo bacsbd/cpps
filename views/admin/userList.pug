@@ -21,9 +21,9 @@ block content
                 .dropdown
                   button.btn.btn-secondary.dropdown-toggle#dropdownStatusButton(data-toggle="dropdown",aria-haspopup="true", aria-expanded="false")= user.status
                   .dropdown-menu(aria-labelledby="dropdownStatusButton")
-                    a.dropdown-item(href=`/admin/user/change-status/${email}/root`) root
-                    a.dropdown-item(href=`/admin/user/change-status/${email}/admin`) admin
-                    a.dropdown-item(href=`/admin/user/change-status/${email}/user`) user
+                    a.dropdown-item(href=`/admin/user/change-status/${user.email}/root`) root
+                    a.dropdown-item(href=`/admin/user/change-status/${user.email}/admin`) admin
+                    a.dropdown-item(href=`/admin/user/change-status/${user.email}/user`) user
 
               td= user.verified
               td.moment-date= user.createdAt
