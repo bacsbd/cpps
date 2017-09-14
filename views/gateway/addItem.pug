@@ -29,6 +29,9 @@ block content
                 option(value='text') Text
 
         #problem
+          .form-group
+            label(for='link') Link
+            input#link.form-control(type='url', name='link')
           .row
             .col-sm-6
               .form-group
@@ -41,9 +44,6 @@ block content
               .form-group
                 label(for='pid') Problem ID
                 input#pid.form-control(type='text', name='pid')
-          .form-group
-            label(for='link') Link
-            input#link.form-control(type='url', name='link')
 
         #body.form-group
           label(for='body2') Body

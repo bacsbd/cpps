@@ -21,4 +21,12 @@ $('.moment-date').each(function() {
   $(this).html(date);
 });
 
+// For popover
+$(function () {
+  $('[data-toggle="popover"]').popover()
+});
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})
+
 require('./formLogic');
