@@ -43,8 +43,8 @@ function autoFillFromLink(){
 
   const uvaRegExp = /^https?:\/\/uva\.onlinejudge\.org/gi;
   const cfRegExp = /^https?:\/\/codeforces\.com\/problemset\/problem\/([\d]*)\/([A-Z])/gi;
-  const lojRegExp = /^https?:\/\/www\.lightoj\.com\/volume_showproblem\.php\?problem=([\d]{4,4})/gi;
-  const spojRegExp = /^https?:\/\/www\.spoj\.com\/problems\/([\w]*)/gi;
+  const lojRegExp = /^https?:\/\/lightoj\.com\/volume_showproblem\.php\?problem=([\d]{4,4})/gi;
+  const spojRegExp = /^https?:\/\/spoj\.com\/problems\/([\w]*)/gi;
   const hduRegExp = /^https?:\/\/acm\.hdu\.edu\.cn\/showproblem\.php\?pid=([\d]{4,4})/gi;
   const pojRegExp = /https?:\/\/poj\.org\/problem\?id=([\d]{4})/gi;
 

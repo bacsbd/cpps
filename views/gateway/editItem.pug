@@ -30,6 +30,9 @@ block content
               input(type="hidden", name="type", value=item.type)
 
         #problem
+          .form-group
+            label(for='link') Link
+            input#link.form-control(type='url', name='link', value=item.link)
           .row
             .col-sm-6
               .form-group
@@ -43,9 +46,7 @@ block content
                 label(for='pid') Problem ID
                 input#pid.form-control(type='text', name='pid', value=item.pid)
 
-          .form-group
-            label(for='link') Link
-            input#link.form-control(type='url', name='link', value=item.link)
+
 
         #body.form-group
           label(for='body2')
