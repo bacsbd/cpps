@@ -23,9 +23,8 @@ block content
             .form-group
               label(for='type') Type
               select#type.form-control(name='type',required)
-                option(disabled, selected, value=undefined) Select a Type
                 option(value='folder') Folder
-                option(value='problem') Problem
+                option(value='problem', selected) Problem
                 option(value='text') Text
 
         #problem
