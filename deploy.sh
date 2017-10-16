@@ -1,8 +1,23 @@
-docker-compose down
-git pull origin master
-docker-compose build
-docker-compose up &
-sleep 5s
-docker cp secret.js cpps_app_1:/home/src
-docker exec -itd cpps_app_1 gulp
+#!/bin/sh
 
+if [ $# != 1 -o \( $1 != "dev" -a $1 != "prod" \) ] ; then
+  echo "Please enter a single argument to specify prod or dev"
+  exit 0
+fi
+
+if [ $1 = "prod" ] ; then
+  docker-compose down
+  git pull origin master
+  docker-compose build
+  docker-compose up &
+  sleep 5s
+  docker cp secret.js cpps_app_1:/home/src
+  docker exec -itd cpps_app_1 gulp
+else
+  docker-compose down
+  docker-compose build
+  docker-compose up &
+  sleep 5s
+  docker cp secret.js cpps_app_1:/home/src
+  docker exec -it cpps_app_1 /bin/bash -c "cd /root/src && npm install && gulp"
+fi
