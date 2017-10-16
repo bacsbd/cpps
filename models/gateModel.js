@@ -67,9 +67,14 @@ schema.statics.getRoot = function() {
 };
 
 schema.pre('save', function(next, req) {
+  // only admins are allowed in here
+  if ( req.session.status == 'user' ) next();
+
   const doc = this;
+
   // Don't update when doneList gets changed
   if (doc.isModified('doneList')) return next();
+
   if (!doc.createdBy) doc.createdBy = req.session.email;
   doc.lastUpdatedBy = req.session.email;
   next();
