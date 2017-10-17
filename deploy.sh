@@ -1,11 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 
-if [ $# != 1 -o \( $1 != "dev" -a $1 != "prod" \) ] ; then
+if [[ $# != 1 || ( $1 != "dev" && $1 != "prod" ) ]] ; then
   echo "Please enter a single argument to specify prod or dev"
   exit 0
 fi
 
-if [ $1 = "prod" ] ; then
+# Check if secret.js file exists
+if [[ ! -f secret.js ]] ; then
+  echo "File missing: secret.js (Please read README.md)"
+  exit 0
+fi
+
+if [[ $1 = "prod" ]] ; then
   docker-compose down
   git pull origin master
   docker-compose build
