@@ -1,5 +1,9 @@
 extends ../layouts/layout.pug
 
+block head
+  link(rel="stylesheet",href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css")
+  script(src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js")
+
 block content
   .row.align-items-center#fill-view.m-b-1
     .col-sm.text-center
@@ -13,38 +17,12 @@ block content
           input.form-control(id='slug',name='slug',type='text', pattern='[a-z0-9\-]+', title='Small letters, digits and hyphens only',required, value=slug)
         .form-group
           label(for='body') Body
-          textarea.form-control(id='body',name='body')= body
+          .text-left
+            textarea.form-control(id='body',name='body')= body
 
-        button.btn.btn-success.ml-1#previewButton(type='button',data-toggle="modal", data-target="#preview") Preview
         input.btn.btn-primary.ml-1.disableOnClick(type='submit', value='Update')
         a.btn.btn-secondary.ml-1(href=`/notebook/view-note/${slug}`) Done
         button.btn.btn-danger.ml-1(type='button',data-toggle="modal", data-target="#delete") Delete
-
-  #preview.modal.fade(tabindex="-1",role='dialog', aria-labelledby="previewLabel")
-    .modal-dialog(role="document", style="max-width: 70%;")
-      .modal-content
-        .modal-header
-          h4.modal-title(id='previewLabel') Preview
-          button.close(type='button', data-dismiss='modal') &times;
-        .modal-body#previewBody
-        .modal-footer
-          button.btn.btn-secondary.ml-1(data-dismiss='modal') Cancel
-
-  #delete.modal.fade(tabindex="-1",role='dialog', aria-labelledby="myModalLabel")
-    form(action=`/notebook/delete-note/${slug}`,method='post')
-      .modal-dialog(role="document")
-        .modal-content
-          .modal-header
-            h4.modal-title(id='myModalLabel') Delete Slug
-            button.close(type='button', data-dismiss='modal') &times;
-          .modal-body
-            p Are you sure you want to <b>delete</b> this? If so, please enter the slug of the note below:
-            .form-group
-              input.form-control(placeholder='Enter Slug',name='slug',type='text',required,pattern=slug,title='Slug entered must match the note to be deleted')
-
-          .modal-footer
-            input.btn.btn-danger.disableOnClick(type='submit', value='Delete Note')
-            button.btn.btn-secondary.ml-1(data-dismiss='modal') Cancel
 
 block scripts
   script( defer src="/js/notebook/previewNote.js")
