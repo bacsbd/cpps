@@ -1,9 +1,5 @@
 extends ../layouts/layout.pug
 
-block head
-  link(rel="stylesheet",href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css")
-  script(src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js")
-
 block content
   .row.align-items-center#fill-view.m-b-1
     .col-sm.text-center
@@ -24,5 +20,22 @@ block content
         a.btn.btn-secondary.ml-1(href=`/notebook/view-note/${slug}`) Done
         button.btn.btn-danger.ml-1(type='button',data-toggle="modal", data-target="#delete") Delete
 
+  #delete.modal.fade(tabindex="-1",role='dialog', aria-labelledby="myModalLabel")
+    form(action=`/notebook/delete-note/${slug}`,method='post')
+      .modal-dialog(role="document")
+        .modal-content
+          .modal-header
+            h4.modal-title(id='myModalLabel') Delete Slug
+            button.close(type='button', data-dismiss='modal') &times;
+          .modal-body
+            p Are you sure you want to <b>delete</b> this? If so, please enter the slug of the note below:
+            .form-group
+              input.form-control(placeholder='Enter Slug',name='slug',type='text',required,pattern=slug,title='Slug entered must match the note to be deleted')
+
+          .modal-footer
+            input.btn.btn-danger.disableOnClick(type='submit', value='Delete Note')
+            button.btn.btn-secondary.ml-1(data-dismiss='modal') Cancel
+
+
 block scripts
-  script( defer src="/js/notebook/previewNote.js")
+  script( defer src="/js/common/simplemde.js")

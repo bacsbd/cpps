@@ -46,14 +46,16 @@ block content
 
         #body.form-group
           label(for='body2') Body
-          textarea#body2.form-control(name='body')
+          .text-left
+            textarea#body2.form-control(name='body')
 
 
         input.btn.btn-primary.mr-1.disableOnClick(type='submit', value='Insert')
         a.btn.btn-secondary(href=`/gateway/get-children/${parentId}`) Cancel
 
 block scripts
-  script( src='/js/gateway/addItem/index.min.js')
+  script( defer src="/js/common/simplemde.js")
+  script( defer src='/js/gateway/addItem/index.min.js')
   script.
     function addPattern(pattern) {
       if ( !pattern ) pattern = ".+";

@@ -50,7 +50,8 @@ block content
 
         #body.form-group
           label(for='body2')
-          textarea#body2.form-control(name='body')= item.body
+          .text-left
+            textarea#body2.form-control(name='body')= item.body
 
 
         input.btn.btn-primary.mr-1.disableOnClick(type='submit', value='Update')
@@ -76,8 +77,9 @@ block content
             button.btn.btn-secondary(data-dismiss="modal") Cancel
 
 block scripts
-  script(src='/js/gateway/addItem/index.js')
-  script.
+  script( defer src="/js/common/simplemde.js")
+  script( defer src='/js/gateway/addItem/index.js')
+  script(defer).
     var pattern = $("#platform").find(":selected")[0].dataset.pattern;
     addPattern(pattern);
 
