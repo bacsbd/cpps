@@ -21,3 +21,5 @@ const classSchema = new mongoose.Schema({
     maxlength: 20
   }
 })
+
+mongoose.model('classRoom', classSchema);
