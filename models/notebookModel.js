@@ -36,8 +36,8 @@ function matchSlug(val) {
 
 noteSchema.pre('save', function(next, req) {
   const doc = this;
-  if (!doc.createdBy) doc.createdBy = req.session.email;
-  doc.lastUpdatedBy = req.session.email;
+  if (!doc.createdBy) doc.createdBy = req.session.username;
+  doc.lastUpdatedBy = req.session.username;
   next();
 });
 

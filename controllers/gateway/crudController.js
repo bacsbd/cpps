@@ -66,7 +66,7 @@ function get_editItem_Id(req, res, next) {
     });
 }
 
-function syncModel(target, source) {
+function syncModel(target, source, session) {
   target.type = source.type;
   target.parentId = source.parentId;
   target.ind = source.ind;
@@ -75,11 +75,13 @@ function syncModel(target, source) {
   target.platform = source.platform;
   target.pid = source.pid;
   target.link = source.link;
+  target.createdBy = session.username;
+  target.lastUpdatedBy = session.username;
 }
 
 function post_addItem(req, res, next) {
   const item = {};
-  syncModel(item, req.body);
+  syncModel(item, req.body, req.session);
 
   ///Need to calculate the ancestor of this item.
   ///For that we need ancestor list of the parent
@@ -126,7 +128,7 @@ function addUniqueProblem(itemModel, callback) {
     platform: itemModel.platform,
     pid: itemModel.pid
   }, {
-    $setOnInsert: itemModel
+    $setOnInsert: itemModel // Sets only if upsert inserts a new document
   }, {
     upsert: true,
     fields: '_id'
@@ -153,8 +155,8 @@ function post_editItem(req, res, next) {
     }
 
     const original = {};
-    syncModel(original, item);
-    syncModel(item, req.body);
+    syncModel(original, item, req.session);
+    syncModel(item, req.body, req.session);
 
     // Update ancestor if necessary
     if (original.parentId.toString() !== req.body.parentId) {

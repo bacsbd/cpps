@@ -2,6 +2,7 @@
 
 ## Version 1.5.0
 - Added WYSIWYG editor, with latex support.
+- Added support for username.
 
 ## Version 1.4.0 (2017-10-18)
 - Updated deploy.sh script to automate dev server

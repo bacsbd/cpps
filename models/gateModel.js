@@ -73,10 +73,12 @@ schema.pre('save', function(next, req) {
   const doc = this;
 
   // Don't update when doneList gets changed
-  if (doc.isModified('doneList')) return next();
+  console.log("While modifying a doc");
+  console.log(this.isNew);
+  if ( this.isNew === false && doc.isModified('doneList')) return next();
 
-  if (!doc.createdBy) doc.createdBy = req.session.email;
-  doc.lastUpdatedBy = req.session.email;
+  if (!doc.createdBy) doc.createdBy = req.session.username;
+  doc.lastUpdatedBy = req.session.username;
   next();
 });
 
