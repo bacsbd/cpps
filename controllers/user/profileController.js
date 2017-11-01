@@ -12,6 +12,8 @@ const profileRouter = express.Router(); // '/user/profile'
 profileRouter.get('/', get_profile);
 profileRouter.get('/change-password', recaptcha.middleware.render, get_changePassword);
 profileRouter.post('/change-password', recaptcha.middleware.verify, post_changePassword);
+profileRouter.get('/set-username', get_setUsername);
+profileRouter.post('/set-username', post_setUsername);
 
 module.exports = {
   addRouter(app) {
@@ -69,4 +71,44 @@ function post_changePassword(req, res, next) {
         return res.redirect('/user/profile');
       });
     });
+}
+
+function get_setUsername (req, res) {
+  if ( req.session.username ) return res.redirect('/user/profile');
+  return myRender(req, res, 'user/setUsername');
+}
+
+function post_setUsername (req, res){
+  if ( req.session.username ) return res.redirect('/user/profile');
+
+  const username = req.body.username;
+
+  //TODO: Validate username
+  if ( !username ) {
+    req.flash('error', "Invalid Username");
+    return res.redirect('/user/profile/set-username');
+  }
+
+  const email = req.session.email;
+
+  User
+    .findOne({email})
+    .exec()
+    .then(function(user){
+      user.username = username;
+      return user.save();
+    }).then(function(){
+      req.flash('success', "Username successfully set");
+      req.session.username = username;
+      return res.redirect('/user/profile/set-username');
+    }, function(err){
+      if ( err.code == 11000 ) {
+        req.flash('error', 'Username already exists')
+      }
+      else {
+        console.log(err);
+        req.flash('error', 'Some error occured');
+      }
+      return res.redirect('/user/profile/set-username');
+    })
 }

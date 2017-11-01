@@ -35,6 +35,7 @@ require('./models/gateModel.js');
 /*Middleware*/
 app.use(require('./middlewares/flash.js'));
 app.use(require('./middlewares/verification.js'));
+app.use(require('./middlewares/username.js'));
 /****/
 
 /*Routers*/

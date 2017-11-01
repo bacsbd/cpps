@@ -1,0 +1,10 @@
+extends ../layouts/layout.pug
+
+block content
+  .row.align-items-center#fill-view
+    .offset-sm-3.col-sm-6.text-center
+      h3 Set Username
+      form(action='/user/profile/set-username', method='post')
+        .form-group
+          input.form-control#username( name='username', maxlength=256, required, title='Must be between 6 to 256 characters', placeholder='Set Username')
+        input.btn.btn-primary(type='submit', value='Submit')

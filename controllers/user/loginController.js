@@ -38,7 +38,7 @@ function post_login(req, res, next) {
     .exec(function(err, user) {
       if (err) return next(err);
       if (!user) {
-        req.flash('error', 'Email address not found');
+        req.flash('error', 'Email address not found or Password did not match');
         return res.redirect('/user/login');
       }
       if (user.comparePassword(password)) {
@@ -49,9 +49,10 @@ function post_login(req, res, next) {
         req.session.email = email;
         req.session.status = user.status;
         req.session.userId = user._id;
+        req.session.username = user.username;
         return res.redirect('/');
       } else {
-        req.flash('error', 'Password did not match');
+        req.flash('error', 'Email address not found or Password did not match');
         return res.redirect('/user/login');
       }
     });
