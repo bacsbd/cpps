@@ -1,7 +1,4 @@
 const express = require('express');
-const {
-  myRender
-} = require('forthright48/world');
 const Notebook = require('mongoose').model('Notebook');
 
 const router = express.Router();
@@ -29,7 +26,7 @@ function get_recent(req, res, next) {
       if (err) {
         return next(err);
       }
-      return myRender(req, res, 'notebook/recent', {
+      return res.render('notebook/recent', {
         notes
       });
     });

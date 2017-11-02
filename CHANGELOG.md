@@ -4,6 +4,7 @@
 - Added WYSIWYG editor, with latex support.
 - Added support for username.
 - Add mongo command to deploy.sh
+- Improve codebase by removing myRender function.
 
 ## Version 1.4.0 (2017-10-18)
 - Updated deploy.sh script to automate dev server

@@ -1,6 +1,5 @@
 const express = require('express');
 const {
-  myRender,
   grabMiddleware
 } = require('forthright48/world');
 const loginMiddleware = grabMiddleware('login');
@@ -26,11 +25,11 @@ module.exports = {
  */
 
 function get_profile(req, res) {
-  return myRender(req, res, 'user/profile');
+  return res.render('user/profile');
 }
 
 function get_changePassword(req, res) {
-  return myRender(req, res, 'user/changePassword.pug', {
+  return res.render('user/changePassword.pug', {
     recaptcha: req.recaptcha
   });
 }
@@ -75,7 +74,7 @@ function post_changePassword(req, res, next) {
 
 function get_setUsername (req, res) {
   if ( req.session.username ) return res.redirect('/user/profile');
-  return myRender(req, res, 'user/setUsername');
+  return res.render('user/setUsername');
 }
 
 function post_setUsername (req, res){

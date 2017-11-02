@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const {
-  myRender,
   grabMiddleware,
   rootPath
 } = require('forthright48/world');
@@ -42,7 +41,7 @@ function get_index(req, res) {
 
 function get_addItem_ParentId(req, res) {
   const parentId = req.params.parentId;
-  return myRender(req, res, 'gateway/addItem', {
+  return res.render('gateway/addItem', {
     parentId,
     ojnames
   });
@@ -59,7 +58,7 @@ function get_editItem_Id(req, res, next) {
         req.flash('error', 'No such item found for edit');
         return res.redirect('/gateway');
       }
-      return myRender(req, res, 'gateway/editItem', {
+      return res.render( 'gateway/editItem', {
         item,
         ojnames
       });
@@ -311,7 +310,7 @@ function get_readItem_Id(req, res, next) {
       marked(item.body, function(err, content) {
         if (err) return next(err);
         item.body = content;
-        return myRender(req, res, 'gateway/readItem', {
+        return res.render('gateway/readItem', {
           item
         });
       });

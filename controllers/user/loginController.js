@@ -1,6 +1,5 @@
 const express = require('express');
 const {
-  myRender,
   grabMiddleware
 } = require('forthright48/world');
 const User = require('mongoose').model('User');
@@ -25,7 +24,7 @@ module.exports = {
  *Implementation
  */
 function get_login(req, res) {
-  return myRender(req, res, 'user/login');
+  return res.render('user/login');
 }
 
 function post_login(req, res, next) {
@@ -59,7 +58,7 @@ function post_login(req, res, next) {
 }
 
 function get_register(req, res) {
-  return myRender(req, res, 'user/register', {
+  return res.render('user/register', {
     recaptcha: req.recaptcha
   });
 }

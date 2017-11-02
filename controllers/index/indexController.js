@@ -1,6 +1,4 @@
 const express = require('express');
-const myRender = require('forthright48/world').myRender;
-
 const router = express.Router();
 
 router.get('/', get_index);
@@ -17,13 +15,13 @@ module.exports = {
  *Implementation
  */
 function get_index(req, res) {
-  myRender(req, res, 'index/index');
+  return res.render('index/index');
 }
 
 function get_bugsandhugs(req, res) {
-  myRender(req, res, 'index/bugsandhugs');
+  return res.render('index/bugsandhugs');
 }
 
 function get_faq(req, res) {
-  myRender(req, res, 'index/faq');
+  return res.render('index/faq');
 }

@@ -5,7 +5,6 @@
 
 const express = require('express');
 const {
-  myRender,
   grabMiddleware
 } = require('forthright48/world');
 const User = require('mongoose').model('User');
@@ -31,11 +30,11 @@ module.exports = {
  *Implementation
  */
 function get_dashboard(req, res) {
-  return myRender(req, res, 'admin/dashboard');
+  return res.render('admin/dashboard');
 }
 
 function get_invite(req, res) {
-  return myRender(req, res, 'admin/invite');
+  return res.render('admin/invite');
 }
 
 function post_invite(req, res) {
@@ -86,7 +85,7 @@ function get_user_list(req, res) {
     sort: '-createdAt',
     limit: 100
   }, function(err, users) {
-    return myRender(req, res, 'admin/userList', {
+    return res.render('admin/userList', {
       users: users.docs
     });
   });

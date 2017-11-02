@@ -1,6 +1,5 @@
 const express = require('express');
 const {
-  myRender,
   grabMiddleware
 } = require('forthright48/world');
 const {
@@ -35,7 +34,7 @@ function get_index(req, res) {
 }
 
 function get_addNote(req, res) {
-  return myRender(req, res, 'notebook/addNote');
+  return res.render('notebook/addNote');
 }
 
 function post_addNote(req, res) {
@@ -52,11 +51,9 @@ function post_addNote(req, res) {
       } else {
         req.flash('error', `Some error with code ${err.code}`);
       }
-      req.flash('context', req.body);
       return res.redirect('/notebook/add-note');
     }
     req.flash('success', 'Saved successfully');
-    req.flash('context', req.body);
     return res.redirect(`/notebook/edit-note/${req.body.slug}`);
   });
 }
@@ -75,7 +72,7 @@ function get_editNote_Slug(req, res, next) {
       return res.redirect('/notebook');
     }
 
-    return myRender(req, res, 'notebook/editNote', {
+    return res.render('notebook/editNote', {
       title: note.title,
       slug: note.slug,
       body: note.body
@@ -118,7 +115,6 @@ function post_editNote_Slug(req, res, next) {
       } else {
         req.flash('success', 'Edited successfully');
       }
-      req.flash('context', req.body);
       return res.redirect(`/notebook/edit-note/${req.body.slug}`);
     });
   });
@@ -164,7 +160,7 @@ function get_viewNote_Slug(req, res, next) {
       marked(body, function(err, content) {
         if (err) return next(err);
         note.body = content;
-        return myRender(req, res, 'notebook/viewNote', {
+        return res.render('notebook/viewNote', {
           note
         });
       });

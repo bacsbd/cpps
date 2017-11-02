@@ -1,6 +1,5 @@
 const express = require('express');
 const {
-  myRender,
   grabMiddleware
 } = require('forthright48/world');
 const User = require('mongoose').model('User');
@@ -23,7 +22,7 @@ module.exports = {
  *Implementation
  */
 function get_verify(req, res) {
-  return myRender(req, res, 'user/verify');
+  return res.render(req, res, 'user/verify');
 }
 
 function post_verify(req, res) {

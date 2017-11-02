@@ -1,7 +1,4 @@
 const express = require('express');
-const {
-  myRender
-} = require('forthright48/world');
 const Gate = require('mongoose').model('Gate');
 const async = require('async');
 
@@ -83,7 +80,7 @@ function get_getChildren_ParentId(req, res, next) {
     }
   }, function(err, result) {
     if (err) return next(err);
-    return myRender(req, res, 'gateway/getChildren', {
+    return res.render( 'gateway/getChildren', {
       root: result.root,
       items: result.items,
       doneList: result.doneList
