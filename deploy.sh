@@ -3,8 +3,9 @@
 if [[ $# != 1 || (
   $1 != "dev" &&
   $1 != "prod" &&
-  $1 != "mongo" ) ]] ; then
-  echo "Please enter a single argument to specify prod or dev"
+  $1 != "mongo" &&
+  $1 != "mongo-express") ]] ; then
+  echo "Please enter a single argument to specify prod, dev, mongo or mongo-express"
   exit 0
 fi
 
@@ -31,4 +32,12 @@ elif [[ $1 = "dev" ]] ; then
   docker exec -it cpps_app_1 /bin/bash -c "cd /root/src && npm install && gulp"
 elif [[ $1 = "mongo" ]] ; then
   docker exec -it cpps_db_1 mongo
+elif [[ $1 = "mongo-express" ]] ; then
+  docker run -it --rm \
+      --name mongo-express \
+      --network cpps_ntw \
+      --link cpps_db_1:mongo \
+      -p 8081:8081 \
+      -e ME_CONFIG_OPTIONS_EDITORTHEME="ambiance" \
+      mongo-express
 fi
