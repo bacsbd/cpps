@@ -1,4 +1,3 @@
-const $ = require('jquery');
 const marked = require('marked');
 const escapeLatex = require('forthright48/escapeLatex');
 

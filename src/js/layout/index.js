@@ -1,15 +1,3 @@
-const $ = require('jquery');
-window.jQuery = window.$ = $;
-
-const notify = require('notifyjs-browser')(this, $);
-const moment = require('moment');
-
-const tether = require('tether');
-window.Tether = tether;
-
-const bootstrap = require('vendor/bootstrap/js/bootstrap.js');
-
-
 /*Add flash messages*/
 require('./flash')($);
 
@@ -28,5 +16,8 @@ $(function () {
 $('.popover-dismiss').popover({
   trigger: 'focus'
 })
+
+// Hide all elements with d-hide class
+$('.d-hide').hide();
 
 require('./formLogic');

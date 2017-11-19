@@ -1,0 +1,66 @@
+form#inlineForm.form-inline.justify-content-center(action=`/gateway/add-item/${root._id}`, method='post')
+  .form-group.mx-1
+    label.sr-only(for="type") Type
+    select#type.form-control(name='type',required)
+      option(value='folder') Folder
+      option(value='problem', selected) Problem
+
+  .form-group.mx-1.problem
+    label.sr-only(for='platform') Platform
+    select#platform.form-control(name="platform", onchange="addPattern(this.selectedOptions[0].dataset.pattern);")
+      option(disabled, selected, value=undefined) Select a Platform
+      each val in ojnames.data
+        option(value=val.name, data-pattern=val.format )= val.name
+  .form-group.mx-1.problem
+    label.sr-only(for='pid') Problem ID
+    input#pid.form-control(type='text', name='pid', placeholder="Problem ID")
+
+  .form-group.mx-1.folder.d-hide
+    label.sr-only(for='title') Title
+    input#title.form-control(type='text', name='title', placeholder="Name")
+
+  button.btn.btn-primary.mr-1.disableOnClick(type='submit') Insert
+
+block scripts
+  script( defer src='/js/gateway/getChildren/index.js')
+  script( defer ).
+    function addPattern(pattern) {
+      if ( !pattern ) pattern = ".+";
+      $('#pid')
+      .attr('pattern', pattern)
+      .attr('title', `Please match the RegExp: ${pattern}`);
+    }
+
+
+#problemDetails.modal(tabindex="-1")
+  form(action=`/gateway/add-item/${root._id}`, method='post')
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h3.modal-title Problem Details
+          button.close(type='button', data-dismiss='modal') &times;
+        .modal-body
+          #wait
+            p Retrieving details. Please Wait.
+            i.fa.fa-spinner.fa-spin
+          #showDetails.d-hide
+            .form-group.row.d-hide
+              label.col-3.col-form-label(for='p-type') Type
+              input.col-9.form-control-plaintext(id='p-type', name='type', value='problem')
+            .form-group.row
+              label.col-3.col-form-label(for='p=platform') Platform
+              input#p-platform.col-9.form-control-plaintext(type='text', name='platform')
+            .form-group.row
+              label.col-3.col-form-label(for='p-pid')  PID
+              input#p-pid.col-9.form-control-plaintext(type='text', name='pid')
+            .form-group.row
+              label.col-3.col-form-label(for='p-title') Title
+              input.col-9.form-control-plaintext(id='p-title',type='text', name='title', required)
+            .form-group.row
+              label.col-3.col-form-label(for='p-link')
+                a#p-link2(href='#', target="_blank") Link
+              input#p-link.col-9.form-control-plaintext(type='url', name='link')
+
+        .modal-footer
+          button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+          button#addProblem.btn.btn-primary.d-hide(type="submit") Add Problem

@@ -1,6 +1,11 @@
 const express = require('express');
 const Gate = require('mongoose').model('Gate');
 const async = require('async');
+const path = require('path');
+const {
+  rootPath
+} = require('forthright48/world');
+const ojnames = require(path.join(rootPath, 'models/ojnames.js'));
 
 const router = express.Router();
 
@@ -83,7 +88,8 @@ function get_getChildren_ParentId(req, res, next) {
     return res.render( 'gateway/getChildren', {
       root: result.root,
       items: result.items,
-      doneList: result.doneList
+      doneList: result.doneList,
+      ojnames
     });
   });
 }

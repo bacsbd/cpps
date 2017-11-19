@@ -12,23 +12,10 @@ html(lang='en')
       }
     title CPPS
 
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css")
     link(rel="stylesheet", href="/scss/main.css", media="screen", title="no title", charset="utf-8")
-
-    script(type='text/x-mathjax-config').
-      MathJax.Hub.Config({
-        extensions: ["tex2jax.js"],
-        jax: ["input/TeX", "output/HTML-CSS"],
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-          processEscapes: true
-        },
-        "HTML-CSS": { availableFonts: ["TeX"] }
-      });
-    script(type='text/javascript', src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML")
-
     link(rel="stylesheet",href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css")
-    script(src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js")
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css")
 
     block head
 
@@ -43,7 +30,28 @@ html(lang='en')
 
     script.
       var flash = !{flash};
-    script(src='/js/vendor/vendor.min.js')
-    script(src='/js/layout/index.min.js')
+
+    script(type='text/x-mathjax-config').
+      MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true
+        },
+        "HTML-CSS": { availableFonts: ["TeX"] }
+      });
+    script(type='text/javascript', src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML")
+
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.2/moment.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.1/js/tether.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js")
+    script(src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js")
+
+    script(src='/js/layout/index.js')
 
     block scripts

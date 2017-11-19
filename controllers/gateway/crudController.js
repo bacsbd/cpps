@@ -20,7 +20,7 @@ const router = express.Router();
 router.get('/', get_index);
 router.get('/add-item/:parentId', isAdmin, get_addItem_ParentId);
 router.get('/edit-item/:id', isAdmin, get_editItem_Id);
-router.post('/add-item', isAdmin, post_addItem);
+router.post('/add-item/:parentId', isAdmin, post_addItem);
 router.post('/edit-item', isAdmin, post_editItem);
 router.post('/delete-item/:id', isRoot, post_deleteItem_Id);
 router.get('/read-item/:id', get_readItem_Id);
@@ -81,6 +81,7 @@ function syncModel(target, source, session) {
 function post_addItem(req, res, next) {
   const item = {};
   syncModel(item, req.body, req.session);
+  item.parentId = req.params.parentId;
 
   ///Need to calculate the ancestor of this item.
   ///For that we need ancestor list of the parent

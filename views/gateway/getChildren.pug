@@ -7,8 +7,11 @@ block content
         .col
           if ( root.parentId )
             a.mr-1(href=`/gateway/get-children/${root.parentId}`) #[i.fa.fa-level-up] Go Up
+      .row.mb-2
+        .col
           if (superUser)
-            a(href="/gateway/add-item/"+root._id) #[i.fa.fa-plus] Insert
+            include form/inline-addItem.pug
+
       .row.align-items-center
         .col-sm-4
           span Solved in this folder: #{root.userCount}/#{root.totalCount}
