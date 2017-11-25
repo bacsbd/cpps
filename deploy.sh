@@ -1,21 +1,49 @@
 #!/bin/bash
 
-if [[ $# != 1 || (
-  $1 != "dev" &&
-  $1 != "prod" &&
-  $1 != "mongo" &&
-  $1 != "mongo-express") ]] ; then
-  echo "Please enter a single argument to specify prod, dev, mongo or mongo-express"
-  exit 0
+BOLD='\e[1;31m'      # Bold Red
+REV='\e[1;32m'       # Bold Green
+OFF='\e[0m'
+
+TYPE=""
+PORT="80"
+HELP="false"
+
+#Help function
+function HELP_DETAILS {
+  echo -e "${REV}TYPE${OFF}: Can be one of dev, prod, mongo or mongo-express"
+  echo -p "${REV}PORT${OFF}: Port number for listeining to rquest"
+  exit 1
+}
+
+while getopts hp:t: FLAG; do
+  case $FLAG in
+    h) HELP="true" ;;
+    p) PORT=$OPTARG ;;
+    t) TYPE=$OPTARG ;;
+    *) echo "Unexpected option" && HELP_DETAILS && exit 1 ;;
+  esac
+done
+
+if [[ $HELP = "true" ]] ; then
+  HELP_DETAILS
+  exit 1
+fi
+
+if [[ $TYPE = "" ]] ; then
+  echo -e "${BOLD}Error${OFF}: Type flag is required."
+  HELP_DETAILS
+  exit 1
 fi
 
 # Check if secret.js file exists
 if [[ ! -f secret.js ]] ; then
-  echo "File missing: secret.js (Please read README.md)"
+  echo -e "${BOLD}File missing${OFF}: secret.js (Please read README.md)"
   exit 0
 fi
 
-if [[ $1 = "prod" ]] ; then
+export PORT
+
+if [[ $TYPE = "prod" ]] ; then
   docker-compose down
   git pull origin master
   docker-compose build
@@ -23,16 +51,16 @@ if [[ $1 = "prod" ]] ; then
   sleep 5s
   docker cp secret.js cpps_app_1:/home/src
   docker exec -itd cpps_app_1 gulp
-elif [[ $1 = "dev" ]] ; then
+elif [[ $TYPE = "dev" ]] ; then
   docker-compose down
   docker-compose build
   docker-compose up &
   sleep 5s
   docker cp secret.js cpps_app_1:/home/src
   docker exec -it cpps_app_1 /bin/bash -c "cd /root/src && npm install && gulp"
-elif [[ $1 = "mongo" ]] ; then
+elif [[ $TYPE = "mongo" ]] ; then
   docker exec -it cpps_db_1 mongo
-elif [[ $1 = "mongo-express" ]] ; then
+elif [[ $TYPE = "mongo-express" ]] ; then
   docker run -it --rm \
       --name mongo-express \
       --network cpps_ntw \
@@ -40,4 +68,6 @@ elif [[ $1 = "mongo-express" ]] ; then
       -p 8081:8081 \
       -e ME_CONFIG_OPTIONS_EDITORTHEME="ambiance" \
       mongo-express
+else
+    echo -e "${BOLD}Unknown Type${OFF}: $TYPE"
 fi

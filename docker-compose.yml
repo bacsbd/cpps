@@ -15,7 +15,7 @@ services:
     depends_on:
       - db
     ports:
-      - "80:8002"
+      - "${PORT}:8002"
       - "3000:3000"
     networks:
       - ntw
@@ -24,7 +24,7 @@ services:
       - ./:/root/src/
     command: tail -f /dev/null
     environment:
-      - NO_SIGN_UP=1 
+      - NO_SIGN_UP=1
 
 networks:
   ntw:
