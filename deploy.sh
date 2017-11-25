@@ -5,13 +5,13 @@ REV='\e[1;32m'       # Bold Green
 OFF='\e[0m'
 
 TYPE=""
-PORT="80"
+PORT=""
 HELP="false"
 
 #Help function
 function HELP_DETAILS {
-  echo -e "${REV}TYPE${OFF}: Can be one of dev, prod, mongo or mongo-express"
-  echo -p "${REV}PORT${OFF}: Port number for listeining to rquest"
+  echo -e "${REV}TYPE${OFF}: Can be one of dev, prod, beta, mongo or mongo-express"
+  echo -e "${REV}PORT${OFF}: Port number for listeining to request. Required if type is dev, prod or beta"
   exit 1
 }
 
@@ -35,6 +35,15 @@ if [[ $TYPE = "" ]] ; then
   exit 1
 fi
 
+if [[ $TYPE = "prod" || $TYPE = "dev" || $TYPE = "beta" ]] ; then
+  if [[ $PORT = "" ]]; then
+    echo -e "${BOLD}Port Number Required${OFF}: Please provide -p flag"
+    echo
+    HELP_DETAILS
+    exit 1
+  fi
+fi
+
 # Check if secret.js file exists
 if [[ ! -f secret.js ]] ; then
   echo -e "${BOLD}File missing${OFF}: secret.js (Please read README.md)"
@@ -43,9 +52,14 @@ fi
 
 export PORT
 
-if [[ $TYPE = "prod" ]] ; then
+if [[ $TYPE = "prod" || $TYPE = "beta" ]] ; then
   docker-compose down
   git pull origin master
+  if [[ $TYPE = "prod" ]] ; then
+    git checkout master
+  else
+    git checkout release
+  fi
   docker-compose build
   docker-compose up &
   sleep 5s
