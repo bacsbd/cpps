@@ -35,10 +35,13 @@ function matchSlug(val) {
 }
 
 noteSchema.pre('save', function(next, req) {
+  if ( !req.session ) {
+    return next();
+  }
   const doc = this;
   if (!doc.createdBy) doc.createdBy = req.session.username;
   doc.lastUpdatedBy = req.session.username;
-  next();
+  return next();
 });
 
 mongoose.model('Notebook', noteSchema);

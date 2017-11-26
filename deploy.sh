@@ -10,7 +10,7 @@ HELP="false"
 
 #Help function
 function HELP_DETAILS {
-  echo -e "${REV}TYPE${OFF}: Can be one of dev, prod, beta, mongo or mongo-express"
+  echo -e "${REV}TYPE${OFF}: Can be one of dev, prod, beta, init, mongo or mongo-express"
   echo -e "${REV}PORT${OFF}: Port number for listeining to request. Required if type is dev, prod or beta"
   exit 1
 }
@@ -82,6 +82,8 @@ elif [[ $TYPE = "mongo-express" ]] ; then
       -p 8081:8081 \
       -e ME_CONFIG_OPTIONS_EDITORTHEME="ambiance" \
       mongo-express
+elif [[ $TYPE = "init" ]] ; then
+  docker exec -it cpps_app_1 node configuration/init.js
 else
     echo -e "${BOLD}Unknown Type${OFF}: $TYPE"
 fi

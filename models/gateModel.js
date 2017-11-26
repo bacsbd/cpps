@@ -12,8 +12,7 @@ const schema = new mongoose.Schema({
   // For children query
   parentId: {
     type: mongoose.Schema.ObjectId,
-    set: removeNullOrBlank,
-    required: true,
+    set: removeNullOrBlank
   },
   // For subtree query
   ancestor: [mongoose.Schema.ObjectId],
@@ -66,18 +65,29 @@ schema.statics.getRoot = function() {
   return mongoose.Types.ObjectId('000000000000000000000000'); // eslint-disable-line
 };
 
+/**
+ * Deals with "createdBy" and "updatedBy"
+ */
 schema.pre('save', function(next, req) {
+  if ( !req.session ) {
+    return next();
+  }
+
   // only admins are allowed in here
-  if ( req.session.status == 'user' ) next();
+  if ( req.session.status == 'user' ) {
+    return next();
+  }
 
   const doc = this;
 
   // Don't update when doneList gets changed
-  if ( this.isNew === false && doc.isModified('doneList')) return next();
+  if ( this.isNew === false && doc.isModified('doneList')) {
+    return next();
+  }
 
   if (!doc.createdBy) doc.createdBy = req.session.username;
   doc.lastUpdatedBy = req.session.username;
-  next();
+  return next();
 });
 
 mongoose.model('Gate', schema);

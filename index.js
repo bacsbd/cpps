@@ -67,6 +67,9 @@ app.get('*', function(req, res) {
   return res.status(404).send('Page not found\n');
 });
 
+process.on('unhandledRejection', (reason) => {
+    console.log('Reason: ' + reason);
+});
 
 if (require.main === module) {
   server.listen(app.get('port'), function() {
