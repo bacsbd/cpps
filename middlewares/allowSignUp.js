@@ -1,9 +1,10 @@
 /** Middleware that controls whether user Sign Up is allowed or not
  *
- * If process.env.NO_SIGN_UP is defined, then registration is switched off
+ * Signup is controlled by "invite_only" settings value
  */
+const settings = require('../controllers/node_modules/settings');
 module.exports = function(req, res, next) {
-  if (process.env.NO_SIGN_UP === "1") {
+  if (settings.getKey('invite_only') === "on") {
     req.flash("info", "Sign up is currently switched off. You need an invitation.");
     return res.redirect("/");
   }

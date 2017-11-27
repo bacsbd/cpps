@@ -11,3 +11,7 @@ block content
         a(href='/admin/user/list').list-group-item.list-group-item-action
           i.fa.fa-vcard.mr-2
           span User List
+        if status == 'root'
+          a(href='/root/settings').list-group-item.list-group-item-action
+            i.fa.fa-wrench.mr-2
+            span Settings

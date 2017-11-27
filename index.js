@@ -30,6 +30,7 @@ recaptcha.init(secret.recaptcha.site, secret.recaptcha.secret);
 require('./models/userModel.js');
 require('./models/notebookModel.js');
 require('./models/gateModel.js');
+require('./models/settingModel.js');
 /****/
 
 /*Middleware*/
@@ -41,6 +42,8 @@ app.use(require('./middlewares/passSession.js'));
 
 /*Routers*/
 require('./controllers/admin/dashboard.js').addRouter(app);
+require('./controllers/admin/root.js').addRouter(app);
+
 
 require('./controllers/index/indexController.js').addRouter(app);
 

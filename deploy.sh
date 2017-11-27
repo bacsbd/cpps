@@ -54,7 +54,7 @@ export PORT
 
 if [[ $TYPE = "prod" || $TYPE = "beta" ]] ; then
   docker-compose down
-  git pull origin master
+  git pull origin
   if [[ $TYPE = "prod" ]] ; then
     git checkout master
   else

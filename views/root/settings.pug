@@ -1,0 +1,13 @@
+extends ../layouts/layout.pug
+
+block content
+  .row.align-items-center#fill-view.justify-content-center
+    .col.text-center
+      h2 Settings
+      .list-group.d-inline-flex
+        form.form-inline.justify-content-center(action=`/root/settings/invite_only`, method='post')
+          .form-check
+            label.form-check-label
+              input(type="checkbox", name="value", checked=(settings.invite_only?"checked":undefined)).form-check-input
+              span Invite Only
+          input.ml-2(type="submit", value="Save")
