@@ -11,3 +11,9 @@ block content
               input(type="checkbox", name="value", checked=(settings.invite_only?"checked":undefined)).form-check-input
               span Invite Only
           input.ml-2(type="submit", value="Save")
+        form.form-inline.justify-content-center.mt-1(action=`/root/settings/private_site`, method='post')
+          .form-check
+            label.form-check-label
+              input(type="checkbox", name="value", checked=(settings.private_site?"checked":undefined)).form-check-input
+              span Private Site
+          input.ml-2(type="submit", value="Save")

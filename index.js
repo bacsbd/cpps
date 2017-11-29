@@ -38,6 +38,7 @@ app.use(require('./middlewares/flash.js'));
 app.use(require('./middlewares/verification.js'));
 app.use(require('./middlewares/username.js'));
 app.use(require('./middlewares/passSession.js'));
+app.use(require('./middlewares/privateSite.js'));
 /****/
 
 /*Routers*/

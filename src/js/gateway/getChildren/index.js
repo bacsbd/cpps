@@ -46,6 +46,8 @@ function handleSubmit(event){
     return false;
   }
 
+  $('#wait').show();
+  $('#showDetails').hide();
   $('#problemDetails').modal('show');
 
   ojscraper.getProblemInfo({ojname,problemID})

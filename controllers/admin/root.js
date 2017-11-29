@@ -24,6 +24,7 @@ module.exports = {
  */
 
 function get_settings( req, res, next ) {
+  console.log(settings.getAll());
   return res.render('root/settings', {
     settings: settings.getAll()
   });

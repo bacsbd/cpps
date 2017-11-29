@@ -23,8 +23,6 @@ services:
       - app:/home/volumes/cpps_app
       - ./:/root/src/
     command: tail -f /dev/null
-    environment:
-      - NO_SIGN_UP=1
 
 networks:
   ntw:
