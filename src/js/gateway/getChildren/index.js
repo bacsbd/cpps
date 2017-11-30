@@ -52,7 +52,6 @@ function handleSubmit(event){
 
   ojscraper.getProblemInfo({ojname,problemID})
     .then(function(info){
-      console.log(info);
       $('#wait').hide();
       $('#p-platform').val(ojname);
       $('#p-pid').val(problemID);
@@ -62,6 +61,11 @@ function handleSubmit(event){
       $('#showDetails').show();
       $('#addProblem').show();
     })
-    .catch(console.log)
+    .catch(function(err){
+      console.log(err);
+      $('#error').append(`<p>${err.message}</p>`);
+      $('#wait').hide();
+      $('#error').show();
+    })
   return false;
 }
