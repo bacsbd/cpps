@@ -22,7 +22,7 @@ module.exports = {
  *Implementation
  */
 function get_verify(req, res) {
-  return res.render(req, res, 'user/verify');
+  return res.render('user/verify.pug');
 }
 
 function post_verify(req, res) {
