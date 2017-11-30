@@ -31,7 +31,7 @@ block content
           each val, index in items
             tr
               td
-                span= index + 1
+                span.indexNumber= index + 1
                 if (superUser)
                   span= " | " + val.ind
               if val.type !== "problem" && val.type !== "text"

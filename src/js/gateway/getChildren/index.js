@@ -53,6 +53,7 @@ function handleSubmit(event){
   ojscraper.getProblemInfo({ojname,problemID})
     .then(function(info){
       $('#wait').hide();
+      $('#p-index').val(parseInt($('.indexNumber').last().text())+1);
       $('#p-platform').val(ojname);
       $('#p-pid').val(problemID);
       $('#p-title').val(info.title);
