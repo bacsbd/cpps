@@ -10,6 +10,7 @@ const {
 const User = require('mongoose').model('User');
 const userGroup = grabMiddleware('userGroup');
 const mailer = require('forthright48/mailer').mailer;
+const {domain,subdomain, siteName} = require('forthright48/world').secretModule;
 
 const router = express.Router();
 
@@ -61,10 +62,10 @@ function post_invite(req, res) {
     //Send activation email
     const emailMail = {
       to: [email],
-      from: 'CPPS BACS <no-reply@bacsbd.org>',
-      subject: 'You are invited to join CPPS-BACS Gateway',
-      text: `Welcome to CPPS Gateway (cpps.bacsbd.org). Your password is ${req.body.password}. Please make sure that you change it. Here is your verification code: ${user.verificationValue}`,
-      html: `Welcome to CPPS Gateway (<a href="http://cpps.bacsbd.org/">cpps.bacsbd.org</a>).
+      from: `CPPS ${siteName} <no-reply@${domain}>`,
+      subject: `You are invited to join CPPS-${siteName} Gateway`,
+      text: `Welcome to CPPS Gateway (${subdomain}.${domain}). Your password is ${req.body.password}. Please make sure that you change it. Here is your verification code: ${user.verificationValue}`,
+      html: `Welcome to CPPS Gateway (<a href="http://${subdomain}.${domain}/">${subdomain}.${domain}</a>).
       Your password is <b>${req.body.password}</b>. Please make sure that you change it. Here is your verification code: <b>${user.verificationValue}</b>`
     };
 
