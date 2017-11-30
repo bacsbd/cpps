@@ -26,10 +26,10 @@ module.exports = {
     //   name: 'POJ',
     //   format: fourDigits,
     // },
-    // {
-    //   name: 'SPOJ',
-    //   format: '^[A-Z0-9_]+$',
-    // },
+    {
+      name: 'spoj',
+      format: '^[A-Z0-9_]+$',
+    },
     // {name: 'TJU'},
     // {name: 'Toph'},
     // {
