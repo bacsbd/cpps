@@ -70,6 +70,7 @@
     "notifyjs-browser": "git+https://github.com/notifyjs/notifyjs.git",
     "ojscraper": "^1.1.0",
     "pug": "^2.0.0-beta3",
+    "request": "^2.83.0",
     "tether": "^1.3.7",
     "validator": "^7.0.0",
     "vinyl-buffer": "^1.0.0",

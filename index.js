@@ -59,6 +59,7 @@ require('./controllers/gateway/crudController.js').addRouter(app);
 require('./controllers/gateway/getChildrenController.js').addRouter(app);
 require('./controllers/gateway/otherController.js').addRouter(app);
 require('./controllers/gateway/doneStat.js').addRouter(app);
+require('./controllers/gateway/ojscraper.js').addRouter(app);
 /****/
 
 app.use(function(err, req, res, next) {
