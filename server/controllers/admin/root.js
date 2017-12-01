@@ -5,8 +5,7 @@
 
 const express = require('express');
 const settings = require('settings');
-const {grabMiddleware} = require('forthright48/world');
-const userGroup = grabMiddleware('userGroup');
+const userGroup = require('middlewares/userGroup');
 
 const router = express.Router();
 

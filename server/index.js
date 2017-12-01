@@ -1,18 +1,18 @@
 const express = require('express');
-const world = require('forthright48/world');
+const world = require('world');
 const path = require('path');
 const bodyParser = require('body-parser');
 const recaptcha = require('express-recaptcha');
 const app = express();
 const server = require('http').createServer(app);
 const rootPath = world.rootPath;
-const secret = require('forthright48/world').secretModule;
+const secret = require('world').secretModule;
 
 app.set('port', process.env.PORT || 8002);
 app.set('view engine', 'pug');
-app.set('views', path.join(rootPath, './views'));
+app.set('views', path.join(rootPath, '../views'));
 
-app.use('/', express.static(path.join(rootPath, '/public')));
+app.use('/', express.static(path.join(rootPath, '../public')));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({
   extended: true
@@ -34,11 +34,11 @@ require('./models/settingModel.js');
 /****/
 
 /*Middleware*/
-app.use(require('./middlewares/flash.js'));
-app.use(require('./middlewares/verification.js'));
-app.use(require('./middlewares/username.js'));
-app.use(require('./middlewares/passSession.js'));
-app.use(require('./middlewares/privateSite.js'));
+app.use(require('middlewares/flash.js'));
+app.use(require('middlewares/verification.js'));
+app.use(require('middlewares/username.js'));
+app.use(require('middlewares/passSession.js'));
+app.use(require('middlewares/privateSite.js'));
 /****/
 
 /*Routers*/

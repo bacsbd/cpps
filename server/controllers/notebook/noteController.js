@@ -1,14 +1,11 @@
 const express = require('express');
 const {
-  grabMiddleware
-} = require('forthright48/world');
-const {
   isRoot,
   isAdmin
-} = grabMiddleware('userGroup');
+} = require('middlewares/userGroup');
 const Notebook = require('mongoose').model('Notebook');
 const marked = require('marked');
-const escapeLatex = require('forthright48/escapeLatex');
+const escapeLatex = require('escapeLatex');
 
 const router = express.Router();
 

@@ -1,18 +1,17 @@
 const express = require('express');
 const path = require('path');
 const {
-  grabMiddleware,
   rootPath
-} = require('forthright48/world');
+} = require('world');
 const {
   isRoot,
   isAdmin
-} = grabMiddleware('userGroup');
+} = require('middlewares/userGroup');
 const Gate = require('mongoose').model('Gate');
 const ojnames = require(path.join(rootPath, 'models/ojnames.js'));
 const rootStr = '000000000000000000000000';
 const marked = require('marked');
-const escapeLatex = require('forthright48/escapeLatex');
+const escapeLatex = require('escapeLatex');
 const async = require('async');
 
 const router = express.Router();

@@ -1,8 +1,7 @@
 const express = require('express');
 const ojscraper = require('ojscraper');
 const router = express.Router();
-const grabMiddleware = require('forthright48/world').grabMiddleware;
-const {isAdmin} = grabMiddleware('userGroup');
+const {isAdmin} = require('middlewares/userGroup');
 
 router.get('/problemInfo/:ojname/:problemID', get_problemInfo);
 

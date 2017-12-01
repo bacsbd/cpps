@@ -6,7 +6,7 @@ module.exports = function(gulp) {
   gulp.task('nodemon', function(cb) {
     let callbackCalled = false;
     return nodemon({
-      script: './index.js',
+      script: './server/index.js',
       ignore: ['./src', './public', './views'],
     }).on('start', function() {
       if (!callbackCalled) {

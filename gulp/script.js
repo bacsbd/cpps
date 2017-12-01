@@ -1,6 +1,6 @@
 const path = require('path');
 const uglify = require('gulp-uglify');
-const rootPath = require('forthright48/world').rootPath;
+const rootPath = path.join(__dirname, '../');
 const rename = require('gulp-rename');
 const browserify = require('browserify');
 const glob = require('glob');

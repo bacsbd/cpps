@@ -4,13 +4,10 @@
 */
 
 const express = require('express');
-const {
-  grabMiddleware
-} = require('forthright48/world');
 const User = require('mongoose').model('User');
-const userGroup = grabMiddleware('userGroup');
-const mailer = require('forthright48/mailer').mailer;
-const {domain,subdomain, siteName} = require('forthright48/world').secretModule;
+const userGroup = require('middlewares/userGroup');
+const mailer = require('mailer').mailer;
+const {domain,subdomain, siteName} = require('world').secretModule;
 
 const router = express.Router();
 

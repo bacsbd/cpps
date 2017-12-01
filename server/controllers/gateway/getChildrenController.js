@@ -4,7 +4,7 @@ const async = require('async');
 const path = require('path');
 const {
   rootPath
-} = require('forthright48/world');
+} = require('world');
 const ojnames = require(path.join(rootPath, 'models/ojnames.js'));
 
 const router = express.Router();

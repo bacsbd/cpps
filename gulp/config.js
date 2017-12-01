@@ -27,5 +27,5 @@ module.exports = {
     css: [],
     all: [],
   },
-  browserifyPath: ['./node_modules', './src'],
+  browserifyPath: ['./node_modules', './src', './server/node_modules'],
 };

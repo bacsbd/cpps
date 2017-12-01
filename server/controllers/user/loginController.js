@@ -1,10 +1,7 @@
 const express = require('express');
-const {
-  grabMiddleware
-} = require('forthright48/world');
 const User = require('mongoose').model('User');
 const recaptcha = require('express-recaptcha');
-const allowSignUp = grabMiddleware('allowSignUp');
+const allowSignUp = require('middlewares/allowSignUp');
 
 const router = express.Router();
 

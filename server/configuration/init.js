@@ -7,7 +7,7 @@
  */
 
 const mongoose = require('mongoose');
-const dburl = require('forthright48/world').secretModule.dburl;
+const dburl = require('world').secretModule.dburl;
 const readline = require('readline');
 const _ = require('lodash');
 const rl = readline.createInterface({

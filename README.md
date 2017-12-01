@@ -16,7 +16,7 @@ In notebook, you will find theoretical resources about CPPS. In gateway, you wil
 2. Clone the project into your workstation.
 3. Install docker and docker-compose.
 4. Enter the following command to start docker containers: `./deploy.sh -t prod`
-5. In order to run the project, you need project specific secret values. In the project root, create a file named `secret.js` and enter the following infos:
+5. In order to run the project, you need project specific secret values. In the project root, create a file named `server/secret.js` and enter the following infos:
     ```
     module.exports = {
       secret: "Your-secret-key", //Used to encrypt passwords and session

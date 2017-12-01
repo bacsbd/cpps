@@ -1,5 +1,5 @@
 const marked = require('marked');
-const escapeLatex = require('forthright48/escapeLatex');
+const escapeLatex = require('escapeLatex');
 
 const simplemde = new SimpleMDE({
   element: $(".simplemde")[0],

@@ -1,8 +1,5 @@
 const express = require('express');
-const {
-  grabMiddleware
-} = require('forthright48/world');
-const loginMiddleware = grabMiddleware('login');
+const loginMiddleware = require('middlewares/login');
 const User = require('mongoose').model('User');
 const recaptcha = require('express-recaptcha');
 

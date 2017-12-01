@@ -45,8 +45,8 @@ if [[ $TYPE = "prod" || $TYPE = "dev" || $TYPE = "beta" ]] ; then
 fi
 
 # Check if secret.js file exists
-if [[ ! -f secret.js ]] ; then
-  echo -e "${BOLD}File missing${OFF}: secret.js (Please read README.md)"
+if [[ ! -f server/secret.js ]] ; then
+  echo -e "${BOLD}File missing${OFF}: server/secret.js (Please read README.md)"
   exit 0
 fi
 
@@ -63,14 +63,14 @@ if [[ $TYPE = "prod" || $TYPE = "beta" ]] ; then
   docker-compose build
   docker-compose up &
   sleep 5s
-  docker cp secret.js cpps_app_1:/home/src
+  docker cp server/secret.js cpps_app_1:/home/src/server/
   docker exec -itd cpps_app_1 gulp
 elif [[ $TYPE = "dev" ]] ; then
   docker-compose down
   docker-compose build
   docker-compose up &
   sleep 5s
-  docker cp secret.js cpps_app_1:/home/src
+  docker cp server/secret.js cpps_app_1:/home/src/server/
   docker exec -it cpps_app_1 /bin/bash -c "cd /root/src && npm install && gulp"
 elif [[ $TYPE = "mongo" ]] ; then
   docker exec -it cpps_db_1 mongo
@@ -83,7 +83,7 @@ elif [[ $TYPE = "mongo-express" ]] ; then
       -e ME_CONFIG_OPTIONS_EDITORTHEME="ambiance" \
       mongo-express
 elif [[ $TYPE = "init" ]] ; then
-  docker exec -it cpps_app_1 node configuration/init.js
+  docker exec -it cpps_app_1 node server/configuration/init.js
 else
     echo -e "${BOLD}Unknown Type${OFF}: $TYPE"
 fi

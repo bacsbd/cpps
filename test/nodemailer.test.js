@@ -1,6 +1,6 @@
 /** A script to check if nodemailer is configured correctly or not*/
 
-const mailer = require('forthright48/mailer').mailer;
+const mailer = require('mailer').mailer;
 
 const args = process.argv.slice(2);
 if ( !args.length ) {
