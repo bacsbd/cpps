@@ -5,6 +5,7 @@ form#inlineForm.form-inline.justify-content-center(action=`/gateway/add-item/${r
       option(value='folder') Folder
       option(value='problem', selected) Problem
 
+  //- Form fields for problem. Gets intercepted by jquery.
   .form-group.mx-1.problem
     label.sr-only(for='platform') Platform
     select#platform.form-control(name="platform", onchange="addPattern(this.selectedOptions[0].dataset.pattern);")
@@ -15,9 +16,13 @@ form#inlineForm.form-inline.justify-content-center(action=`/gateway/add-item/${r
     label.sr-only(for='pid') Problem ID
     input#pid.form-control(type='text', name='pid', placeholder="Problem ID")
 
+  //- Form fields for folder. Goes to server directly
   .form-group.mx-1.folder.d-hide
     label.sr-only(for='title') Title
     input#title.form-control(type='text', name='title', placeholder="Name")
+  .form-group.mx-1.d-hide
+    label.sr-only(for='ind') Index
+    input#ind.form-control(type='number', name='ind')
 
   button.btn.btn-primary.mr-1.disableOnClick(type='submit') Insert
 

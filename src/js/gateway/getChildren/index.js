@@ -34,6 +34,8 @@ function handleSubmit(event){
   const itemType = $('#type option:selected').val();
 
   if( itemType == 'folder' ) {
+    const lastIndex = parseInt($('.indexNumber').last().text());
+    $('#ind').val(lastIndex? lastIndex+1: 1);
     return true;
   }
 
@@ -62,7 +64,8 @@ function handleSubmit(event){
       return;
     }
     $('#wait').hide();
-    $('#p-index').val(parseInt($('.indexNumber').last().text())+1);
+    const lastIndex = parseInt($('.indexNumber').last().text());
+    $('#p-index').val(lastIndex? lastIndex+1: 1);
     $('#p-platform').val(ojname);
     $('#p-pid').val(problemID);
     $('#p-title').val(info.title);
