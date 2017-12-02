@@ -4,8 +4,8 @@ require('./flash')($);
 require('./fill-view')($);
 
 $('.moment-date').each(function() {
-  let date = $(this).html();
-  date = moment(date, 'ddd MMM DD YYYY HH:mm:ss ZZ').fromNow();
+  let date = new Date($(this).text());
+  date = moment(date).fromNow();
   $(this).html(date);
 });
 
