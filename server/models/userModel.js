@@ -40,7 +40,15 @@ const userSchema = new mongoose.Schema({
   },
   verificationValue: {
     type: String
-  }
+  },
+  /** Stores usernames/userIDs of the user in various online judge */
+  ojIds: [{
+    ojname: {
+      type: String,
+      unique: true
+    },
+    userIds: [String] /** Some people have multiple CF accounts for example*/
+  }]
 }, {
   timestamps: true
 });
