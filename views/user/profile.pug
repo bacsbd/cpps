@@ -17,3 +17,41 @@ block content
         .list-group-item
           i.fa.fa-users.mr-2
           span= status[0].toUpperCase() + status.slice(1)
+  table.table.text-center.table-bordered.table-cell-center
+    thead
+      th Index
+      th OJ Name
+      th User ID
+      th Solve
+    tbody
+      each val, index in data
+        tr
+          td= index + 1
+          td= val.displayName
+          if (!val.userId)
+            td
+              button.btn.btn-link.setUserName(data-ojname=val.name) Set User ID
+          else
+            td= val.userId[0]
+          td -
+
+  #setUserNameModal.modal(tabindex="-1")
+    form(action=`/user/profile/set-userId`, method='post')
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h3.modal-title Set User ID
+            button.close(type='button', data-dismiss='modal') &times;
+          .modal-body
+              .form-group.row
+                label.col-3.col-form-label(for='ojname') OJ Name
+                input.col-9.form-control-plaintext(id='ojname', name='ojname', value="Not set", readonly)
+              .form-group.row
+                label.col-3.col-form-label(for='userId') User Id
+                input.col-9.form-control(id='userId', name='userId')
+          .modal-footer
+            button.btn.btn-primary(type="submit") Set User Id
+            button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+
+block scripts
+  script(src="/js/user/profile.js")

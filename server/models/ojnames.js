@@ -4,6 +4,7 @@ const fourDigits = '\\d{4}';
 module.exports = {
   data: [
     {
+      displayName: 'Codeforces',
       name: 'cf',
       format: '^\\d+[A-Z]$',
     },
@@ -27,6 +28,7 @@ module.exports = {
     //   format: fourDigits,
     // },
     {
+      displayName: "SPOJ",
       name: 'spoj',
       format: '^[A-Z0-9_]+$',
     },
@@ -38,6 +40,7 @@ module.exports = {
     // },
     // {name: 'URI'},
     {
+      displayName: 'UVa Online Judge',
       name: 'uva',
       format: '^\\d{3,5}$', //3 to 5 digits
     },

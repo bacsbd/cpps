@@ -1,0 +1,12 @@
+{
+  "extends": "google",
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
+  "rules": {
+    "new-cap": ["error", {
+      "capIsNewExceptions": ["Router"]
+      }],
+    "require-jsdoc": "off"
+  }
+}

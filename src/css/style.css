@@ -14,10 +14,14 @@ textarea {
 }
 
 .list-group-item:hover {
-  color: #292b2c;
   background-color: #eceeef;
+  color: #292b2c;
 }
 
 .debug {
   border: 1px red solid;
+}
+
+button {
+ cursor: pointer;
 }

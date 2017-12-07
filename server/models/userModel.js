@@ -36,21 +36,18 @@ const userSchema = new mongoose.Schema({
   verified: {
     type: Boolean,
     required: true,
-    default: false
+    default: false,
   },
   verificationValue: {
-    type: String
+    type: String,
   },
   /** Stores usernames/userIDs of the user in various online judge */
   ojIds: [{
-    ojname: {
-      type: String,
-      unique: true
-    },
-    userIds: [String] /** Some people have multiple CF accounts for example*/
-  }]
+    ojname: String,
+    userIds: [String], /** Some people have multiple CF accounts for example*/
+  }],
 }, {
-  timestamps: true
+  timestamps: true,
 });
 
 userSchema.plugin(mongoosePaginate);

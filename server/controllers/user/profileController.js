@@ -2,36 +2,58 @@ const express = require('express');
 const loginMiddleware = require('middlewares/login');
 const User = require('mongoose').model('User');
 const recaptcha = require('express-recaptcha');
+const rootPath = require('world').rootPath;
+const path = require('path');
+const ojnames = require(path.join(rootPath, 'models', 'ojnames.js'));
+const _ = require('lodash');
 
-const profileRouter = express.Router(); // '/user/profile'
+const router = express.Router(); // '/user/profile'
 
-profileRouter.get('/', get_profile);
-profileRouter.get('/change-password', recaptcha.middleware.render, get_changePassword);
-profileRouter.post('/change-password', recaptcha.middleware.verify, post_changePassword);
-profileRouter.get('/set-username', get_setUsername);
-profileRouter.post('/set-username', post_setUsername);
+router.get('/', getProfile);
+router
+  .get('/change-password', recaptcha.middleware.render, getChangePassword);
+router
+  .post('/change-password', recaptcha.middleware.verify, postChangePassword);
+router.get('/set-username', getSetUsername);
+router.post('/set-username', postSetUsername);
+router.post('/set-userId', postSetUserId);
+
 
 module.exports = {
   addRouter(app) {
-    app.use('/user/profile', loginMiddleware, profileRouter);
-  }
+    app.use('/user/profile', loginMiddleware, router);
+  },
 };
 
 /**
  *Implementation
  */
 
-function get_profile(req, res) {
-  return res.render('user/profile');
+async function getProfile(req, res) {
+  const username = req.session.username;
+  const user = await User.findOne({username});
+  const data = {};
+  _.forEach(ojnames.data, function(oj) {
+    data[oj.name] = oj;
+  });
+  _.forEach(user.ojIds, function(userId) {
+    data[userId.ojname].userId = userId.userIds;
+  });
+  let dataSorted = [];
+  _.forEach(data, function(x) {
+    dataSorted.push(x);
+  });
+  dataSorted = _.orderBy(data, ['name']);
+  return res.render('user/profile', {data: dataSorted});
 }
 
-function get_changePassword(req, res) {
+function getChangePassword(req, res) {
   return res.render('user/changePassword.pug', {
-    recaptcha: req.recaptcha
+    recaptcha: req.recaptcha,
   });
 }
 
-function post_changePassword(req, res, next) {
+function postChangePassword(req, res, next) {
   if (req.recaptcha.error) {
     req.flash('error', 'Please complete the captcha');
     return res.redirect('/user/profile/change-password');
@@ -40,7 +62,7 @@ function post_changePassword(req, res, next) {
   const {
     current,
     newpass,
-    repeat
+    repeat,
   } = req.body;
 
   if (newpass !== repeat) {
@@ -51,11 +73,11 @@ function post_changePassword(req, res, next) {
   const email = req.session.email;
 
   User.findOne({
-      email
+      email,
     })
     .exec(function(err, user) {
       if (err) return next(err);
-      if (!user) return next(err); //ULK
+      if (!user) return next(err); // ULK
       if (!user.comparePassword(current)) {
         req.flash('error', 'Wrong password');
         return res.redirect('/user/profile/change-password');
@@ -69,19 +91,19 @@ function post_changePassword(req, res, next) {
     });
 }
 
-function get_setUsername (req, res) {
+function getSetUsername(req, res) {
   if ( req.session.username ) return res.redirect('/user/profile');
   return res.render('user/setUsername');
 }
 
-function post_setUsername (req, res){
+function postSetUsername(req, res) {
   if ( req.session.username ) return res.redirect('/user/profile');
 
   const username = req.body.username;
 
-  //TODO: Validate username
+  // TODO: Validate username
   if ( !username ) {
-    req.flash('error', "Invalid Username");
+    req.flash('error', 'Invalid Username');
     return res.redirect('/user/profile/set-username');
   }
 
@@ -90,21 +112,45 @@ function post_setUsername (req, res){
   User
     .findOne({email})
     .exec()
-    .then(function(user){
+    .then(function(user) {
       user.username = username;
       return user.save();
-    }).then(function(){
-      req.flash('success', "Username successfully set");
+    }).then(function() {
+      req.flash('success', 'Username successfully set');
       req.session.username = username;
       return res.redirect('/user/profile/set-username');
-    }, function(err){
+    }, function(err) {
       if ( err.code == 11000 ) {
-        req.flash('error', 'Username already exists')
-      }
-      else {
+        req.flash('error', 'Username already exists');
+      } else {
         console.log(err);
         req.flash('error', 'Some error occured');
       }
       return res.redirect('/user/profile/set-username');
-    })
+    });
+}
+
+async function postSetUserId(req, res, next) {
+  // TODO: Validate OJ Name
+  const {ojname, userId} = req.body;
+  const username = req.session.username;
+  try {
+    const user = await User.findOne(
+      {username, 'ojIds.ojname': {$ne: ojname}}).exec();
+    if (!user) {
+      const e = new Error('OJ Id already set');
+      e.name = 'OJEXIST';
+      throw e;
+    }
+    user.ojIds.push({ojname, userIds: [userId]});
+    await user.save();
+    req.flash('success', `User Id successfully set for ${ojname}`);
+    return res.redirect('/user/profile');
+  } catch (err) {
+    if ( err.name === 'OJEXIST' ) {
+      req.flash('error', err.message);
+      return res.redirect('/user/profile');
+    }
+    return next(err);
+  }
 }

@@ -20,7 +20,7 @@ module.exports = {
     js: './public/js/vendor',
     css: './public/css/vendor',
   },
-  browsersync: ['./public/**', './views/**/*.pug'],
+  browsersync: ['./views/**/*.pug'],
   sassInclude: ['./public'],
   vendorInput: {
     js: [],
