@@ -6,6 +6,7 @@ const rootPath = require('world').rootPath;
 const path = require('path');
 const ojnames = require(path.join(rootPath, 'models', 'ojnames.js'));
 const _ = require('lodash');
+const ojscraper = require('ojscraper');
 
 const router = express.Router(); // '/user/profile'
 
@@ -17,6 +18,7 @@ router
 router.get('/set-username', getSetUsername);
 router.post('/set-username', postSetUsername);
 router.post('/set-userId', postSetUserId);
+router.post('/sync-ojsolve/:ojname', postSyncOjname);
 
 
 module.exports = {
@@ -36,8 +38,9 @@ async function getProfile(req, res) {
   _.forEach(ojnames.data, function(oj) {
     data[oj.name] = oj;
   });
-  _.forEach(user.ojIds, function(userId) {
+  _.forEach(user.ojStats, function(userId) {
     data[userId.ojname].userId = userId.userIds;
+    data[userId.ojname].solveCount = userId.solveCount;
   });
   let dataSorted = [];
   _.forEach(data, function(x) {
@@ -136,13 +139,13 @@ async function postSetUserId(req, res, next) {
   const username = req.session.username;
   try {
     const user = await User.findOne(
-      {username, 'ojIds.ojname': {$ne: ojname}}).exec();
+      {username, 'ojStats.ojname': {$ne: ojname}}).exec();
     if (!user) {
       const e = new Error('OJ Id already set');
       e.name = 'OJEXIST';
       throw e;
     }
-    user.ojIds.push({ojname, userIds: [userId]});
+    user.ojStats.push({ojname, userIds: [userId]});
     await user.save();
     req.flash('success', `User Id successfully set for ${ojname}`);
     return res.redirect('/user/profile');
@@ -152,5 +155,34 @@ async function postSetUserId(req, res, next) {
       return res.redirect('/user/profile');
     }
     return next(err);
+  }
+}
+
+async function postSyncOjname(req, res, next) {
+  const ojname = req.params.ojname;
+  try {
+    const user = await User.findById(req.session.userId);
+
+    const ojStat = _.filter(user.ojStats, function(x) {
+      return x.ojname === ojname;
+    })[0];
+
+    const ojUserId = ojStat.userIds[0];
+    const scrap = await ojscraper.getUserInfo({ojname, username: ojUserId});
+
+    if ( ojStat.solveCount && ojStat.solveCount >= scrap.solveCount ) {
+      req.flash('info', 'Already uptodate');
+      return res.redirect('/user/profile');
+    }
+
+    ojStat.solveCount = parseInt(scrap.solveCount);
+    ojStat.solveList = scrap.solveList;
+
+    await user.save();
+
+    req.flash('success', 'Solve Stats Updated');
+    return res.redirect('/user/profile');
+  } catch(err) {
+    next(err);
   }
 }

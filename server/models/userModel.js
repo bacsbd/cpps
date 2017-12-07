@@ -7,9 +7,9 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     unique: true,
-    sparse: true, //Allows null
-    //TODO: Validate
-    maxlength: 256
+    sparse: true, // Allows null
+    // TODO: Validate
+    maxlength: 256,
   },
   email: {
     type: String,
@@ -17,21 +17,21 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: validator.isEmail,
-      message: 'Email not valid'
+      message: 'Email not valid',
     },
-    maxlength: 256
+    maxlength: 256,
   },
   password: {
     type: String,
     required: true,
     minlength: 6,
-    maxlength: 256
+    maxlength: 256,
   },
   status: {
     type: String,
     required: true,
     default: 'user',
-    enum: ['root', 'admin', 'user']
+    enum: ['root', 'admin', 'user'],
   },
   verified: {
     type: Boolean,
@@ -42,9 +42,11 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
   /** Stores usernames/userIDs of the user in various online judge */
-  ojIds: [{
+  ojStats: [{
     ojname: String,
     userIds: [String], /** Some people have multiple CF accounts for example*/
+    solveCount: Number,
+    solveList: [String],
   }],
 }, {
   timestamps: true,

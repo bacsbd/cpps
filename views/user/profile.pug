@@ -23,6 +23,7 @@ block content
       th OJ Name
       th User ID
       th Solve
+      th Sync
     tbody
       each val, index in data
         tr
@@ -31,9 +32,15 @@ block content
           if (!val.userId)
             td
               button.btn.btn-link.setUserName(data-ojname=val.name) Set User ID
+            td -
+            td -
           else
             td= val.userId[0]
-          td -
+            td= val.solveCount? val.solveCount : 0
+            td
+              form.form-inline.d-inline(action=`/user/profile/sync-ojsolve/${val.name}`, method="post")
+                button.btn.btn-link(type="submit", title="Synchronize Count")
+                  i.fa.fa-refresh.ml-2
 
   #setUserNameModal.modal(tabindex="-1")
     form(action=`/user/profile/set-userId`, method='post')
@@ -50,7 +57,7 @@ block content
                 label.col-3.col-form-label(for='userId') User Id
                 input.col-9.form-control(id='userId', name='userId')
           .modal-footer
-            button.btn.btn-primary(type="submit") Set User Id
+            button.btn.btn-primary.disableOnClick(type="submit") Set User Id
             button.btn.btn-secondary(type="button" data-dismiss="modal") Close
 
 block scripts
