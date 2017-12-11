@@ -33,9 +33,7 @@ module.exports = {
 
 async function getProfile(req, res) {
   const username = req.session.username;
-  console.log(username);
   const user = await User.findOne({username});
-  console.log(user);
   const data = {};
   _.forEach(ojnames.data, function(oj) {
     data[oj.name] = _.cloneDeep(oj);

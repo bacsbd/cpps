@@ -64,7 +64,7 @@ require('./controllers/gateway/ojscraper.js').addRouter(app);
 
 app.use(function(err, req, res, next) {
   console.error(err.stack);
-  if ( req.session.status === 'root' ) res.status(500).send(err);
+  if ( req.session.status !== 'user' ) res.status(500).send(err.message);
   else res.status(500).send('Something broke!');
   next();
 });

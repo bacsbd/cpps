@@ -14,10 +14,11 @@ module.exports = {
     // {name: 'GCJ'},
     // {name: 'HR'},
     // {name: 'HE'},
-    // {
-    //   name: 'HDU',
-    //   format: fourDigits,
-    // },
+    {
+      name: 'hdu',
+      displayName: 'HDU',
+      format: fourDigits,
+    },
     // {name: 'LC'},
     // {
     //   name: 'LOJ',
@@ -28,7 +29,7 @@ module.exports = {
     //   format: fourDigits,
     // },
     {
-      displayName: "SPOJ",
+      displayName: 'SPOJ',
       name: 'spoj',
       format: '^[A-Z0-9_]+$',
     },
