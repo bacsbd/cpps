@@ -73,13 +73,14 @@ function syncModel(target, source, session) {
   target.platform = source.platform;
   target.pid = source.pid;
   target.link = source.link;
-  target.createdBy = session.username;
+  // target.createdBy = session.username; // Only during creation
   target.lastUpdatedBy = session.username;
 }
 
 function post_addItem(req, res, next) {
   const item = {};
   syncModel(item, req.body, req.session);
+  item.createdBy = req.session.username;
   item.parentId = req.params.parentId;
 
   ///Need to calculate the ancestor of this item.
