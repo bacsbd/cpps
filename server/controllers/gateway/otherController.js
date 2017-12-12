@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.get('/recent', getRecent);
 router.get('/sync-problems', syncProblems);
+router.get('/done-list/:itemId', getDoneList);
 
 module.exports = {
   addRouter(app) {
@@ -59,5 +60,19 @@ async function syncProblems(req, res) {
     const doneList = await usersThatSolved(p.platform, p.pid);
     // Update doneList
     await Gate.findOneAndUpdate({_id: p._id}, {$set: {doneList}});
+  });
+}
+
+async function getDoneList(req, res) {
+  const itemId = req.params.itemId;
+  const item = await Gate.findById(itemId, {
+    platform: 1,
+    pid: 1,
+    title: 1,
+    doneList: 1,
+  }).exec();
+  return res.render('gateway/doneList.pug', {
+    title: `Done List of ${item.platform} ${item.pid} - ${item.title}`,
+    doneList: item.doneList,
   });
 }

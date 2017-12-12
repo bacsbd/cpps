@@ -1,0 +1,16 @@
+extends ../layouts/layout.pug
+
+block content
+  .row.align-items-center#fill-view
+    .col
+      h3.text-center= title
+      table.table.table-cell-center
+        thead
+          tr
+            th Index
+            th Username
+        tbody
+        each d, ind in doneList
+          tr
+            td= ind + 1
+            td= d

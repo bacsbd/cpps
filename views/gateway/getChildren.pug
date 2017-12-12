@@ -59,14 +59,13 @@ block content
                 if ( val.type === "problem" || val.type === "text" )
                   td
                     if doneList.indexOf(val._id.toString()) > -1
-                      a(href=`/gateway/doneStat/remove-done-list/${val._id}?redirect=${root._id}`)
                         i.fa.fa-check-square(aria-hidden="true")
                     else
-                      a(href=`/gateway/doneStat/add-done-list/${val._id}?redirect=${root._id}`)
                         i.fa.fa-square-o(aria-hidden="true")
                     span &nbsp; &nbsp;
-                    i.fa.fa-user-times(aria-hidden="true")
-                    span= val.userSolved
+                    a.btn.btn-light(href=`/gateway/done-list/${val._id}`)
+                      i.fa.fa-user-times(aria-hidden="true")
+                      span= val.userSolved
                 else
                   td ---
               if (superUser)
