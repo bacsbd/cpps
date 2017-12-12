@@ -48,7 +48,7 @@ const schema = new mongoose.Schema({
     trim: true,
   },
   // Stores the userID who solved the problem
-  doneList: [mongoose.Schema.ObjectId],
+  doneList: [String],
   createdBy: {
     type: String,
     // required: true enforced by system

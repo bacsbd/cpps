@@ -63,11 +63,11 @@ function get_getChildren_ParentId(req, res, next) {
     doneList(cb) {
       ///Get done list from user
       if (req.session.login) {
-        const userId = req.session.userId;
+        const username = req.session.username;
         Gate
           .find({
             parentId,
-            doneList: userId
+            doneList: username
           })
           .select('_id')
           .exec(function(err, arr) {
@@ -120,18 +120,18 @@ function getItemStats(req, item, cb) {
         return pcb(null);
       }
       const sess = req.session || {};
-      ///Usercount is '--' if user is not logged in
+      // Usercount is '--' if user is not logged in
       if (!sess.login) {
         item.userCount = '--';
         return pcb(null);
       }
-      const id = sess.userId;
+      const username = sess.username;
       Gate.count({
           ancestor: item._id,
           type: {
-            $in: ['problem', 'text']
+            $in: ['problem', 'text'],
           },
-          doneList: id
+          doneList: username,
         })
         .exec(function(err, total) {
           if (err) return pcb(err);
