@@ -24,10 +24,11 @@ module.exports = {
     //   name: 'LOJ',
     //   format: fourDigits,
     // },
-    // {
-    //   name: 'POJ',
-    //   format: fourDigits,
-    // },
+    {
+      name: 'poj',
+      displayName: 'POJ',
+      format: fourDigits,
+    },
     {
       displayName: 'SPOJ',
       name: 'spoj',
