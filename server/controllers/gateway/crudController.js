@@ -188,7 +188,7 @@ function post_editItem(req, res, next) {
             ], function(err) {
               if (err) return next(err);
               req.flash('success', 'Edit Successful');
-              return res.redirect(`/gateway/edit-item/${id}`);
+              return res.redirect(`/gateway/get-children/${item.parentId}`);
             });
           } else { //If not folder, then we simply update item's ancestor and continue modification
             item.ancestor = x.ancestor.concat(x._id); //Update ancestor
@@ -234,7 +234,7 @@ function post_editItem(req, res, next) {
       item.save(req, function(err) {
         if (err) return next(err);
         req.flash('success', 'Edit Successful');
-        return res.redirect(`/gateway/edit-item/${id}`);
+        return res.redirect(`/gateway/get-children/${item.parentId}`);
       });
     }
   });

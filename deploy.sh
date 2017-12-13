@@ -53,6 +53,7 @@ fi
 export PORT
 
 if [[ $TYPE = "prod" || $TYPE = "beta" ]] ; then
+  rm package-lock.json
   docker-compose down
   git pull origin
   if [[ $TYPE = "prod" ]] ; then
@@ -66,6 +67,7 @@ if [[ $TYPE = "prod" || $TYPE = "beta" ]] ; then
   docker cp server/secret.js cpps_app_1:/home/src/server/
   docker exec -itd cpps_app_1 gulp
 elif [[ $TYPE = "dev" ]] ; then
+  rm package-lock.json
   docker-compose down
   docker-compose build
   docker-compose up &

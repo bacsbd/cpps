@@ -1,4 +1,5 @@
-const fourDigits = '\\d{4}';
+const fourDigits = '^\\d{4}$';
+const capitalAlphaNumeric = '^[A-Z0-9_]+$';
 
 // TODO: Show full names in bracket
 module.exports = {
@@ -8,7 +9,11 @@ module.exports = {
       name: 'cf',
       format: '^\\d+[A-Z]$',
     },
-    // {name: 'CC'},
+    {
+      name: 'cc',
+      displayName: 'CodeChef',
+      format: capitalAlphaNumeric,
+    },
     // {name: 'CSA'},
     // {name: 'FHC'},
     // {name: 'GCJ'},
@@ -32,7 +37,7 @@ module.exports = {
     {
       displayName: 'SPOJ',
       name: 'spoj',
-      format: '^[A-Z0-9_]+$',
+      format: capitalAlphaNumeric,
     },
     // {name: 'TJU'},
     // {name: 'Toph'},
