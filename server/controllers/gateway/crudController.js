@@ -1,11 +1,11 @@
 const express = require('express');
 const path = require('path');
 const {
-  rootPath
+  rootPath,
 } = require('world');
 const {
   isRoot,
-  isAdmin
+  isAdmin,
 } = require('middlewares/userGroup');
 const Gate = require('mongoose').model('Gate');
 const ojnames = require(path.join(rootPath, 'models/ojnames.js'));
@@ -13,13 +13,14 @@ const rootStr = '000000000000000000000000';
 const marked = require('marked');
 const escapeLatex = require('escapeLatex');
 const async = require('async');
+const {usersThatSolved} = require('./otherController.js');
 
 const router = express.Router();
 
 router.get('/', get_index);
 router.get('/add-item/:parentId', isAdmin, get_addItem_ParentId);
 router.get('/edit-item/:id', isAdmin, get_editItem_Id);
-router.post('/add-item/:parentId', isAdmin, post_addItem);
+router.post('/add-item/:parentId', isAdmin, postAddItem);
 router.post('/edit-item', isAdmin, post_editItem);
 router.post('/delete-item/:id', isRoot, post_deleteItem_Id);
 router.get('/read-item/:id', get_readItem_Id);
@@ -27,7 +28,7 @@ router.get('/read-item/:id', get_readItem_Id);
 module.exports = {
   addRouter(app) {
     app.use('/gateway', router);
-  }
+  },
 };
 
 /**
@@ -77,46 +78,51 @@ function syncModel(target, source, session) {
   target.lastUpdatedBy = session.username;
 }
 
-function post_addItem(req, res, next) {
+async function postAddItem(req, res, next) {
   const item = {};
   syncModel(item, req.body, req.session);
   item.createdBy = req.session.username;
   item.parentId = req.params.parentId;
 
-  ///Need to calculate the ancestor of this item.
-  ///For that we need ancestor list of the parent
+  // Need to calculate the ancestor of this item.
+  // For that we need ancestor list of the parent
 
-  Gate.findOne({
-      _id: item.parentId
-    })
-    .select('ancestor')
-    .exec(function(err, x) {
-      if (err) return next(err);
-      if (!x) {
-        req.flash('error', `No such parent with id ${item.parentId}`);
-        return res.redirect(`/gateway/add-item/${item.parentId}`);
-      }
-      item.ancestor = x.ancestor.concat(item.parentId);
+  try {
+    const x = await Gate
+                      .findOne({_id: item.parentId})
+                      .select('ancestor').exec();
+    if (!x) {
+      req.flash('error', `No such parent with id ${item.parentId}`);
+      return res.redirect(`/gateway/add-item/${item.parentId}`);
+    }
+    item.ancestor = x.ancestor.concat(item.parentId);
 
-      /// Ready to save our item
-      const itemModel = new Gate(item);
-      if (itemModel.type.toString() === 'problem') { // Need to ensure uniquensess of problem
-        return addUniqueProblem(itemModel, function(err, oldDoc){
-            if (err) return next(err);
-            if (oldDoc) { //Some doc already exists
-              req.flash('error', 'Problem already exists');
-            } else {
-              req.flash('success', 'Problem successfully inserted');
-            }
-            return res.redirect(`/gateway/get-children/${itemModel.parentId}`);
-          });
-      } else {
-        itemModel.save(req, function(err) {
+    if(item.type === 'problem') {
+      item.doneList = await usersThatSolved(item.platform, item.pid);
+    }
+
+    // Ready to save our item
+    const itemModel = new Gate(item);
+    // Need to ensure uniquensess of problem
+    if (itemModel.type.toString() === 'problem') {
+      return addUniqueProblem(itemModel, function(err, oldDoc) {
           if (err) return next(err);
-          return res.redirect(`/gateway/get-children/${item.parentId}`);
+          if (oldDoc) { // Some doc already exists
+            req.flash('error', 'Problem already exists');
+          } else {
+            req.flash('success', 'Problem successfully inserted');
+          }
+          return res.redirect(`/gateway/get-children/${itemModel.parentId}`);
         });
-      }
-    });
+    } else {
+      itemModel.save(req, function(err) {
+        if (err) return next(err);
+        return res.redirect(`/gateway/get-children/${item.parentId}`);
+      });
+    }
+  } catch (err) {
+    return next(err);
+  }
 }
 
 function addUniqueProblem(itemModel, callback) {

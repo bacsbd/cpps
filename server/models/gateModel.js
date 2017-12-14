@@ -12,7 +12,7 @@ const schema = new mongoose.Schema({
   // For children query
   parentId: {
     type: mongoose.Schema.ObjectId,
-    set: removeNullOrBlank
+    set: removeNullOrBlank,
   },
   // For subtree query
   ancestor: [mongoose.Schema.ObjectId],

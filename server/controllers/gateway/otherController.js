@@ -13,6 +13,7 @@ module.exports = {
   addRouter(app) {
     app.use('/gateway', router);
   },
+  usersThatSolved,
 };
 
 function getRecent(req, res, next) {
