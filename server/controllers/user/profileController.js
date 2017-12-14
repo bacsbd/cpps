@@ -1,6 +1,7 @@
 const express = require('express');
 const loginMiddleware = require('middlewares/login');
 const User = require('mongoose').model('User');
+const Gate = require('mongoose').model('Gate');
 const recaptcha = require('express-recaptcha');
 const rootPath = require('world').rootPath;
 const path = require('path');
@@ -133,6 +134,7 @@ function postSetUsername(req, res) {
     });
 }
 
+// User has profile in various OJ. This collects those userIds
 async function postSetUserId(req, res, next) {
   // TODO: Validate OJ Name
   const {ojname, userId} = req.body;
@@ -176,11 +178,26 @@ async function postSyncOjname(req, res, next) {
     }
 
     ojStat.solveCount = parseInt(scrap.solveCount);
+    const newSolved = _.difference(scrap.solveList, ojStat.solveList);
     ojStat.solveList = scrap.solveList;
 
     await user.save();
 
-    req.flash('success', 'Solve Stats Updated');
+    // Synchronize newly solved problems
+    await Gate.update({
+      platform: ojStat.ojname,
+      pid: {
+        $in: newSolved,
+      },
+    }, {
+      $addToSet: {
+        doneList: user.username,
+      },
+    }, {
+      multi: true,
+    });
+
+    req.flash('success', 'Successfully synched with problem bank');
     return res.redirect('/user/profile');
   } catch(err) {
     next(err);
