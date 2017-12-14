@@ -23,5 +23,40 @@ textarea {
 }
 
 button {
- cursor: pointer;
+ cursor: pointer; /* Cause bootstrap doesn't show pointer*/
+}
+
+/** Loading Modal
+  * Taken from https://stackoverflow.com/questions/1964839/how-can-i-create-a-please-wait-loading-animation-using-jquery
+  *
+**/
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+.loadingSign {
+  background: rgba( 255, 255, 255, .8 )
+              url('http://i.stack.imgur.com/FhHRx.gif')
+              50% 50%
+              no-repeat;
+  display:    none;
+  height:     100%;
+  left:       0;
+  position:   fixed;
+  top:        0;
+  width:      100%;
+  z-index:    1000;
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loadingModal {
+    overflow: hidden;
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loadingModal .loadingSign {
+    display: block;
 }

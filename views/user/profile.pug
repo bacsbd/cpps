@@ -39,7 +39,7 @@ block content
             td= val.solveCount? val.solveCount : 0
             td
               form.form-inline.d-inline(action=`/user/profile/sync-ojsolve/${val.name}`, method="post")
-                button.btn.btn-link.disableOnClick(type="submit", title="Synchronize Count")
+                button.btn.btn-link.syncButton.disableOnClick(type="submit", title="Synchronize Count")
                   i.fa.fa-refresh.ml-2
 
   #setUserNameModal.modal(tabindex="-1")

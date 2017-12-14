@@ -4,3 +4,7 @@ $('.setUserName').on('click', function(event) {
   $('#ojname').val(ojname);
   $('#setUserNameModal').modal('show');
 });
+
+$('.syncButton').click(function(event) {
+  $('body').addClass('loadingModal');
+});
