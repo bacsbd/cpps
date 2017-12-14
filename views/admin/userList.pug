@@ -8,15 +8,18 @@ block content
         thead
           tr
             th Index
-            th Email
+            th User
             th Status
-            th Verified
             th Created
         tbody
           each user, index in users
             tr
               td= index + 1
-              td= user.email
+              if (user.username)
+                td
+                  a(href=`/user/profile/${user.username}`)= user.username
+              else
+                td= user.email
               td
                 .dropdown
                   button.btn.btn-secondary.dropdown-toggle#dropdownStatusButton(data-toggle="dropdown",aria-haspopup="true", aria-expanded="false")= user.status
@@ -25,5 +28,4 @@ block content
                     a.dropdown-item(href=`/admin/user/change-status/${user.email}/admin`) admin
                     a.dropdown-item(href=`/admin/user/change-status/${user.email}/user`) user
 
-              td= user.verified
               td.moment-date= user.createdAt

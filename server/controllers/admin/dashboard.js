@@ -79,7 +79,7 @@ function post_invite(req, res) {
 
 function get_user_list(req, res) {
   User.paginate({}, {
-    select: 'createdAt email status verified',
+    select: 'createdAt email username status verified',
     sort: '-createdAt',
     limit: 100
   }, function(err, users) {
