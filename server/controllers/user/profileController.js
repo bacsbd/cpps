@@ -11,7 +11,7 @@ const ojscraper = require('ojscraper');
 
 const router = express.Router(); // '/user/profile'
 
-router.get('/', getProfile);
+router.get('/:username', getProfile);
 router
   .get('/change-password', recaptcha.middleware.render, getChangePassword);
 router
@@ -33,7 +33,7 @@ module.exports = {
  */
 
 async function getProfile(req, res) {
-  const username = req.session.username;
+  const username = req.params.username;
   const user = await User.findOne({username});
   const data = {};
   _.forEach(ojnames.data, function(oj) {
@@ -48,7 +48,18 @@ async function getProfile(req, res) {
     dataSorted.push(x);
   });
   dataSorted = _.orderBy(data, ['name']);
-  return res.render('user/profile', {data: dataSorted});
+
+  const displayUser = {
+    username: user.username,
+    status: user.status,
+  };
+
+  console.log(username === req.session.username);
+  return res.render('user/profile', {
+    data: dataSorted,
+    displayUser,
+    owner: username === req.session.username,
+  });
 }
 
 function getChangePassword(req, res) {
@@ -74,10 +85,10 @@ function postChangePassword(req, res, next) {
     return res.redirect('/user/profile/change-password');
   }
 
-  const email = req.session.email;
+  const username = req.session.username;
 
   User.findOne({
-      email,
+      username,
     })
     .exec(function(err, user) {
       if (err) return next(err);
@@ -90,18 +101,20 @@ function postChangePassword(req, res, next) {
       user.save(function(err) {
         if (err) return next(err);
         req.flash('success', 'Password successfully changed');
-        return res.redirect('/user/profile');
+        return res.redirect(`/user/profile/${username}`);
       });
     });
 }
 
 function getSetUsername(req, res) {
-  if ( req.session.username ) return res.redirect('/user/profile');
+  if ( req.session.username ) return res.redirect(`/user/profile/${username}`);
   return res.render('user/setUsername');
 }
 
 function postSetUsername(req, res) {
-  if ( req.session.username ) return res.redirect('/user/profile');
+  if ( req.session.username ) {
+    return res.redirect(`/user/profile/${req.session.username}`);
+  }
 
   const username = req.body.username;
 
@@ -150,11 +163,11 @@ async function postSetUserId(req, res, next) {
     user.ojStats.push({ojname, userIds: [userId]});
     await user.save();
     req.flash('success', `User Id successfully set for ${ojname}`);
-    return res.redirect('/user/profile');
+    return res.redirect(`/user/profile/${username}`);
   } catch (err) {
     if ( err.name === 'OJEXIST' ) {
       req.flash('error', err.message);
-      return res.redirect('/user/profile');
+      return res.redirect(`/user/profile/${username}`);
     }
     return next(err);
   }
@@ -162,6 +175,7 @@ async function postSetUserId(req, res, next) {
 
 async function postSyncOjname(req, res, next) {
   const ojname = req.params.ojname;
+  const username = req.session.username;
   try {
     const user = await User.findById(req.session.userId);
 
@@ -174,7 +188,7 @@ async function postSyncOjname(req, res, next) {
 
     if ( ojStat.solveCount && ojStat.solveCount >= scrap.solveCount ) {
       req.flash('info', 'Already uptodate');
-      return res.redirect('/user/profile');
+      return res.redirect(`/user/profile/${username}`);
     }
 
     ojStat.solveCount = parseInt(scrap.solveCount);
@@ -197,8 +211,8 @@ async function postSyncOjname(req, res, next) {
       multi: true,
     });
 
-    req.flash('success', 'Successfully synched with problem bank');
-    return res.redirect('/user/profile');
+    req.flash('success', 'Successfully updated profile');
+    return res.redirect(`/user/profile/${username}`);
   } catch(err) {
     next(err);
   }

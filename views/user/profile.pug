@@ -5,42 +5,50 @@ block content
     .col.text-center
       h3 Profile Page
       ul.list-group.d-inline-flex
-        .list-group-item
-          i.fa.fa-envelope.mr-2
-          span= email
+        if(owner)
+          .list-group-item
+            i.fa.fa-envelope.mr-2
+            span= email
         .list-group-item
           i.fa.fa-user.mr-2
-          span= username
-        .list-group-item
-          i.fa.fa-key.mr-2
-          a(href='/user/profile/change-password') Change Password
+          span= displayUser.username
+        if(owner)
+          .list-group-item
+            i.fa.fa-key.mr-2
+            a(href='/user/profile/change-password') Change Password
         .list-group-item
           i.fa.fa-users.mr-2
-          span= status[0].toUpperCase() + status.slice(1)
+          span= displayUser.status[0].toUpperCase() + displayUser.status.slice(1)
   table.table.text-center.table-bordered.table-cell-center
     thead
       th Index
       th OJ Name
       th User ID
       th Solve
-      th Sync
+      if(owner)
+        th Sync
     tbody
       each val, index in data
         tr
           td= index + 1
           td= val.displayName
           if (!val.userId)
-            td
-              button.btn.btn-link.setUserName(data-ojname=val.name) Set User ID
+            if(owner)
+              td
+                button.btn.btn-link.setUserName(data-ojname=val.name) Set User ID
+            else
+              td -
             td -
-            td -
+            if(owner)
+              td -
           else
             td= val.userId[0]
             td= val.solveCount? val.solveCount : 0
-            td
-              form.form-inline.d-inline(action=`/user/profile/sync-ojsolve/${val.name}`, method="post")
-                button.btn.btn-link.syncButton.disableOnClick(type="submit", title="Synchronize Count")
-                  i.fa.fa-refresh.ml-2
+            if(owner)
+              td
+                form.form-inline.d-inline(action=`/user/profile/sync-ojsolve/${val.name}`, method="post")
+                  button.btn.btn-link.syncButton.disableOnClick(type="submit", title="Synchronize Count")
+                    i.fa.fa-refresh.ml-2
 
   #setUserNameModal.modal(tabindex="-1")
     form(action=`/user/profile/set-userId`, method='post')
