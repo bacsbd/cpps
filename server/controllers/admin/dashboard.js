@@ -7,7 +7,8 @@ const express = require('express');
 const User = require('mongoose').model('User');
 const userGroup = require('middlewares/userGroup');
 const mailer = require('mailer').mailer;
-const {domain,subdomain, siteName} = require('world').secretModule;
+const {domain, subdomain, siteName} = require('world').secretModule;
+const _ = require('lodash');
 
 const router = express.Router();
 
@@ -42,7 +43,7 @@ function post_invite(req, res) {
   const user = new User({
     email,
     password,
-    verificationValue: User.createSalt()
+    verificationValue: _.random(100000, 999999),
   });
 
   user.save(function(err) {
