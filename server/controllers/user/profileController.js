@@ -108,7 +108,9 @@ function postChangePassword(req, res, next) {
 }
 
 function getSetUsername(req, res) {
-  if ( req.session.username ) return res.redirect(`/user/profile/${username}`);
+  if ( req.session.username ) {
+    return res.redirect(`/user/profile/${req.session.username}`);
+  }
   return res.render('user/setUsername');
 }
 

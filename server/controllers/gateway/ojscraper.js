@@ -3,12 +3,12 @@ const ojscraper = require('ojscraper');
 const router = express.Router();
 const {isAdmin} = require('middlewares/userGroup');
 
-router.get('/problemInfo/:ojname/:problemID', getProblemInfo);
+router.get('/problemInfo/:ojname/:problemID', isAdmin, getProblemInfo);
 router.get('/userInfo/:ojname/:username', getUserInfo);
 
 module.exports = {
   addRouter(app) {
-    app.use('/gateway/ojscraper', isAdmin, router);
+    app.use('/gateway/ojscraper', router);
   },
 };
 
