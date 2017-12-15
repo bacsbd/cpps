@@ -179,6 +179,11 @@ async function postSetUserId(req, res, next) {
 async function postSyncOjname(req, res, next) {
   const ojname = req.params.ojname;
   const username = req.session.username;
+
+  if (ojname === 'vjudge') {
+    req.flash('info', 'You cannot sync vjudge directly. Sync individual oj.');
+    return res.redirect(`/user/profile/${req.session.username}`);
+  }
   try {
     const user = await User.findById(req.session.userId);
 
@@ -186,17 +191,30 @@ async function postSyncOjname(req, res, next) {
       return x.ojname === ojname;
     })[0];
 
+    // Grab vjudge if available
+    const vjudgeStat = _.filter(user.ojStats, function(x) {
+      return x.ojname === 'vjudge';
+    })[0];
+
     const ojUserId = ojStat.userIds[0];
     const scrap = await ojscraper.getUserInfo({ojname, username: ojUserId});
 
-    if ( ojStat.solveCount && ojStat.solveCount >= scrap.solveCount ) {
+    const vjudgeUserId = vjudgeStat.userIds[0];
+    const vjudgeScrap = await ojscraper.getUserInfo({
+      ojname: 'vjudge', username: vjudgeUserId, subojname: ojname,
+    });
+
+    const totalScrapSolveCount = scrap.solveCount + vjudgeScrap.solveCount;
+    const totalSolveList = _.union(scrap.solveList, vjudgeScrap.solveList);
+
+    if ( ojStat.solveCount && ojStat.solveCount >= totalScrapSolveCount ) {
       req.flash('info', 'Already uptodate');
       return res.redirect(`/user/profile/${username}`);
     }
 
-    ojStat.solveCount = parseInt(scrap.solveCount);
-    const newSolved = _.difference(scrap.solveList, ojStat.solveList);
-    ojStat.solveList = scrap.solveList;
+    ojStat.solveCount = parseInt(totalScrapSolveCount);
+    const newSolved = _.difference(totalSolveList, ojStat.solveList);
+    ojStat.solveList = _.orderBy(totalSolveList);
 
     await user.save();
 

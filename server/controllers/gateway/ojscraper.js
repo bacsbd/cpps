@@ -25,8 +25,9 @@ async function getProblemInfo(req, res, next) {
 
 async function getUserInfo(req, res, next) {
   const {ojname, username} = req.params;
+  const subojname = 'uva';
   try {
-    const info = await ojscraper.getUserInfo({ojname, username});
+    const info = await ojscraper.getUserInfo({ojname, username, subojname});
     return res.json({
       solveCount: info.solveCount,
     });

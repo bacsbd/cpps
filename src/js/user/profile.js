@@ -38,7 +38,10 @@ $('.checkUserId').click(function(event) {
       return false;
     }
     // eslint-disable-next-line max-len
-    if ( confirm(`The user ${userId} has solved ${info.solveCount}. Is this you?`) ) {
+    const normalMsg = `The user ${userId} has solved ${info.solveCount}. Is this you?`;
+    // eslint-disable-next-line max-len
+    const vjudgeMsg = `The user ${userId} has solved ${info.solveCount} in Vjudge-UVa. Is this you?`;
+    if ( confirm(ojname === 'vjudge'? vjudgeMsg: normalMsg) ) {
       $('#setUserNameModal form').submit();
     }
     $('body').removeClass('loadingModal');

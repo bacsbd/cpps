@@ -52,6 +52,10 @@ module.exports = {
       format: '^\\d{3,5}$', //3 to 5 digits
     },
     // {name: 'UVaLive'},
+    {
+      displayName: 'VJudge',
+      name: 'vjudge',
+    },
     // {name: 'ZOJ'},
   ],
 };
