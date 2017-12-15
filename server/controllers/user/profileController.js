@@ -11,7 +11,6 @@ const ojscraper = require('ojscraper');
 
 const router = express.Router(); // '/user/profile'
 
-router.get('/:username', getProfile);
 router
   .get('/change-password', recaptcha.middleware.render, getChangePassword);
 router
@@ -21,6 +20,8 @@ router.post('/set-username', postSetUsername);
 router.post('/set-userId', postSetUserId);
 router.post('/sync-ojsolve/:ojname', postSyncOjname);
 
+// TODO: account should be separate from profile
+router.get('/:username', getProfile);
 
 module.exports = {
   addRouter(app) {
