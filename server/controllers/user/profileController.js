@@ -55,7 +55,6 @@ async function getProfile(req, res) {
     status: user.status,
   };
 
-  console.log(username === req.session.username);
   return res.render('user/profile', {
     data: dataSorted,
     displayUser,
@@ -204,15 +203,15 @@ async function postSyncOjname(req, res, next) {
       ojname: 'vjudge', username: vjudgeUserId, subojname: ojname,
     });
 
-    const totalScrapSolveCount = scrap.solveCount + vjudgeScrap.solveCount;
     const totalSolveList = _.union(scrap.solveList, vjudgeScrap.solveList);
+    const totalScrapSolveCount = totalSolveList.length;
 
-    if ( ojStat.solveCount && ojStat.solveCount >= totalScrapSolveCount ) {
-      req.flash('info', 'Already uptodate');
-      return res.redirect(`/user/profile/${username}`);
-    }
+    // if ( ojStat.solveCount && ojStat.solveCount >= totalScrapSolveCount ) {
+    //   req.flash('info', 'Already uptodate');
+    //   return res.redirect(`/user/profile/${username}`);
+    // }
 
-    ojStat.solveCount = parseInt(totalScrapSolveCount);
+    ojStat.solveCount = totalScrapSolveCount;
     const newSolved = _.difference(totalSolveList, ojStat.solveList);
     ojStat.solveList = _.orderBy(totalSolveList);
 
