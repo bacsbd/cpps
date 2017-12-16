@@ -2,12 +2,16 @@ const express = require('express');
 const Gate = require('mongoose').model('Gate');
 const User = require('mongoose').model('User');
 const _ = require('lodash');
+const path = require('path');
+const rootPath = require('world').rootPath;
+const ojnames = require(path.join(rootPath, 'models/ojnames.js')).data;
 
 const router = express.Router();
 
 router.get('/recent', getRecent);
 router.get('/sync-problems', syncProblems);
 router.get('/done-list/:itemId', getDoneList);
+router.get('/leaderboard', getLeaderboard);
 
 module.exports = {
   addRouter(app) {
@@ -48,32 +52,84 @@ async function usersThatSolved(ojname, problemId) {
   }
 }
 
-async function syncProblems(req, res) {
+async function syncProblems(req, res, next) {
   req.flash('info', 'Processing the request. It will take a while.');
   res.redirect('/admin/dashboard');
 
-  const problems = await Gate.find({
-    type: 'problem',
-  }, {platform: 1, pid: 1}).exec();
+  try {
+    const problems = await Gate.find({
+      type: 'problem',
+    }, {platform: 1, pid: 1}).exec();
 
-  _.each(problems, async function(p) {
-    // Get users that solved this problem
-    const doneList = await usersThatSolved(p.platform, p.pid);
-    // Update doneList
-    await Gate.findOneAndUpdate({_id: p._id}, {$set: {doneList}});
-  });
+    _.each(problems, async function(p) {
+      // Get users that solved this problem
+      const doneList = await usersThatSolved(p.platform, p.pid);
+      // Update doneList
+      await Gate.findOneAndUpdate({_id: p._id}, {$set: {doneList}});
+    });
+  } catch (err) {
+    next(err);
+  }
 }
 
 async function getDoneList(req, res) {
   const itemId = req.params.itemId;
-  const item = await Gate.findById(itemId, {
-    platform: 1,
-    pid: 1,
-    title: 1,
-    doneList: 1,
-  }).exec();
-  return res.render('gateway/doneList.pug', {
-    title: `Done List of ${item.platform} ${item.pid} - ${item.title}`,
-    doneList: item.doneList,
-  });
+  try{
+    const item = await Gate.findById(itemId, {
+      platform: 1,
+      pid: 1,
+      title: 1,
+      doneList: 1,
+    }).exec();
+    return res.render('gateway/doneList.pug', {
+      title: `Done List of ${item.platform} ${item.pid} - ${item.title}`,
+      doneList: item.doneList,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function getLeaderboard(req, res, next) {
+  try{
+    const userData = await User.aggregate([
+      {$match: {username: {$exists: true}}},
+      {$project: {username: 1, _id: 0, ojStats: 1}},
+      {$unwind: '$ojStats'},
+      {
+        $project: {
+          username: 1,
+          ojname: '$ojStats.ojname',
+          solveCount: '$ojStats.solveCount',
+        }},
+      {
+        $group: {
+          _id: '$username',
+          totalSolved: {$sum: '$solveCount'},
+          ojStats: {
+            $push: {
+              ojname: '$ojname',
+              solveCount: '$solveCount',
+            }}}},
+      {$project: {_id: 0, username: '$_id', totalSolved: 1, ojStats: 1}},
+      {$sort: {totalSolved: -1, username: 1}},
+    ]);
+
+    const data = [];
+    _.each(userData, function(user) {
+      const d = {};
+      d.username = user.username;
+      d.totalSolved = user.totalSolved;
+      _.each(user.ojStats, function(stat) {
+        let {ojname, solveCount} = stat;
+        if (!solveCount) solveCount = 0;
+        d[ojname] = solveCount;
+      });
+      data.push(d);
+    });
+
+    return res.render('gateway/leaderboard', {data, ojnames});
+  } catch (err) {
+    next(err);
+  }
 }

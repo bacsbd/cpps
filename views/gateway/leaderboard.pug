@@ -1,0 +1,26 @@
+extends ../layouts/layout.pug
+
+block content
+  .row#fill-view
+    .col
+      h3.text-center Leaderboard
+      table.table.table-cell-center
+        thead
+          tr
+            th Index
+            th Username
+            th Total Solved
+            each ojname in ojnames
+              th= ojname.name
+        tbody
+          each user, index in data
+            tr
+              td= index + 1
+              td
+                a(href=`/user/profile/${user.username}`)= user.username
+              td= user.totalSolved
+              each ojname in ojnames
+                if (user[ojname.name] !== undefined)
+                  td= user[ojname.name]
+                else
+                  td -
