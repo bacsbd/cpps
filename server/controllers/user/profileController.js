@@ -198,10 +198,16 @@ async function postSyncOjname(req, res, next) {
     const ojUserId = ojStat.userIds[0];
     const scrap = await ojscraper.getUserInfo({ojname, username: ojUserId});
 
-    const vjudgeUserId = vjudgeStat.userIds[0];
-    const vjudgeScrap = await ojscraper.getUserInfo({
-      ojname: 'vjudge', username: vjudgeUserId, subojname: ojname,
-    });
+    let vjudgeUserId;
+    let vjudgeScrap = {
+      solveList: [],
+    };
+    if (vjudgeStat) {
+      vjudgeUserId = vjudgeStat.userIds[0];
+      vjudgeScrap = await ojscraper.getUserInfo({
+        ojname: 'vjudge', username: vjudgeUserId, subojname: ojname,
+      });
+    }
 
     const totalSolveList = _.union(scrap.solveList, vjudgeScrap.solveList);
     const totalScrapSolveCount = totalSolveList.length;
