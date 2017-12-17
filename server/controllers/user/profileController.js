@@ -195,8 +195,13 @@ async function postSyncOjname(req, res, next) {
       return x.ojname === 'vjudge';
     })[0];
 
+    const credential =
+      _.get(require('world').secretModule, 'ojscraper.loj.credential');
+
     const ojUserId = ojStat.userIds[0];
-    const scrap = await ojscraper.getUserInfo({ojname, username: ojUserId});
+    const scrap = await ojscraper.getUserInfo({
+      ojname, username: ojUserId, credential,
+    });
 
     let vjudgeUserId;
     let vjudgeScrap = {

@@ -25,10 +25,11 @@ module.exports = {
       format: fourDigits,
     },
     // {name: 'LC'},
-    // {
-    //   name: 'LOJ',
-    //   format: fourDigits,
-    // },
+    {
+      name: 'loj',
+      displayName: 'LightOJ',
+      format: fourDigits,
+    },
     {
       name: 'poj',
       displayName: 'POJ',
