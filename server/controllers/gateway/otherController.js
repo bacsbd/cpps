@@ -5,13 +5,16 @@ const _ = require('lodash');
 const path = require('path');
 const rootPath = require('world').rootPath;
 const ojnames = require(path.join(rootPath, 'models/ojnames.js')).data;
+const {isRoot} = require('middlewares/userGroup');
+const login = require('middlewares/login');
 
 const router = express.Router();
 
 router.get('/recent', getRecent);
-router.get('/sync-problems', syncProblems);
+router.get('/sync-problems', isRoot, syncProblems);
 router.get('/done-list/:itemId', getDoneList);
 router.get('/leaderboard', getLeaderboard);
+router.get('/random-problem', login, getRandomProblem);
 
 module.exports = {
   addRouter(app) {
@@ -130,6 +133,21 @@ async function getLeaderboard(req, res, next) {
 
     return res.render('gateway/leaderboard', {data, ojnames});
   } catch (err) {
+    next(err);
+  }
+}
+
+async function getRandomProblem(req, res, next) {
+  try{
+    const username = req.session.username;
+    const problemArr = await Gate.aggregate([
+      {$match: {type: 'problem', doneList: {$ne: username}}},
+      {$sample: {size: 1}},
+    ]);
+    const problem = problemArr[0];
+    problem.userSolved = problem.doneList.length;
+    return res.render('gateway/random', {problem});
+  } catch(err) {
     next(err);
   }
 }

@@ -1,0 +1,35 @@
+extends ../layouts/layout.pug
+
+block content
+  .row.align-items-center#fill-view
+    .col
+      h3.text-center A Random Unsolved Problem
+      table.table.table-cell-center
+        thead
+          th Index
+          th Title
+          th Type
+          th Action
+          if (login)
+            th Done
+        tbody
+          tr
+            td= 1
+            td
+              a(target="_blank", href=problem.link)= problem.platform + " " + problem.pid + " - " + problem.title
+            td #[i.fa.fa-link(aria-hidden="true") ]
+            td
+              a(target="_blank", href=problem.link) Solve
+              if problem.body
+                span= " | "
+                a(href="/gateway/read-item/"+problem._id) Hints
+            if (login)
+              if ( problem.type === "problem" || problem.type === "text" )
+                td
+                  i.fa.fa-square-o(aria-hidden="true")
+                  span &nbsp; &nbsp;
+                  a.btn.btn-light.py-0(href=`/gateway/done-list/${problem._id}`)
+                    i.fa.fa-user-times(aria-hidden="true")
+                    span= problem.userSolved
+              else
+                td ---
