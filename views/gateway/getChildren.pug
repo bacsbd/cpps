@@ -31,6 +31,7 @@ block content
           each val, index in items
             tr
               td
+                a(name=val._id)
                 span.indexNumber= index + 1
                 if (superUser)
                   span= " | " + val.ind
