@@ -1,0 +1,28 @@
+extends ../layouts/layout.pug
+
+block content
+  .row#fill-view.align-items-center
+    .col.text-center
+      h1 Search Problem
+      form#inlineForm.form-inline.justify-content-center(action=`/gateway/search-problem`, method='post')
+        //- Form fields for problem. Gets intercepted by jquery.
+        .form-group.mx-1.problem
+          label.sr-only(for='platform') Platform
+          select#platform.form-control(name="platform", onchange="addPattern(this.selectedOptions[0].dataset.pattern);")
+            option(disabled, selected, value=undefined) Select a Platform
+            each val in ojnames
+              option(value=val.name, data-pattern=val.format )= val.name
+        .form-group.mx-1.problem
+          label.sr-only(for='pid') Problem ID
+          input#pid.form-control(type='text', name='pid', placeholder="Problem ID")
+
+        button.btn.btn-primary.mr-1.disableOnClick(type='submit') Search
+
+block scripts
+  script( defer ).
+    function addPattern(pattern) {
+      if ( !pattern ) pattern = ".+";
+      $('#pid')
+      .attr('pattern', pattern)
+      .attr('title', `Please match the RegExp: ${pattern}`);
+    }

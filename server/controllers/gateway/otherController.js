@@ -15,6 +15,8 @@ router.get('/sync-problems', isRoot, syncProblems);
 router.get('/done-list/:itemId', getDoneList);
 router.get('/leaderboard', getLeaderboard);
 router.get('/random-problem', login, getRandomProblem);
+router.get('/search-problem', getSearchProblem);
+router.post('/search-problem', postSearchProblem);
 
 module.exports = {
   addRouter(app) {
@@ -149,5 +151,33 @@ async function getRandomProblem(req, res, next) {
     return res.render('gateway/random', {problem});
   } catch(err) {
     next(err);
+  }
+}
+
+function getSearchProblem(req, res) {
+  return res.render('gateway/search', {
+    ojnames,
+  });
+}
+
+async function postSearchProblem(req, res, next) {
+  const {platform, pid} = req.body;
+
+  try {
+    const problem = await Gate.findOne({
+      type: 'problem',
+      platform,
+      pid,
+    }).exec();
+    if (!problem) {
+      req.flash('error', 'No such problem in Gateway');
+      return res.redirect('/gateway/search-problem');
+    }
+    req.flash('success', 'Problem found');
+    return res.redirect(
+      `/gateway/get-children/${problem.parentId}#${problem._id}`
+    );
+  } catch(e) {
+    next(e);
   }
 }
