@@ -15,33 +15,33 @@ app.set('views', path.join(rootPath, '../views'));
 app.use('/', express.static(path.join(rootPath, '../public')));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({
-  extended: true
+  extended: true,
 })); // support encoded bodies
 
 
-/*Configuration*/
+/* Configuration*/
 require('./configuration/database');
 require('./configuration/session').addSession(app);
 app.use(require('connect-flash')());
 recaptcha.init(secret.recaptcha.site, secret.recaptcha.secret);
-/****/
 
-/*Models*/
+
+/* Models*/
 require('./models/userModel.js');
 require('./models/notebookModel.js');
 require('./models/gateModel.js');
 require('./models/settingModel.js');
-/****/
+require('./models/classroomModel.js');
 
-/*Middleware*/
+
+/* Middleware*/
 app.use(require('middlewares/flash.js'));
 app.use(require('middlewares/verification.js'));
 app.use(require('middlewares/username.js'));
 app.use(require('middlewares/passSession.js'));
 app.use(require('middlewares/privateSite.js'));
-/****/
 
-/*Routers*/
+/* Routers*/
 require('./controllers/admin/dashboard.js').addRouter(app);
 require('./controllers/admin/root.js').addRouter(app);
 
@@ -60,7 +60,6 @@ require('./controllers/gateway/getChildrenController.js').addRouter(app);
 require('./controllers/gateway/otherController.js').addRouter(app);
 require('./controllers/gateway/doneStat.js').addRouter(app);
 require('./controllers/gateway/ojscraper.js').addRouter(app);
-/****/
 
 app.use(function(err, req, res, next) {
   console.error(err.stack);
@@ -84,6 +83,6 @@ if (require.main === module) {
 } else {
   module.exports = {
     server,
-    app
+    app,
   };
 }
