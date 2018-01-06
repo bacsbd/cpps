@@ -63,6 +63,8 @@ require('./controllers/gateway/ojscraper.js').addRouter(app);
 
 /* API */
 app.use('/api/v1', require('./api/v1/classroom.js'));
+require('./api/v1/contests.js').addRouter(app);
+
 app.use('/api/v1', function(err, req, res, next) {
   return res.status(500).json({
     status: 500,
