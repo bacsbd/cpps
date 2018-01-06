@@ -4,4 +4,3 @@ css_build
 public
 .eslintrc
 server/secret.js
-package-lock.json

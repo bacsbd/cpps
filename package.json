@@ -1,6 +1,6 @@
 {
   "name": "cpps",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "A portal all about competitive programming and problem solving",
   "main": "server/index.js",
   "scripts": {
