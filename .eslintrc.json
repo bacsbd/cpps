@@ -5,7 +5,7 @@
   },
   "rules": {
     "new-cap": ["error", {
-      "capIsNewExceptions": ["Router"]
+      "capIsNewExceptions": ["Router", "ObjectId"]
       }],
     "require-jsdoc": "off"
   }
