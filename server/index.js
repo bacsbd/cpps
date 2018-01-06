@@ -61,6 +61,9 @@ require('./controllers/gateway/otherController.js').addRouter(app);
 require('./controllers/gateway/doneStat.js').addRouter(app);
 require('./controllers/gateway/ojscraper.js').addRouter(app);
 
+/* API */
+app.use('/api/v1', require('./api/v1/classroom.js'));
+
 app.use(function(err, req, res, next) {
   console.error(err.stack);
   if ( req.session.status !== 'user' ) res.status(500).send(err.message);

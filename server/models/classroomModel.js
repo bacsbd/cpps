@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const classroomSchema = new mongoose.Schema({
   name: {
@@ -7,12 +8,12 @@ const classroomSchema = new mongoose.Schema({
     required: true,
   },
   coach: {
-    type: Schema.Types.ObjectId,
+    type: ObjectId,
     ref: 'User',
     required: true,
     index: true,
   },
-  students: [{type: Schema.Types.ObjectId, ref: 'User'}],
+  students: [{type: ObjectId, ref: 'User'}],
 }, {
   timestamps: true,
 });

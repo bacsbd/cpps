@@ -23,19 +23,8 @@ module.exports = function(gulp) {
       .pipe(gulp.dest(config.dirs.css_build));
   });
 
-  gulp.task('cssAbsPath:client_module', function() {
-    return gulp.src(config.css.client_module, {
-        nodir: true,
-      })
-      .pipe(changed(config.dirs.css_build))
-      .pipe(absUrl({
-        root: './client_module',
-      }))
-      .pipe(gulp.dest(config.dirs.css_build));
-  });
-
   gulp.task('build:css',
-    gulp.parallel('cssAbsPath:src', 'cssAbsPath:client_module'
+    gulp.parallel('cssAbsPath:src'
   ));
 
   gulp.task('style:scss', gulp.series(function() {

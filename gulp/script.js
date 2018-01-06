@@ -9,46 +9,13 @@ const buffer = require('vinyl-buffer');
 const config = require('./config.js');
 const sourcemaps = require('gulp-sourcemaps');
 
-const vendors = config.vendorInput.js;
-
 module.exports = function(gulp) {
-  gulp.task('build:vendor', function() {
-    const b = browserify({
-      debug: true,
-      paths: config.browserifyPath,
-    });
-
-    // require all libs specified in vendors array
-    vendors.forEach(function(lib) {
-      let expose = lib;
-      if (lib[0] === '.') {
-        // Relative path
-        expose = path.basename(lib, '.js');
-      }
-
-      b.require(lib, {
-        expose,
-      });
-    });
-
-    return b.bundle()
-      .pipe(source('vendor.js'))
-      .pipe(gulp.dest(config.vendorOutput.js))
-      .pipe(rename({
-        suffix: '.min',
-      }))
-      .pipe(buffer())
-      .pipe(uglify())
-      .pipe(gulp.dest(config.vendorOutput.js));
-  });
-
   function browserified(filePath) {
     const fileName = path.basename(filePath);
     return browserify({
         entries: [filePath],
         paths: config.browserifyPath,
       })
-      .external(vendors)
       .transform('babelify', {
         presets: ['es2015'],
       })
