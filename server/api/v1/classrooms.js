@@ -5,11 +5,11 @@ const login = require('middlewares/login');
 
 const router = express.Router();
 
-router.get('/classroom', getClassroom);
-router.get('/classroom/:classId', getOneClassroom);
-router.post('/classroom', insertClassroom);
-router.put('/classroom/:classId', updateClassroom);
-router.delete('/classroom/:classId', deleteClassroom);
+router.get('/classrooms', getClassroom);
+router.get('/classrooms/:classId', getOneClassroom);
+router.post('/classrooms', insertClassroom);
+router.put('/classrooms/:classId', updateClassroom);
+router.delete('/classrooms/:classId', deleteClassroom);
 
 module.exports = {
   addRouter(app) {
