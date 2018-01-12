@@ -10,8 +10,11 @@ router.post('/classroom', insertClassroom);
 router.put('/classroom/:classId', updateClassroom);
 router.delete('/classroom/:classId', deleteClassroom);
 
-module.exports = router;
-
+module.exports = {
+  addRouter(app) {
+    app.use('/api/v1', login, router);
+  },
+};
 /**
  *Implementation
  */
