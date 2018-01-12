@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Classroom = mongoose.model('Classroom');
 const login = require('middlewares/login');
+const isObjectId = mongoose.Types.ObjectId.isValid;
 
 const router = express.Router();
 
@@ -57,8 +58,16 @@ async function insertClassroom(req, res, next) {
   try {
     const {name, students} = req.body;
     if (!name || !students) {
-      throw new Error('Post body must have name and students field');
+      const err = new Error('Post body must have name and students field');
+      err.status = 400;
+      throw err;
     }
+    if (!students.every(isObjectId)) {
+      const err = new Error('Students must be an array of ObjectId');
+      err.status = 400;
+      throw err;
+    }
+
     const classroom = new Classroom({
       name,
       coach: req.session.userId,
