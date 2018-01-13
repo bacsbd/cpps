@@ -1,5 +1,5 @@
 const express = require('express');
-const loginMiddleware = require('middlewares/login');
+const {login} = require('middlewares/login');
 const User = require('mongoose').model('User');
 const Gate = require('mongoose').model('Gate');
 const recaptcha = require('express-recaptcha');
@@ -25,7 +25,7 @@ router.get('/:username', getProfile);
 
 module.exports = {
   addRouter(app) {
-    app.use('/user/profile', loginMiddleware, router);
+    app.use('/user/profile', login, router);
   },
 };
 

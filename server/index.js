@@ -32,6 +32,7 @@ require('./models/notebookModel.js');
 require('./models/gateModel.js');
 require('./models/settingModel.js');
 require('./models/classroomModel.js');
+require('./models/contestModel.js');
 
 
 /* Middleware*/
@@ -62,6 +63,7 @@ require('./controllers/gateway/doneStat.js').addRouter(app);
 require('./controllers/gateway/ojscraper.js').addRouter(app);
 
 /* API */
+app.use('/api/*', require('middlewares/login').apiLogin );
 require('./api/v1/classrooms.js').addRouter(app);
 require('./api/v1/contests.js').addRouter(app);
 require('./api/v1/users.js').addRouter(app);

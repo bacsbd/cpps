@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Classroom = mongoose.model('Classroom');
-const login = require('middlewares/login');
 const isObjectId = mongoose.Types.ObjectId.isValid;
 
 const router = express.Router();
@@ -14,7 +13,7 @@ router.delete('/classrooms/:classId', deleteClassroom);
 
 module.exports = {
   addRouter(app) {
-    app.use('/api/v1', login, router);
+    app.use('/api/v1', router);
   },
 };
 /**

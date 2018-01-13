@@ -6,7 +6,7 @@ const path = require('path');
 const rootPath = require('world').rootPath;
 const ojnames = require(path.join(rootPath, 'models/ojnames.js')).data;
 const {isRoot} = require('middlewares/userGroup');
-const login = require('middlewares/login');
+const {login} = require('middlewares/login');
 
 const router = express.Router();
 

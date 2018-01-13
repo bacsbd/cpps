@@ -1,13 +1,13 @@
 const express = require('express');
 const User = require('mongoose').model('User');
-const loginMiddleware = require('middlewares/login');
+const {login} = require('middlewares/login');
 const mailer = require('mailer').mailer;
 
 const router = express.Router();
 
-router.get('/verify', loginMiddleware, get_verify);
-router.post('/verify', loginMiddleware, post_verify);
-router.get('/send-code', loginMiddleware, get_send_code);
+router.get('/verify', login, get_verify);
+router.post('/verify', login, post_verify);
+router.get('/send-code', login, get_send_code);
 
 module.exports = {
   addRouter(app) {

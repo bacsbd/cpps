@@ -51,7 +51,7 @@ const contestSchema = new mongoose.Schema({
 /**
  * Deals with "createdBy" and "updatedBy"
  */
-schema.pre('save', function(next, req) {
+contestSchema.pre('save', function(next, req) {
   if ( !req.session ) {
     return next();
   }
