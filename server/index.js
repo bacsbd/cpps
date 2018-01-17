@@ -33,6 +33,7 @@ require('./models/gateModel.js');
 require('./models/settingModel.js');
 require('./models/classroomModel.js');
 require('./models/contestModel.js');
+require('./models/standingModel.js');
 
 
 /* Middleware*/

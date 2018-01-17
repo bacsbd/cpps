@@ -31,7 +31,9 @@ async function getClassroom(req, res, next) {
     if (coach) {
       dbQuery.coach = mongoose.Types.ObjectId(coach);
     }
-    const classrooms = await Classroom.find(dbQuery).exec();
+    const classrooms = await Classroom.find(dbQuery)
+      .populate('coach students', 'username')
+      .exec();
     return res.status(200).json({
       status: 200,
       data: classrooms,
@@ -46,7 +48,7 @@ async function getOneClassroom(req, res, next) {
     const {classId} = req.params;
     const classroom = await Classroom
       .findOne({_id: classId})
-      .populate('coach students')
+      .populate('coach students', 'username')
       .exec();
     return res.status(200).json({
       status: 200,
@@ -99,8 +101,8 @@ async function deleteOneStudent(req, res, next) {
       throw e;
     }
 
-    return res.status(204).json({
-      status: 204,
+    return res.status(200).json({
+      status: 200,
     });
   } catch (err) {
     return next(err);
@@ -120,7 +122,7 @@ async function insertClassroom(req, res, next) {
       err.status = 400;
       throw err;
     }
-    if ((new Set(students)).size !== array.length) {
+    if ((new Set(students)).size !== students.length) {
       const err = new Error('Students array must contain unique Ids');
       err.status = 400;
       throw err;
@@ -166,8 +168,8 @@ async function deleteClassroom(req, res, next) {
   try {
     const {classId} = req.params;
     await Classroom.findOneAndRemove({_id: classId}).exec();
-    return res.status(204).json({
-      status: 204,
+    return res.status(200).json({
+      status: 200,
     });
   } catch (err) {
     next(err);
