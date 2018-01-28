@@ -1,27 +1,27 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
-const contestSchema = new mongoose.Schema({
-  name: {
-    type: String,
+const ratingSchema = new mongoose.Schema({
+  userId: {
+    type: ObjectId,
+    ref: 'User',
     required: true,
-    set: removeNullOrBlank,
-    trim: true,
-  },
-  link: {
-    type: String,
-    set: removeNullOrBlank,
-    trim: true,
   },
   classroomId: {
     type: ObjectId,
     ref: 'Classroom',
+    required: true,
+  },
+  currentRating: {
+    type: Number,
+    required: true,
+    set: removeNullOrBlank,
   },
 }, {
   timestamps: true,
 });
 
-mongoose.model('Contest', contestSchema);
+mongoose.model('Rating', ratingSchema);
 
 /*
  * Implementation

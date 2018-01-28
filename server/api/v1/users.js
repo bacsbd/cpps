@@ -22,7 +22,7 @@ async function getUserIdFromUsername(req, res, next) {
     }
     const user = await User.findOne({username}, {_id: 1});
     if (!user) {
-      const err = new Error('User not found');
+      const err = new Error(`Username ${username} not found`);
       err.status = 404;
       throw err;
     }

@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const {isRoot} = require('middlewares/userGroup');
 const Classroom = mongoose.model('Classroom');
 const isObjectId = mongoose.Types.ObjectId.isValid;
 
@@ -17,7 +18,7 @@ router.delete('/classrooms/:classId/students/:studentId', deleteOneStudent);
 
 module.exports = {
   addRouter(app) {
-    app.use('/api/v1', router);
+    app.use('/api/v1', isRoot, router);
   },
 };
 /**
@@ -64,6 +65,12 @@ async function postAddOneStudent(req, res, next) {
     const {classId} = req.params;
     const {student} = req.body;
 
+    if (isObjectId(student) == false) {
+      const e = new Error(`Student: ${student} must be an objectId`);
+      e.status = 400;
+      throw e;
+    }
+
     const classroom = await Classroom.findOneAndUpdate({_id: classId}, {
       $addToSet: {
         students: student,
@@ -71,7 +78,7 @@ async function postAddOneStudent(req, res, next) {
     });
 
     if (!classroom) {
-      const e = new Error('No such classroom');
+      const e = new Error(`No such classroom: ${classId}`);
       e.status = 400;
       throw e;
     }

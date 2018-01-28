@@ -34,6 +34,7 @@ require('./models/settingModel.js');
 require('./models/classroomModel.js');
 require('./models/contestModel.js');
 require('./models/standingModel.js');
+require('./models/ratingModel.js');
 
 
 /* Middleware*/
@@ -68,6 +69,8 @@ app.use('/api/*', require('middlewares/login').apiLogin );
 require('./api/v1/classrooms.js').addRouter(app);
 require('./api/v1/contests.js').addRouter(app);
 require('./api/v1/users.js').addRouter(app);
+require('./api/v1/ratings.js').addRouter(app);
+require('./api/v1/standings.js').addRouter(app);
 
 app.use('/api/v1', function(err, req, res, next) {
   if ( err.status ) {
