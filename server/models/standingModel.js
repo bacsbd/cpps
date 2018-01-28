@@ -21,7 +21,7 @@ const standingSchema = new mongoose.Schema({
     ref: 'Contest',
     required: true,
   },
-  classroomId: {
+  classroomId: { // Find all ratings for user U who is member of classroom C
     type: ObjectId,
     ref: 'Classroom',
     required: true,

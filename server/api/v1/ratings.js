@@ -1,11 +1,12 @@
 const express = require('express');
 const {isRoot} = require('middlewares/userGroup');
 const Rating = require('mongoose').model('Rating');
+const Standing = require('mongoose').model('Standing');
 
 const router = express.Router();
 
 router.get('/ratings', getRatings);
-// router.post('/contests', insertContest);
+router.put('/ratings/apply/contest/:contestId', applyRating);
 
 module.exports = {
   addRouter(app) {
@@ -26,7 +27,7 @@ async function getRatings(req, res, next) {
     const rating = await Rating.find({classroomId, userId: userIds}).exec();
 
     const missingIds = userIds.filter((id)=>{
-      const found = rating.some((x)=> x.userId === id);
+      const found = rating.some((x)=> x.userId.toString() === id);
       return !found;
     });
 
@@ -43,6 +44,36 @@ async function getRatings(req, res, next) {
       data: rating,
     });
   } catch (err) {
+    next(err);
+  }
+}
+
+async function applyRating(req, res, next) {
+  try{
+    const {contestId} = req.params;
+
+    // Get rating changes due to contestId
+    const standing = await Standing.find({contestId}).exec();
+
+    await Promise.all(standing.map(async(s)=>{
+      await Rating.findOneAndUpdate({
+        userId: s.userId,
+        classroomId: s.classroomId,
+      }, {
+        $set: {
+          userId: s.userId,
+          classroomId: s.classroomId,
+          currentRating: s.newRating,
+        },
+      }, {
+        upsert: true,
+      });
+    }));
+
+    return res.status(200).json({
+      status: 200,
+    });
+  } catch(err) {
     next(err);
   }
 }
