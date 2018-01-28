@@ -8,6 +8,8 @@ const server = require('http').createServer(app);
 const rootPath = world.rootPath;
 const secret = require('world').secretModule;
 
+const clientBuild = path.join(rootPath, '../client/build');
+
 app.set('port', process.env.PORT || 8002);
 app.set('view engine', 'pug');
 app.set('views', path.join(rootPath, '../views'));
@@ -90,6 +92,12 @@ app.use('/api/v1/*', function(req, res, next) {
     status: 404,
     message: 'API not found',
   });
+});
+
+/* React Modules */
+app.use('/', express.static(path.join(clientBuild, 'coach')));
+app.get('/coach', function(req, res, next) {
+  return res.sendFile(path.join(clientBuild, 'coach/index.html'));
 });
 
 app.use(function(err, req, res, next) {

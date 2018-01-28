@@ -4,3 +4,4 @@ css_build
 public
 .eslintrc
 server/secret.js
+client/build/

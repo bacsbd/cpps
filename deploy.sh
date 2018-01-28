@@ -84,6 +84,15 @@ elif [[ $TYPE = "mongo-express" ]] ; then
       mongo-express
 elif [[ $TYPE = "init" ]] ; then
   docker exec -it cpps_app_1 node server/configuration/init.js
+elif [[ $TYPE = "build-client" ]] ; then
+  cd client/modules/coach/app
+  yarn install
+  yarn build
+  cd -
+  cd client/
+  mkdir -p build
+  cd build
+  cp ../modules/coach/app/build -r coach
 else
     echo -e "${BOLD}Unknown Type${OFF}: $TYPE"
 fi
