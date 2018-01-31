@@ -98,7 +98,10 @@ app.use('/api/v1/*', function(req, res, next) {
 
 /* React Modules */
 app.use('/', express.static(path.join(clientBuild, 'coach')));
-app.get('/coach', function(req, res, next) {
+app.get(/\/coach.*/, function(req, res, next) {
+  return res.sendFile(path.join(clientBuild, 'coach/index.html'));
+});
+app.get('/classroom/*', function(req, res, next) {
   return res.sendFile(path.join(clientBuild, 'coach/index.html'));
 });
 
