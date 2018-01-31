@@ -7,6 +7,7 @@ const app = express();
 const server = require('http').createServer(app);
 const rootPath = world.rootPath;
 const secret = require('world').secretModule;
+const morgan = require('morgan');
 
 const clientBuild = path.join(rootPath, '../client/build');
 
@@ -45,6 +46,7 @@ app.use(require('middlewares/verification.js'));
 app.use(require('middlewares/username.js'));
 app.use(require('middlewares/passSession.js'));
 app.use(require('middlewares/privateSite.js'));
+app.use(morgan('dev'));
 
 /* Routers*/
 require('./controllers/admin/dashboard.js').addRouter(app);

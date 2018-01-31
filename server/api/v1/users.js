@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const {isAdmin} = require('middlewares/userGroup');
 const User = require('mongoose').model('User');
+const Classroom = require('mongoose').model('Classroom');
 
 router.get('/users/username-userId/:username', getUserIdFromUsername );
 router.get('/users/:username', getUser );
+router.get('/users/stats/whoSolvedIt', whoSolvedIt );
 
 module.exports = {
   addRouter(app) {
@@ -40,8 +42,6 @@ async function getUser(req, res, next) {
     const {username} = req.params;
     const {select} = req.query;
 
-    console.log(select);
-
     const user = await User.findOne({username}).select(select).exec();
 
     if (!user) {
@@ -53,6 +53,41 @@ async function getUser(req, res, next) {
     return res.status(200).json({
       status: 200,
       data: user,
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function whoSolvedIt(req, res, next) {
+  try{
+    const {problemList, classId} = req.query;
+
+    const studentList = await Classroom
+      .findOne({_id: classId})
+      .select({students: 1})
+      .exec();
+
+    const studentIds = studentList.students;
+
+    const resp = await Promise.all(problemList.map(async (p)=>{
+      const solvedBy = await User.find({
+        _id: studentIds,
+        ojStats: {
+          $elemMatch: {
+            ojname: p.ojname,
+            solveList: p.problemId,
+          },
+        },
+      }).select('_id username').exec();
+      p.solvedBy = solvedBy.map((x)=>x.username);
+      p.solveCount = solvedBy.length;
+      return p;
+    }));
+
+    return res.status(200).json({
+      status: 200,
+      data: resp,
     });
   } catch (err) {
     return next(err);

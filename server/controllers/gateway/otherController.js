@@ -59,7 +59,7 @@ async function usersThatSolved(ojname, problemId) {
 
 async function syncProblems(req, res, next) {
   req.flash('info', 'Processing the request. It will take a while.');
-  res.redirect('/admin/dashboard');
+  // res.redirect('/admin/dashboard');
 
   try {
     const problems = await Gate.find({
