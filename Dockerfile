@@ -18,7 +18,7 @@ RUN yarn install
 
 ADD . .
 
-RUN cd client/modules/coach/app && yarn install && yarn build && cd - && cd client/ && mkdir -p build && cd build && cp ../modules/coach/app/build -r coach
+RUN cd client/modules/coach && yarn install && yarn build && cd - && cd client/ && mkdir -p build && cd build && cp ../modules/coach/build -r coach
 
 EXPOSE 8002
 EXPOSE 3000
