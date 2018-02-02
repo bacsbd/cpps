@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.get('/contests', getContests);
 router.post('/contests', insertContest);
+router.delete('/contests/:contestId', deleteStandings);
 
 module.exports = {
   addRouter(app) {
@@ -67,6 +68,25 @@ async function insertContest(req, res, next) {
     });
   } catch (err) {
     err.message = err.message + ' Error in standings creation';
+    err.status = 500;
+    err.type = 'standings-error';
+    return next(err);
+  }
+}
+
+// Only allow deleting standings
+async function deleteStandings(req, res, next) {
+  // TODO: Check if classroom belongs to user
+  const {contestId} = req.params;
+
+  // Now remove all related standings
+  try {
+    await Standing.remove({contestId}).exec();
+    return res.status(200).json({
+      status: 200,
+    });
+  } catch (err) {
+    err.message = err.message + ' Error in standings deletion';
     err.status = 500;
     err.type = 'standings-error';
     return next(err);
