@@ -5,6 +5,7 @@ const Standing = require('mongoose').model('Standing');
 const router = express.Router();
 
 router.get('/standings', getStandings);
+router.post('/standings', insertStandings);
 
 
 module.exports = {
@@ -30,5 +31,34 @@ async function getStandings(req, res, next) {
     });
   } catch (err) {
     next(err);
+  }
+}
+
+async function insertStandings(req, res, next) {
+  const {classroomId, standings, contestId} = req.body;
+  try {
+    const data = await Promise.all(standings.map(async (s)=>{
+      const standing = new Standing({
+        username: s.username,
+        userId: s.userId,
+        position: s.position,
+        contestId,
+        classroomId,
+        previousRating: s.previousRating,
+        newRating: s.newRating,
+      });
+      await standing.save();
+      return standing;
+    }));
+
+    return res.status(201).json({
+      status: 201,
+      data,
+    });
+  } catch (err) {
+    err.message = err.message + ' Error in standings creation';
+    err.status = 500;
+    err.type = 'standings-error';
+    return next(err);
   }
 }

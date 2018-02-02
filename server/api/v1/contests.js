@@ -35,41 +35,18 @@ async function getContests(req, res, next) {
 
 async function insertContest(req, res, next) {
   // TODO: Check if classroom belongs to user
-  const {name, link, classroomId, standings} = req.body;
+  const {name, link, classroomId} = req.body;
   const contest = new Contest({name, link, classroomId});
   try {
     await contest.save();
-  } catch (err) {
-    err.message = err.message + ' Error during contest creation';
-    err.status = 500;
-    err.type = 'contest-error';
-    return next(err);
-  }
-
-  try {
-    const contestId = contest._id;
-    await Promise.all(standings.map(async (s)=>{
-      const standing = new Standing({
-        username: s.username,
-        userId: s.userId,
-        position: s.position,
-        contestId,
-        classroomId,
-        previousRating: s.previousRating,
-        newRating: s.newRating,
-      });
-      await standing.save();
-      return standing;
-    }));
-
     return res.status(201).json({
       status: 201,
       data: contest,
     });
   } catch (err) {
-    err.message = err.message + ' Error in standings creation';
+    err.message = err.message + ' Error during contest creation';
     err.status = 500;
-    err.type = 'standings-error';
+    err.type = 'contest-error';
     return next(err);
   }
 }
