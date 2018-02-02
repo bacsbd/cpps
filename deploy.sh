@@ -55,12 +55,12 @@ export PORT
 if [[ $TYPE = "prod" || $TYPE = "beta" ]] ; then
   docker-compose down
   git pull origin
-  git submodule update --remote --recursive
   if [[ $TYPE = "prod" ]] ; then
     git checkout master
   else
     git checkout release
   fi
+  git submodule update --remote --recursive
   docker-compose build
   docker-compose up &
   sleep 5s
