@@ -6,12 +6,12 @@ const Standing = require('mongoose').model('Standing');
 const router = express.Router();
 
 router.get('/contests', getContests);
-router.post('/contests', insertContest);
-router.delete('/contests/:contestId', deleteStandings);
+router.post('/contests', isRoot, insertContest);
+router.delete('/contests/:contestId', isRoot, deleteStandings);
 
 module.exports = {
   addRouter(app) {
-    app.use('/api/v1', isRoot, router);
+    app.use('/api/v1', router);
   },
 };
 

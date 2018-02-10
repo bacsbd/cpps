@@ -89,6 +89,7 @@ app.use('/api/v1', function(err, req, res, next) {
     message: err.message,
   });
 });
+
 app.use('/api/v1/*', function(req, res, next) {
   return res.status(404).json({
     status: 404,

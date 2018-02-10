@@ -6,19 +6,20 @@ const isObjectId = mongoose.Types.ObjectId.isValid;
 
 const router = express.Router();
 
-router.get('/classrooms', getClassroom);
-router.post('/classrooms', insertClassroom);
+router.get('/classrooms', isRoot, getClassroom);
+router.post('/classrooms', isRoot, insertClassroom);
 
 router.get('/classrooms/:classId', getOneClassroom);
-router.put('/classrooms/:classId', updateClassroom);
-router.delete('/classrooms/:classId', deleteClassroom);
+router.put('/classrooms/:classId', isRoot, updateClassroom);
+router.delete('/classrooms/:classId', isRoot, deleteClassroom);
 
-router.post('/classrooms/:classId/students', postAddOneStudent);
-router.delete('/classrooms/:classId/students/:studentId', deleteOneStudent);
+router.post('/classrooms/:classId/students', isRoot, postAddOneStudent);
+router.delete(
+  '/classrooms/:classId/students/:studentId', isRoot, deleteOneStudent);
 
 module.exports = {
   addRouter(app) {
-    app.use('/api/v1', isRoot, router);
+    app.use('/api/v1', router);
   },
 };
 /**

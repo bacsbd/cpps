@@ -6,11 +6,11 @@ const Standing = require('mongoose').model('Standing');
 const router = express.Router();
 
 router.get('/ratings', getRatings);
-router.put('/ratings/apply/contest/:contestId', applyRating);
+router.put('/ratings/apply/contest/:contestId', isRoot, applyRating);
 
 module.exports = {
   addRouter(app) {
-    app.use('/api/v1', isRoot, router);
+    app.use('/api/v1', router);
   },
 };
 
@@ -38,7 +38,6 @@ async function getRatings(req, res, next) {
         currentRating: -1,
       });
     });
-
     return res.status(200).json({
       status: 200,
       data: rating,

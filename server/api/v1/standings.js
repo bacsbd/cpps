@@ -4,13 +4,13 @@ const Standing = require('mongoose').model('Standing');
 
 const router = express.Router();
 
-router.get('/standings', getStandings);
-router.post('/standings', insertStandings);
+router.get('/standings', isRoot, getStandings);
+router.post('/standings', isRoot, insertStandings);
 
 
 module.exports = {
   addRouter(app) {
-    app.use('/api/v1', isRoot, router);
+    app.use('/api/v1', router);
   },
 };
 

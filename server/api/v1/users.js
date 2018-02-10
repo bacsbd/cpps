@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const {isAdmin} = require('middlewares/userGroup');
+const {isRoot} = require('middlewares/userGroup');
 const User = require('mongoose').model('User');
 const Classroom = require('mongoose').model('Classroom');
 
-router.get('/users/username-userId/:username', getUserIdFromUsername );
-router.get('/users/:username', getUser );
-router.get('/users/stats/whoSolvedIt', whoSolvedIt );
+router.get('/users/username-userId/:username', isRoot, getUserIdFromUsername );
+router.get('/users/:username', isRoot, getUser );
+router.get('/users/stats/whoSolvedIt', isRoot, whoSolvedIt );
 
 module.exports = {
   addRouter(app) {
-    app.use('/api/v1', isAdmin, router);
+    app.use('/api/v1', router);
   },
 };
 
