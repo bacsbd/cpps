@@ -1,9 +1,11 @@
 extends ../layouts/layout.pug
 
 block content
+  .text-center
+    h3 Profile Page
   .row.align-items-center.justify-content-center#fill-view
     .col.text-center
-      h3 Profile Page
+      h4 Personal Info
       ul.list-group.d-inline-flex
         if(owner)
           .list-group-item
@@ -19,6 +21,13 @@ block content
         .list-group-item
           i.fa.fa-users.mr-2
           span= displayUser.status[0].toUpperCase() + displayUser.status.slice(1)
+    if(owner)
+      .col.text-center
+        h4 Classrooms
+        ul.list-group.d-inline-flex
+          each val, index in classrooms
+            .list-group-item
+              a(href=`/classroom/${val._id}`)=`${val.coach.username}/${val.name}`
   table.table.text-center.table-bordered.table-cell-center
     thead
       th Index

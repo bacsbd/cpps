@@ -5,8 +5,9 @@ const User = require('mongoose').model('User');
 const Classroom = require('mongoose').model('Classroom');
 
 router.get('/users/username-userId/:username', isRoot, getUserIdFromUsername );
-router.get('/users/:username', isRoot, getUser );
 router.get('/users/stats/whoSolvedIt', isRoot, whoSolvedIt );
+router.get('/users/session', getSession);
+router.get('/users/:username', isRoot, getUser );
 
 module.exports = {
   addRouter(app) {
@@ -92,4 +93,13 @@ async function whoSolvedIt(req, res, next) {
   } catch (err) {
     return next(err);
   }
+}
+
+function getSession(req, res, next) {
+  const s = req.session;
+  return res.status(200).json({
+    username: s.username,
+    status: s.status,
+    userId: s.userId,
+  });
 }

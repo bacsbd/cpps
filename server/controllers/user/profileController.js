@@ -2,6 +2,7 @@ const express = require('express');
 const {login} = require('middlewares/login');
 const User = require('mongoose').model('User');
 const Gate = require('mongoose').model('Gate');
+const Classroom = require('mongoose').model('Classroom');
 const recaptcha = require('express-recaptcha');
 const rootPath = require('world').rootPath;
 const path = require('path');
@@ -55,10 +56,20 @@ async function getProfile(req, res) {
     status: user.status,
   };
 
+  const owner = username === req.session.username;
+
+  let classrooms = [];
+  if (owner) {
+    const userId = req.session.userId;
+    classrooms = await Classroom.find({students: userId})
+      .select('name coach').populate('coach', 'username').exec();
+  }
+
   return res.render('user/profile', {
     data: dataSorted,
     displayUser,
-    owner: username === req.session.username,
+    owner,
+    classrooms,
   });
 }
 
