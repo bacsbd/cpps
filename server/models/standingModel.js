@@ -26,6 +26,10 @@ const standingSchema = new mongoose.Schema({
     ref: 'Classroom',
     required: true,
   },
+  coach: {
+    type: ObjectId,
+    ref: 'User',
+  },
   previousRating: {
     type: Number,
     required: true,

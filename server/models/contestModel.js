@@ -17,6 +17,10 @@ const contestSchema = new mongoose.Schema({
     type: ObjectId,
     ref: 'Classroom',
   },
+  coach: {
+    type: ObjectId,
+    ref: 'User',
+  },
 }, {
   timestamps: true,
 });
