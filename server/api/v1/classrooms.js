@@ -1,21 +1,21 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const {isRoot} = require('middlewares/userGroup');
+const {isAdmin} = require('middlewares/userGroup');
 const Classroom = mongoose.model('Classroom');
 const isObjectId = mongoose.Types.ObjectId.isValid;
 
 const router = express.Router();
 
-router.get('/classrooms', isRoot, getClassroom);
-router.post('/classrooms', isRoot, insertClassroom);
+router.get('/classrooms', isAdmin, getClassroom);
+router.post('/classrooms', isAdmin, insertClassroom);
 
 router.get('/classrooms/:classId', getOneClassroom);
-router.put('/classrooms/:classId', isRoot, updateClassroom);
-router.delete('/classrooms/:classId', isRoot, deleteClassroom);
+router.put('/classrooms/:classId', updateClassroom);
+router.delete('/classrooms/:classId', deleteClassroom);
 
-router.post('/classrooms/:classId/students', isRoot, postAddOneStudent);
+router.post('/classrooms/:classId/students', postAddOneStudent);
 router.delete(
-  '/classrooms/:classId/students/:studentId', isRoot, deleteOneStudent);
+  '/classrooms/:classId/students/:studentId', deleteOneStudent);
 
 module.exports = {
   addRouter(app) {
@@ -65,6 +65,7 @@ async function postAddOneStudent(req, res, next) {
   try{
     const {classId} = req.params;
     const {student} = req.body;
+    const {userId} = req.session;
 
     if (isObjectId(student) == false) {
       const e = new Error(`Student: ${student} must be an objectId`);
@@ -72,7 +73,10 @@ async function postAddOneStudent(req, res, next) {
       throw e;
     }
 
-    const classroom = await Classroom.findOneAndUpdate({_id: classId}, {
+    const classroom = await Classroom.findOneAndUpdate({
+      _id: classId,
+      coach: userId,
+    }, {
       $addToSet: {
         students: student,
       },
@@ -96,8 +100,12 @@ async function postAddOneStudent(req, res, next) {
 async function deleteOneStudent(req, res, next) {
   try {
     const {classId, studentId} = req.params;
+    const {userId} = req.session;
 
-    const classroom = await Classroom.findOneAndUpdate({_id: classId}, {
+    const classroom = await Classroom.findOneAndUpdate({
+      _id: classId,
+      coach: userId,
+    }, {
       $pull: {
         students: studentId,
       },
@@ -155,14 +163,19 @@ async function updateClassroom(req, res, next) {
   try {
     const {name, students} = req.body;
     const {classId} = req.params;
+    const {userId} = req.session;
     if (!name || !students) {
       throw new Error('Post body must have name and students field');
     }
-    const classroom = await Classroom.findOneAndUpdate({_id: classId}, {
+    const classroom = await Classroom.findOneAndUpdate({
+        _id: classId,
+        coach: userId, // This ensures user is the owner
+      }, {
       name,
       coach: req.session.userId,
       students,
     });
+
     return res.status(201).json({
       status: 201,
       data: classroom,
@@ -175,7 +188,11 @@ async function updateClassroom(req, res, next) {
 async function deleteClassroom(req, res, next) {
   try {
     const {classId} = req.params;
-    await Classroom.findOneAndRemove({_id: classId}).exec();
+    const {userId} = req.session;
+    await Classroom.findOneAndRemove({
+      _id: classId,
+      coach: userId,
+    }).exec();
     return res.status(200).json({
       status: 200,
     });
