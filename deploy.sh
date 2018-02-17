@@ -85,6 +85,12 @@ elif [[ $TYPE = "mongo-express" ]] ; then
       mongo-express
 elif [[ $TYPE = "init" ]] ; then
   docker exec -it cpps_app_1 node server/configuration/init.js
+elif [[ $TYPE = "mongo-backup" ]]; then
+  docker exec -it cpps_db_1 mongodump --db cpps --out /root/volumes/cpps_db/`date +"%m-%d-%y"`
+  docker cp cpps_db_1:/root/volumes/cpps_db ./backup/
+  docker exec -it cpps_db_1 rm -r /root/volumes/cpps_db/`date +"%m-%d-%y"`
+elif [[ $TYPE = "mongo-restore" ]]; then
+  docker exec -it cpps_db_1 mongorestore --db cpps --drop /root/volumes/cpps_db/restore/cpps/
 else
     echo -e "${BOLD}Unknown Type${OFF}: $TYPE"
 fi
