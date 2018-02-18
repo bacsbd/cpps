@@ -7,7 +7,7 @@ const Classroom = require('mongoose').model('Classroom');
 router.get('/users/username-userId/:username', isRoot, getUserIdFromUsername );
 router.get('/users/stats/whoSolvedIt', isRoot, whoSolvedIt );
 router.get('/users/session', getSession);
-router.get('/users/:username', isRoot, getUser );
+router.get('/users/:username', getUser );
 
 module.exports = {
   addRouter(app) {
@@ -50,6 +50,10 @@ async function getUser(req, res, next) {
       err.status = 400;
       throw err;
     }
+
+    // Remove sensitive information
+    user.email = undefined;
+    user.password = undefined;
 
     return res.status(200).json({
       status: 200,
@@ -98,8 +102,12 @@ async function whoSolvedIt(req, res, next) {
 function getSession(req, res, next) {
   const s = req.session;
   return res.status(200).json({
-    username: s.username,
-    status: s.status,
-    userId: s.userId,
+    status: 200,
+    data: {
+      username: s.username,
+      status: s.status,
+      userId: s.userId,
+      email: s.email,
+    },
   });
 }
