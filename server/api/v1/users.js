@@ -3,11 +3,14 @@ const router = express.Router();
 const {isRoot} = require('middlewares/userGroup');
 const User = require('mongoose').model('User');
 const Classroom = require('mongoose').model('Classroom');
+const Gate = require('mongoose').model('Gate');
 
 router.get('/users/username-userId/:username', isRoot, getUserIdFromUsername );
 router.get('/users/stats/whoSolvedIt', isRoot, whoSolvedIt );
+
 router.get('/users/session', getSession);
 router.get('/users/:username', getUser );
+router.get('/users/:username/root-stats', rootStats);
 
 module.exports = {
   addRouter(app) {
@@ -110,4 +113,58 @@ function getSession(req, res, next) {
       email: s.email,
     },
   });
+}
+
+async function rootStats(req, res, next) {
+  const {username} = req.params;
+  const parentId = '0'.repeat(24);
+
+  try {
+    const root = {
+      _id: parentId,
+    };
+    if (!root) throw new Error(`No parent with id ${parentId}`);
+
+    await setFolderStat(root, username);
+
+    // Grab children under root
+    const childrenModel = await Gate.find({parentId})
+      .select('_id title').lean().exec();
+
+    const childrenWithStat = await Promise.all(childrenModel
+      .map(async (child)=>{
+        await setFolderStat(child, username);
+        return child;
+      }));
+
+    return res.json({
+      status: 200,
+      data: {
+        root,
+        children: childrenWithStat,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function setFolderStat(folder, username) {
+  try {
+    const totalProblems = await Gate.count({
+      ancestor: folder._id,
+      type: 'problem',
+    }).exec();
+
+    const userSolved = await Gate.count({
+      ancestor: folder._id,
+      type: 'problem',
+      doneList: username,
+    });
+
+    folder.total = totalProblems;
+    folder.user = userSolved;
+  } catch (err) {
+    throw err;
+  }
 }
