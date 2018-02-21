@@ -28,13 +28,18 @@ module.exports = {
 
 async function getClassroom(req, res, next) {
   try {
-    const {coach} = req.query;
+    const {coach, student, select, populate=['', '']} = req.query;
     const dbQuery = {};
     if (coach) {
       dbQuery.coach = mongoose.Types.ObjectId(coach);
     }
+    if (student) {
+      dbQuery.students = student;
+    }
+
     const classrooms = await Classroom.find(dbQuery)
-      .populate('coach students', 'username')
+      .select(select)
+      .populate(populate[0], populate[1])
       .exec();
     return res.status(200).json({
       status: 200,

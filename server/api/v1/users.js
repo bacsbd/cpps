@@ -4,6 +4,8 @@ const {isRoot} = require('middlewares/userGroup');
 const User = require('mongoose').model('User');
 const Classroom = require('mongoose').model('Classroom');
 const Gate = require('mongoose').model('Gate');
+const ojscraper = require('ojscraper');
+const _ = require('lodash');
 
 router.get('/users/username-userId/:username', isRoot, getUserIdFromUsername );
 router.get('/users/stats/whoSolvedIt', isRoot, whoSolvedIt );
@@ -11,6 +13,7 @@ router.get('/users/stats/whoSolvedIt', isRoot, whoSolvedIt );
 router.get('/users/session', getSession);
 router.get('/users/:username', getUser );
 router.get('/users/:username/root-stats', rootStats);
+router.get('/users/:username/sync-solve-count', syncSolveCount);
 
 module.exports = {
   addRouter(app) {
@@ -166,5 +169,80 @@ async function setFolderStat(folder, username) {
     folder.user = userSolved;
   } catch (err) {
     throw err;
+  }
+}
+
+async function syncSolveCount(req, res, next) {
+  const username = req.params.username;
+
+  try {
+    const user = await User.findOne({username});
+
+    // Grab vjudge if available
+    const vjudgeStat = _.filter(user.ojStats, function(x) {
+      return x.ojname === 'vjudge';
+    })[0];
+
+    const credential = require('world').secretModule.ojscraper.loj.credential;
+
+    await Promise.all(user.ojStats.map(async function(ojStat) {
+      const ojUserId = ojStat.userIds[0];
+      const ojname = ojStat.ojname;
+      if (ojname === 'vjudge') return 0;
+
+      try {
+        const scrap = await ojscraper.getUserInfo({
+          ojname, username: ojUserId, credential,
+        });
+        let vjudgeUserId;
+        let vjudgeScrap = {
+          solveList: [],
+        };
+        if (vjudgeStat) {
+          vjudgeUserId = vjudgeStat.userIds[0];
+          vjudgeScrap = await ojscraper.getUserInfo({
+            ojname: 'vjudge', username: vjudgeUserId, subojname: ojname,
+          });
+        }
+
+        const totalSolveList = _.union(scrap.solveList, vjudgeScrap.solveList);
+        const totalScrapSolveCount = totalSolveList.length;
+
+        // if (
+        // ojStat.solveCount && ojStat.solveCount >= totalScrapSolveCount ) {
+        //   req.flash('info', 'Already uptodate');
+        //   return res.redirect(`/user/profile/${username}`);
+        // }
+        ojStat.solveCount = totalScrapSolveCount;
+        const newSolved = _.difference(totalSolveList, ojStat.solveList);
+        ojStat.solveList = _.orderBy(totalSolveList);
+
+        // Synchronize newly solved problems
+        await Gate.update({
+          platform: ojname,
+          pid: {
+            $in: newSolved,
+          },
+        }, {
+          $addToSet: {
+            doneList: username,
+          },
+        }, {
+          multi: true,
+        });
+        return 0;
+      } catch (err) {
+        console.log(`error in ${ojname}`, err);
+      }
+    }));
+
+    await user.save();
+
+    return res.status(201).json({
+      status: 200,
+      data: user.ojStats,
+    });
+  } catch (err) {
+    return next(err);
   }
 }

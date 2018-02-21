@@ -105,6 +105,9 @@ app.get(/\/coach.*/, function(req, res, next) {
 app.get('/classroom/*', function(req, res, next) {
   return res.sendFile(path.join(clientBuild, 'coach/index.html'));
 });
+app.get('/users/*', function(req, res, next) {
+  return res.sendFile(path.join(clientBuild, 'coach/index.html'));
+});
 
 app.use(function(err, req, res, next) {
   console.error(err.stack);
