@@ -1,14 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const {isRoot} = require('middlewares/userGroup');
 const User = require('mongoose').model('User');
 const Classroom = require('mongoose').model('Classroom');
 const Gate = require('mongoose').model('Gate');
 const ojscraper = require('ojscraper');
 const _ = require('lodash');
 
-router.get('/users/username-userId/:username', isRoot, getUserIdFromUsername );
-router.get('/users/stats/whoSolvedIt', isRoot, whoSolvedIt );
+router.get('/users/username-userId/:username', getUserIdFromUsername );
+router.get('/users/stats/whoSolvedIt', whoSolvedIt );
 
 router.get('/users/session', getSession);
 router.get('/users/:username', getUser );
