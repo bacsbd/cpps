@@ -6,7 +6,7 @@ const isObjectId = mongoose.Types.ObjectId.isValid;
 
 const router = express.Router();
 
-router.get('/classrooms', isAdmin, getClassroom);
+router.get('/classrooms', getClassroom);
 router.post('/classrooms', isAdmin, insertClassroom);
 
 router.get('/classrooms/:classId', getOneClassroom);
