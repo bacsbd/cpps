@@ -39,14 +39,13 @@ async function insertStandings(req, res, next) {
   const {classroomId, standings, contestId} = req.body;
   const {userId} = req.session;
   try {
-    const contest = Contest.findOne({_id: contestId}).exec();
+    const contest = await Contest.findOne({_id: contestId}).exec();
     if (!contest) {
       const e = new Error(
         `contestId: ${contestId} No such contest `);
       e.status = 400;
       throw e;
     }
-
     if (contest.classroomId.toString() !== classroomId ) {
       const e = new Error(
         `classroomId: ${classroomId} No such classroom `);
