@@ -2,6 +2,7 @@ const express = require('express');
 const {isRoot} = require('middlewares/userGroup');
 const Contest = require('mongoose').model('Contest');
 const Standing = require('mongoose').model('Standing');
+const Classroom = require('mongoose').model('Classroom');
 
 const router = express.Router();
 
