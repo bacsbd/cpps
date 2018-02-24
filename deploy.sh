@@ -54,6 +54,7 @@ export PORT
 
 if [[ $TYPE = "prod" || $TYPE = "beta" ]] ; then
   docker-compose down
+  docker rmi $(docker images -f "dangling=true" -q)
   git pull origin
   if [[ $TYPE = "prod" ]] ; then
     git checkout master
@@ -68,6 +69,7 @@ if [[ $TYPE = "prod" || $TYPE = "beta" ]] ; then
   docker exec -itd cpps_app_1 gulp
 elif [[ $TYPE = "dev" ]] ; then
   docker-compose down
+  docker rmi $(docker images -f "dangling=true" -q)
   docker-compose build
   docker-compose up &
   sleep 5s
