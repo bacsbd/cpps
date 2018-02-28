@@ -5,6 +5,9 @@ const Classroom = require('mongoose').model('Classroom');
 const Gate = require('mongoose').model('Gate');
 const ojscraper = require('ojscraper');
 const _ = require('lodash');
+const path = require('path');
+const rootPath = require('world').rootPath;
+const ojnames = require(path.join(rootPath, 'models/ojnames'));
 
 router.get('/users/username-userId/:username', getUserIdFromUsername );
 router.get('/users/stats/whoSolvedIt', whoSolvedIt );
@@ -12,7 +15,7 @@ router.get('/users/stats/whoSolvedIt', whoSolvedIt );
 router.get('/users/session', getSession);
 router.get('/users/:username', getUser );
 router.get('/users/:username/root-stats', rootStats);
-router.get('/users/:username/sync-solve-count', syncSolveCount);
+router.put('/users/:username/sync-solve-count', syncSolveCount);
 
 module.exports = {
   addRouter(app) {
@@ -184,15 +187,36 @@ async function syncSolveCount(req, res, next) {
 
     const credential = require('world').secretModule.ojscraper.loj.credential;
 
+    // Handle missing ojs'
+    if (vjudgeStat) {
+      const ojnamesOnly = ojnames.data.map((x)=>x.name);
+      const userHasOj = user.ojStats.map((x)=>x.ojname);
+      const missingOjs = _.difference(ojnamesOnly, userHasOj);
+      missingOjs.forEach((oj)=>{
+        user.ojStats.push({
+          ojname: oj,
+          solveList: [],
+          userIds: [],
+        });
+      });
+    }
+
     await Promise.all(user.ojStats.map(async function(ojStat) {
       const ojUserId = ojStat.userIds[0];
       const ojname = ojStat.ojname;
       if (ojname === 'vjudge') return 0;
 
       try {
-        const scrap = await ojscraper.getUserInfo({
-          ojname, username: ojUserId, credential,
-        });
+        const scrap = {
+          solveList: [],
+        };
+
+        if (ojUserId) {
+          const ojscrap = await ojscraper.getUserInfo({
+            ojname, username: ojUserId, credential,
+          });
+          scrap.solveList = ojscrap.solveList;
+        }
         let vjudgeUserId;
         let vjudgeScrap = {
           solveList: [],
@@ -231,14 +255,14 @@ async function syncSolveCount(req, res, next) {
         });
         return 0;
       } catch (err) {
-        console.log(`error in ${ojname}`, err);
+        console.log(`error in ${ojname}:${ojUserId} for ${username}`);
       }
     }));
 
     await user.save();
 
     return res.status(201).json({
-      status: 200,
+      status: 201,
       data: user.ojStats,
     });
   } catch (err) {

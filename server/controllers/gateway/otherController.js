@@ -165,7 +165,6 @@ async function postSearchProblem(req, res, next) {
 
   try {
     const problem = await Gate.findOne({
-      type: 'problem',
       platform,
       pid,
     }).exec();

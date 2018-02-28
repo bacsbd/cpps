@@ -75,6 +75,7 @@ require('./api/v1/contests.js').addRouter(app);
 require('./api/v1/users.js').addRouter(app);
 require('./api/v1/ratings.js').addRouter(app);
 require('./api/v1/standings.js').addRouter(app);
+require('./api/v1/ojnames.js').addRouter(app);
 
 app.use('/api/v1', function(err, req, res, next) {
   if ( err.status ) {
