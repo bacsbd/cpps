@@ -8,6 +8,7 @@ const server = require('http').createServer(app);
 const rootPath = world.rootPath;
 const secret = require('world').secretModule;
 const morgan = require('morgan');
+const logger = require('logger');
 
 const clientBuild = path.join(rootPath, '../client/build');
 
@@ -46,7 +47,7 @@ app.use(require('middlewares/verification.js'));
 app.use(require('middlewares/username.js'));
 app.use(require('middlewares/passSession.js'));
 app.use(require('middlewares/privateSite.js'));
-app.use(morgan('dev'));
+app.use(morgan('common'));
 
 /* Routers*/
 require('./controllers/admin/dashboard.js').addRouter(app);
@@ -84,7 +85,7 @@ app.use('/api/v1', function(err, req, res, next) {
       message: err.message,
     });
   }
-  console.log(err);
+  logger.error(err);
   return res.status(500).json({
     status: 500,
     message: err.message,
@@ -111,7 +112,7 @@ app.get('/users/*', function(req, res, next) {
 });
 
 app.use(function(err, req, res, next) {
-  console.error(err.stack);
+  logger.error(err.stack);
   if ( req.session.status !== 'user' ) res.status(500).send(err.message);
   else res.status(500).send('Something broke!');
   next();
@@ -122,12 +123,18 @@ app.get('*', function(req, res) {
 });
 
 process.on('unhandledRejection', (reason) => {
-    console.log('Reason: ' + reason);
+  logger.error('Reason: ' + reason);
+  process.exit(1);
+});
+
+process.on('uncaughtException', function(error) {
+  logger.error(error);
+  process.exit(1);
 });
 
 if (require.main === module) {
   server.listen(app.get('port'), function() {
-    console.log(`Server running at port ${app.get('port')}`);
+    logger.info(`Server running at port ${app.get('port')}`);
   });
 } else {
   module.exports = {

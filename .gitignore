@@ -5,3 +5,4 @@ public
 .eslintrc
 server/secret.js
 client/build/
+logs/

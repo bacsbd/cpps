@@ -8,6 +8,7 @@ const _ = require('lodash');
 const path = require('path');
 const rootPath = require('world').rootPath;
 const ojnames = require(path.join(rootPath, 'models/ojnames'));
+const logger = require('logger');
 
 router.get('/users/username-userId/:username', getUserIdFromUsername );
 router.get('/users/stats/whoSolvedIt', whoSolvedIt );
@@ -231,11 +232,9 @@ async function syncSolveCount(req, res, next) {
         const totalSolveList = _.union(scrap.solveList, vjudgeScrap.solveList);
         const totalScrapSolveCount = totalSolveList.length;
 
-        // if (
-        // ojStat.solveCount && ojStat.solveCount >= totalScrapSolveCount ) {
-        //   req.flash('info', 'Already uptodate');
-        //   return res.redirect(`/user/profile/${username}`);
-        // }
+        if ( ojStat.solveCount && ojStat.solveCount >= totalScrapSolveCount ) {
+          return 0;
+        }
         ojStat.solveCount = totalScrapSolveCount;
         const newSolved = _.difference(totalSolveList, ojStat.solveList);
         ojStat.solveList = _.orderBy(totalSolveList);
@@ -255,7 +254,7 @@ async function syncSolveCount(req, res, next) {
         });
         return 0;
       } catch (err) {
-        console.log(`error in ${ojname}:${ojUserId} for ${username}`);
+        logger.error(`error in ${ojname}:${ojUserId} for ${username}`);
       }
     }));
 
