@@ -21,6 +21,7 @@ services:
       - ntw
     volumes:
       - app:/home/volumes/cpps_app
+      - logs:/home/src/logs
       - ./:/root/src/
     command: tail -f /dev/null
 
@@ -31,3 +32,4 @@ volumes:
   db_data:
   db:
   app:
+  logs:

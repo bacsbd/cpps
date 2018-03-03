@@ -16,9 +16,10 @@ RUN apt-get update && apt-get install yarn
 COPY package.json .
 RUN yarn install
 
-ADD . .
-
+COPY client client
 RUN cd client/modules/coach && yarn install && yarn build && cd - && cd client/ && mkdir -p build && cd build && cp ../modules/coach/build -r coach
+
+ADD . .
 
 EXPOSE 8002
 EXPOSE 3000

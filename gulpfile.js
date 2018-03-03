@@ -10,9 +10,9 @@ require('./gulp/watch.js')(gulp);
 
 gulp.task('default',
   gulp.series(
-    gulp.parallel('clean'),
+    'clean',
     'build:css',
-    gulp.parallel('copy'),
+    'copy',
     gulp.parallel('style:scss', 'script'),
     gulp.parallel('watch', 'browser-sync')
   )
@@ -20,9 +20,9 @@ gulp.task('default',
 
 gulp.task('production',
   gulp.series(
-    gulp.parallel('clean'),
+    'clean',
     'build:css',
-    gulp.parallel('copy'),
+    'copy',
     gulp.parallel('style:scss', 'script')
   )
 );
