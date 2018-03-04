@@ -53,7 +53,6 @@ app.use(morgan('common'));
 require('./controllers/admin/dashboard.js').addRouter(app);
 require('./controllers/admin/root.js').addRouter(app);
 
-
 require('./controllers/index/indexController.js').addRouter(app);
 
 require('./controllers/user/loginController.js').addRouter(app);
@@ -113,23 +112,29 @@ app.get('/users/*', function(req, res, next) {
 
 app.use(function(err, req, res, next) {
   logger.error(err.stack);
-  if ( req.session.status !== 'user' ) res.status(500).send(err.message);
-  else res.status(500).send('Something broke!');
-  next();
+  if ( req.session.status !== 'user' ) {
+    res.status(500).send(err.message);
+  } else {
+    return res.status(500).send('Something broke!');
+  }
 });
 
 app.get('*', function(req, res) {
   return res.status(404).send('Page not found\n');
 });
 
-process.on('unhandledRejection', (reason) => {
-  logger.error('Reason: ' + reason);
-  process.exit(1);
+process.on('unhandledRejection', (error) => {
+  logger.error({
+    sever: true,
+    error: error.stack,
+  });
 });
 
 process.on('uncaughtException', function(error) {
-  logger.error(error);
-  process.exit(1);
+  logger.error({
+    sever: true,
+    error: error.stack,
+  });
 });
 
 if (require.main === module) {
