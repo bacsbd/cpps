@@ -125,14 +125,14 @@ app.get('*', function(req, res) {
 
 process.on('unhandledRejection', (error) => {
   logger.error({
-    sever: true,
+    severe: true,
     error: error.stack,
   });
 });
 
 process.on('uncaughtException', function(error) {
   logger.error({
-    sever: true,
+    severe: true,
     error: error.stack,
   });
 });

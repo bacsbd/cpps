@@ -129,11 +129,18 @@ function postSetUsername(req, res) {
     return res.redirect(`/user/profile/${req.session.username}`);
   }
 
-  const username = req.body.username;
+  let username = req.body.username;
 
   // TODO: Validate username
   if ( !username ) {
-    req.flash('error', 'Invalid Username');
+    req.flash('error', 'Empty username');
+    return res.redirect('/user/profile/set-username');
+  }
+
+  username = username.trim();
+  const usernameRegex = /^[A-Za-z_0-9]$/g;
+  if ( !usernameRegex.exec(username) ) {
+    req.flash('error', 'Username can only contain alphanumeric letters and _');
     return res.redirect('/user/profile/set-username');
   }
 
