@@ -18,6 +18,8 @@ router.get('/users/:username', getUser );
 router.get('/users/:username/root-stats', rootStats);
 router.put('/users/:username/sync-solve-count', syncSolveCount);
 
+router.put('/users/:username/unset-oj-username/:ojname', unsetOjUsername);
+
 module.exports = {
   addRouter(app) {
     app.use('/api/v1', router);
@@ -177,7 +179,7 @@ async function setFolderStat(folder, username) {
 
 async function syncSolveCount(req, res, next) {
   const username = req.params.username;
-
+  logger.info(`syncSolveCount: ${req.session.username} has synced solve count of ${username}`);
   try {
     const user = await User.findOne({username});
 
@@ -222,11 +224,18 @@ async function syncSolveCount(req, res, next) {
         let vjudgeScrap = {
           solveList: [],
         };
-        if (vjudgeStat) {
+        if (vjudgeStat && vjudgeStat.userIds[0]) {
           vjudgeUserId = vjudgeStat.userIds[0];
           vjudgeScrap = await ojscraper.getUserInfo({
             ojname: 'vjudge', username: vjudgeUserId, subojname: ojname,
           });
+        }
+
+        // If both ojid and vjudgeid is undefined, then solve is 0
+        if (!ojUserId && ( !vjudgeStat || vjudgeStat && !vjudgeStat.userIds[0])) {
+          ojStat.solveCount = 0;
+          ojStat.solveList = [];
+          return 0;
         }
 
         const totalSolveList = _.union(scrap.solveList, vjudgeScrap.solveList);
@@ -255,6 +264,7 @@ async function syncSolveCount(req, res, next) {
         return 0;
       } catch (err) {
         logger.error(`error in ${ojname}:${ojUserId} for ${username}`);
+        next(err);
       }
     }));
 
@@ -266,5 +276,56 @@ async function syncSolveCount(req, res, next) {
     });
   } catch (err) {
     return next(err);
+  }
+}
+
+async function unsetOjUsername(req, res, next) {
+  try {
+    const username = req.session.username;
+    const ojname = req.params.ojname;
+    if (username !== req.params.username) {
+      throw new Error(`UnsetOjUsername: {username} cannot unset oj username of ${req.params.username}`);
+    }
+
+    const user = await User.findOne({username}).exec();
+    const ojStats = user.ojStats;
+
+    const oj = ojStats.filter((x)=>x.ojname === ojname)[0];
+
+    if (!oj) {
+      throw new Error(`UnsetOjUsername: No such oj ${ojname}`);
+    }
+
+    // Now, remove user from all problems present in solvelist
+
+    const solveList = oj.solveList;
+
+    await Gate.update({
+      platform: ojname,
+      pid: {
+        $in: solveList,
+      },
+    }, {
+      $pull: {
+        doneList: username,
+      },
+    }, {
+      multi: true,
+    });
+
+    logger.info(`unsetOjUsername: ${username} has removed ${ojname}:${oj.userIds[0]}`);
+
+    oj.userIds = [];
+    oj.solveCount = 0;
+    oj.solveList = [];
+
+    await user.save();
+
+    return res.status(201).json({
+      status: 201,
+      data: user.ojStats,
+    });
+  } catch (err) {
+    next(err);
   }
 }
