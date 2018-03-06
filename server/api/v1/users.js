@@ -8,6 +8,7 @@ const _ = require('lodash');
 const path = require('path');
 const rootPath = require('world').rootPath;
 const ojnames = require(path.join(rootPath, 'models/ojnames'));
+const ojnamesOnly = ojnames.data.map((x)=>x.name);
 const logger = require('logger');
 
 router.get('/users/username-userId/:username', getUserIdFromUsername );
@@ -19,6 +20,7 @@ router.get('/users/:username/root-stats', rootStats);
 router.put('/users/:username/sync-solve-count', syncSolveCount);
 
 router.put('/users/:username/unset-oj-username/:ojname', unsetOjUsername);
+router.put('/users/:username/set-oj-username/:ojname/:userId', setOjUsername);
 
 module.exports = {
   addRouter(app) {
@@ -192,7 +194,6 @@ async function syncSolveCount(req, res, next) {
 
     // Handle missing ojs'
     if (vjudgeStat) {
-      const ojnamesOnly = ojnames.data.map((x)=>x.name);
       const userHasOj = user.ojStats.map((x)=>x.ojname);
       const missingOjs = _.difference(ojnamesOnly, userHasOj);
       missingOjs.forEach((oj)=>{
@@ -293,7 +294,7 @@ async function unsetOjUsername(req, res, next) {
     const oj = ojStats.filter((x)=>x.ojname === ojname)[0];
 
     if (!oj) {
-      throw new Error(`UnsetOjUsername: No such oj ${ojname}`);
+      throw new Error(`unsetOjUsername: No such oj ${ojname}`);
     }
 
     // Now, remove user from all problems present in solvelist
@@ -318,6 +319,52 @@ async function unsetOjUsername(req, res, next) {
     oj.userIds = [];
     oj.solveCount = 0;
     oj.solveList = [];
+
+    await user.save();
+
+    return res.status(201).json({
+      status: 201,
+      data: user.ojStats,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function setOjUsername(req, res, next) {
+  try {
+    const username = req.session.username;
+    const ojname = req.params.ojname;
+    const userId = req.params.userId;
+    if (username !== req.params.username) {
+      throw new Error(`setOjUsername: {username} cannot unset oj username of ${req.params.username}`);
+    }
+    if (ojnamesOnly.findIndex((x)=>x === ojname) === -1) {
+      throw new Error(`setOjUsername: no such ojname ${ojname}`);
+    }
+
+    const user = await User.findOne({username}).exec();
+    const ojStats = user.ojStats;
+
+    let oj = ojStats.filter((x)=>x.ojname === ojname)[0];
+
+    if (!oj) {
+      oj = {
+        ojname,
+        userIds: [],
+        solveCount: 0,
+        solveList: [],
+      };
+      ojStats.push(oj);
+    }
+
+    if (oj.userIds.length === 1) {
+      throw new Error('setOjUsername: cannot set multiple userId');
+    }
+
+    oj.userIds = [userId];
+
+    logger.info(`setOjUsername: ${username} has set userId for ${ojname}:${oj.userIds[0]}`);
 
     await user.save();
 
