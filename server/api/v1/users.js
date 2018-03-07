@@ -193,17 +193,15 @@ async function syncSolveCount(req, res, next) {
     const credential = require('world').secretModule.ojscraper.loj.credential;
 
     // Handle missing ojs'
-    if (vjudgeStat) {
-      const userHasOj = user.ojStats.map((x)=>x.ojname);
-      const missingOjs = _.difference(ojnamesOnly, userHasOj);
-      missingOjs.forEach((oj)=>{
-        user.ojStats.push({
-          ojname: oj,
-          solveList: [],
-          userIds: [],
-        });
+    const userHasOj = user.ojStats.map((x)=>x.ojname);
+    const missingOjs = _.difference(ojnamesOnly, userHasOj);
+    missingOjs.forEach((oj)=>{
+      user.ojStats.push({
+        ojname: oj,
+        solveList: [],
+        userIds: [],
       });
-    }
+    });
 
     await Promise.all(user.ojStats.map(async function(ojStat) {
       const ojUserId = ojStat.userIds[0];
