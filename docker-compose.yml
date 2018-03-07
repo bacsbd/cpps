@@ -1,6 +1,12 @@
 version: '2'
 
 services:
+  redis:
+    image: redis
+    networks:
+      - ntw
+    volumes:
+      - redis_db:/data
   db:
     image: mongo:3.4
     networks:
@@ -14,6 +20,7 @@ services:
     image: cpps
     depends_on:
       - db
+      - redis
     ports:
       - "${PORT}:8002"
       - "3000:3000"
@@ -33,3 +40,4 @@ volumes:
   db:
   app:
   logs:
+  redis_db:
