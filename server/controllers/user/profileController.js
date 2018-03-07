@@ -138,8 +138,8 @@ function postSetUsername(req, res) {
   }
 
   username = username.trim();
-  const usernameRegex = /^[A-Za-z_0-9]$/g;
-  if ( !usernameRegex.exec(username) ) {
+  const usernameRegex = /^[A-Za-z_0-9]+$/g;
+  if ( !usernameRegex.test(username) ) {
     req.flash('error', 'Username can only contain alphanumeric letters and _');
     return res.redirect('/user/profile/set-username');
   }
