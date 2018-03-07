@@ -85,6 +85,7 @@ app.use('/api/v1', function(err, req, res, next) {
     });
   }
   logger.error(err);
+  logger.error(err.stack);
   return res.status(500).json({
     status: 500,
     message: err.message,

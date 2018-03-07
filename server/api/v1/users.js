@@ -263,7 +263,6 @@ async function syncSolveCount(req, res, next) {
         return 0;
       } catch (err) {
         logger.error(`error in ${ojname}:${ojUserId} for ${username}`);
-        next(err);
       }
     }));
 
