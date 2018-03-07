@@ -115,8 +115,9 @@ app.use(function(err, req, res, next) {
   if ( req.session.status !== 'user' ) {
     res.status(500).send(err.message);
   } else {
-    return res.status(500).send('Something broke!');
+    res.status(500).send('Something broke!');
   }
+  process.exit(1);
 });
 
 app.get('*', function(req, res) {
@@ -128,6 +129,7 @@ process.on('unhandledRejection', (error) => {
     severe: true,
     error: error.stack,
   });
+  process.exit(1);
 });
 
 process.on('uncaughtException', function(error) {
@@ -135,6 +137,7 @@ process.on('uncaughtException', function(error) {
     severe: true,
     error: error.stack,
   });
+  process.exit(1);
 });
 
 if (require.main === module) {
