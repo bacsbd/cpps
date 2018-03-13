@@ -67,6 +67,7 @@ if [[ $TYPE = "prod" || $TYPE = "beta" ]] ; then
   sleep 5s
   docker cp server/secret.js cpps_app_1:/home/src/server/
   docker exec -itd cpps_app_1 gulp production && forever start server/index.js
+  docker exec -itd cpps_app_1 forever start server/node_modules/queue/worker.js
 elif [[ $TYPE = "dev" ]] ; then
   docker-compose down
   docker rmi $(docker images -f "dangling=true" -q)
