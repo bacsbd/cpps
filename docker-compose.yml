@@ -24,6 +24,7 @@ services:
     ports:
       - "${PORT}:8002"
       - "3000:3000"
+      - "3050:3050"
     networks:
       - ntw
     volumes:

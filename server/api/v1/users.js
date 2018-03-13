@@ -10,6 +10,7 @@ const rootPath = require('world').rootPath;
 const ojnames = require(path.join(rootPath, 'models/ojnames'));
 const ojnamesOnly = ojnames.data.map((x)=>x.name);
 const logger = require('logger');
+const queue = require('queue');
 
 router.get('/users/username-userId/:username', getUserIdFromUsername );
 router.get('/users/stats/whoSolvedIt', whoSolvedIt );
@@ -182,99 +183,18 @@ async function setFolderStat(folder, username) {
 async function syncSolveCount(req, res, next) {
   const username = req.params.username;
   logger.info(`syncSolveCount: ${req.session.username} has synced solve count of ${username}`);
-  try {
-    const user = await User.findOne({username});
 
-    // Grab vjudge if available
-    const vjudgeStat = _.filter(user.ojStats, function(x) {
-      return x.ojname === 'vjudge';
-    })[0];
+  const job = queue.create('syncSolveCount', {
+    title: username,
+    requestedBy: req.session.username,
+  });
 
-    const credential = require('world').secretModule.ojscraper.loj.credential;
-
-    // Handle missing ojs'
-    const userHasOj = user.ojStats.map((x)=>x.ojname);
-    const missingOjs = _.difference(ojnamesOnly, userHasOj);
-    missingOjs.forEach((oj)=>{
-      user.ojStats.push({
-        ojname: oj,
-        solveList: [],
-        userIds: [],
-      });
+  job.save(function(err) {
+    if (err) next(err);
+    else return res.status(202).json({
+      status: 202,
     });
-
-    await Promise.all(user.ojStats.map(async function(ojStat) {
-      const ojUserId = ojStat.userIds[0];
-      const ojname = ojStat.ojname;
-      if (ojname === 'vjudge') return 0;
-
-      try {
-        const scrap = {
-          solveList: [],
-        };
-
-        if (ojUserId) {
-          const ojscrap = await ojscraper.getUserInfo({
-            ojname, username: ojUserId, credential,
-          });
-          scrap.solveList = ojscrap.solveList;
-        }
-        let vjudgeUserId;
-        let vjudgeScrap = {
-          solveList: [],
-        };
-        if (vjudgeStat && vjudgeStat.userIds[0]) {
-          vjudgeUserId = vjudgeStat.userIds[0];
-          vjudgeScrap = await ojscraper.getUserInfo({
-            ojname: 'vjudge', username: vjudgeUserId, subojname: ojname,
-          });
-        }
-
-        // If both ojid and vjudgeid is undefined, then solve is 0
-        if (!ojUserId && ( !vjudgeStat || vjudgeStat && !vjudgeStat.userIds[0])) {
-          ojStat.solveCount = 0;
-          ojStat.solveList = [];
-          return 0;
-        }
-
-        const totalSolveList = _.union(scrap.solveList, vjudgeScrap.solveList);
-        const totalScrapSolveCount = totalSolveList.length;
-
-        if ( ojStat.solveCount && ojStat.solveCount >= totalScrapSolveCount ) {
-          return 0;
-        }
-        ojStat.solveCount = totalScrapSolveCount;
-        const newSolved = _.difference(totalSolveList, ojStat.solveList);
-        ojStat.solveList = _.orderBy(totalSolveList);
-
-        // Synchronize newly solved problems
-        await Gate.update({
-          platform: ojname,
-          pid: {
-            $in: newSolved,
-          },
-        }, {
-          $addToSet: {
-            doneList: username,
-          },
-        }, {
-          multi: true,
-        });
-        return 0;
-      } catch (err) {
-        logger.error(`error in ${ojname}:${ojUserId} for ${username}`);
-      }
-    }));
-
-    await user.save();
-
-    return res.status(201).json({
-      status: 201,
-      data: user.ojStats,
-    });
-  } catch (err) {
-    return next(err);
-  }
+  });
 }
 
 async function unsetOjUsername(req, res, next) {

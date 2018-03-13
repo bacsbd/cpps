@@ -93,6 +93,8 @@ elif [[ $TYPE = "mongo-backup" ]]; then
   docker exec -it cpps_db_1 rm -r /root/volumes/cpps_db/`date +"%m-%d-%y"`
 elif [[ $TYPE = "mongo-restore" ]]; then
   docker exec -it cpps_db_1 mongorestore --db cpps --drop /root/volumes/cpps_db/restore/cpps/
+elif [[ $TYPE = "kuejs" ]] ; then
+  docker exec -it cpps_app_1 node_modules/kue/bin/kue-dashboard -p 3050 -r redis://cpps_redis_1:6379
 else
     echo -e "${BOLD}Unknown Type${OFF}: $TYPE"
 fi

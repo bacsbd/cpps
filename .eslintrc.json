@@ -3,11 +3,16 @@
   "parserOptions": {
     "ecmaVersion": 8
   },
+  "env": {
+    "node": true,
+    "es6": true
+  },
   "rules": {
     "new-cap": ["error", {
       "capIsNewExceptions": ["Router", "ObjectId"]
       }],
     "require-jsdoc": "off",
     "max-len": "off",
+    "no-undef": "error"
   }
 }
