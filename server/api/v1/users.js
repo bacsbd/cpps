@@ -188,8 +188,15 @@ async function syncSolveCount(req, res, next) {
     const job = queue.create('syncSolveCount', {
       title: username,
       requestedBy: req.session.username,
-    }).unique(username)
-    .removeOnComplete(true);
+    }).unique(username);
+
+    job.on('complete', function(result) {
+      job.remove(function(error, job) {
+        if (error) {
+          logger.error(error);
+        }
+      });
+    });
 
     job.save(function(err) {
       if (err) next(err);
