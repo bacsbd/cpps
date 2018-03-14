@@ -184,17 +184,22 @@ async function syncSolveCount(req, res, next) {
   const username = req.params.username;
   logger.info(`syncSolveCount: ${req.session.username} has synced solve count of ${username}`);
 
-  const job = queue.create('syncSolveCount', {
-    title: username,
-    requestedBy: req.session.username,
-  });
+  try {
+    const job = queue.create('syncSolveCount', {
+      title: username,
+      requestedBy: req.session.username,
+    }).unique(username)
+    .removeOnComplete(true);
 
-  job.save(function(err) {
-    if (err) next(err);
-    else return res.status(202).json({
-      status: 202,
+    job.save(function(err) {
+      if (err) next(err);
+      else return res.status(202).json({
+        status: 202,
+      });
     });
-  });
+  } catch (err) {
+    next(err);
+  }
 }
 
 async function unsetOjUsername(req, res, next) {
