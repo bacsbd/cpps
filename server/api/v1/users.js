@@ -182,6 +182,12 @@ async function setFolderStat(folder, username) {
 
 async function syncSolveCount(req, res, next) {
   const username = req.params.username;
+  if (!username) {
+    return res.status(400).json({
+      status: 400,
+      message: `Invalid username: ${username}. You cannot sync this user.`,
+    });
+  }
   logger.info(`syncSolveCount: ${req.session.username} has synced solve count of ${username}`);
 
   try {
