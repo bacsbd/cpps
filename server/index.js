@@ -39,6 +39,7 @@ require('./models/classroomModel.js');
 require('./models/contestModel.js');
 require('./models/standingModel.js');
 require('./models/ratingModel.js');
+require('./models/problemBankModel.js');
 
 
 /* Middleware*/
@@ -47,7 +48,7 @@ app.use(require('middlewares/verification.js'));
 app.use(require('middlewares/username.js'));
 app.use(require('middlewares/passSession.js'));
 app.use(require('middlewares/privateSite.js'));
-app.use(morgan('common'));
+app.use(morgan('dev'));
 
 /* Routers*/
 require('./controllers/admin/dashboard.js').addRouter(app);
@@ -76,6 +77,7 @@ require('./api/v1/users.js').addRouter(app);
 require('./api/v1/ratings.js').addRouter(app);
 require('./api/v1/standings.js').addRouter(app);
 require('./api/v1/ojnames.js').addRouter(app);
+require('./api/v1/problemBank.js').addRouter(app);
 
 app.use('/api/v1', function(err, req, res, next) {
   if ( err.status ) {

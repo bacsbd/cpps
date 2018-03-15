@@ -96,6 +96,8 @@ elif [[ $TYPE = "mongo-restore" ]]; then
   docker exec -it cpps_db_1 mongorestore --db cpps --drop /root/volumes/cpps_db/restore/cpps/
 elif [[ $TYPE = "kuejs" ]] ; then
   docker exec -it cpps_app_1 node_modules/kue/bin/kue-dashboard -p 3050 -r redis://cpps_redis_1:6379
+elif [[ $TYPE = "redis-clean" ]] ; then
+  docker exec -it cpps_redis_1 redis-cli flushall
 else
     echo -e "${BOLD}Unknown Type${OFF}: $TYPE"
 fi
