@@ -40,6 +40,7 @@ require('./models/contestModel.js');
 require('./models/standingModel.js');
 require('./models/ratingModel.js');
 require('./models/problemBankModel.js');
+require('./models/problemListModel.js');
 
 
 /* Middleware*/
@@ -78,6 +79,7 @@ require('./api/v1/ratings.js').addRouter(app);
 require('./api/v1/standings.js').addRouter(app);
 require('./api/v1/ojnames.js').addRouter(app);
 require('./api/v1/problemBank.js').addRouter(app);
+require('./api/v1/problemList.js').addRouter(app);
 
 app.use('/api/v1', function(err, req, res, next) {
   if ( err.status ) {
@@ -96,7 +98,11 @@ app.use('/api/v1', function(err, req, res, next) {
 app.use('/api/v1/*', function(req, res, next) {
   return res.status(404).json({
     status: 404,
-    message: 'API not found',
+    message: `API not found at ${req.originalUrl} `,
+    details: {
+      type: 'API404',
+      path: req.originalUrl,
+    },
   });
 });
 
