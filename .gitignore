@@ -1,7 +1,7 @@
 node_modules/*
 client_module
 css_build
-public
+/public
 .eslintrc
 server/secret.js
 client/build/
