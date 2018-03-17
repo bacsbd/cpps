@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get('/problemlists', getProblemLists);
 router.get('/problemlists/:problemListId', getSingleProblemList);
+router.delete('/problemlists/:problemListId', deleteProblemList);
 
 router.post('/problemlists', insertProblemList);
 router.put('/problemlists/:problemListId/problems', addProblemToList);
@@ -82,6 +83,27 @@ async function getSingleProblemList(req, res, next) {
     return res.status(200).json({
       status: 200,
       data: problemList,
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function deleteProblemList(req, res, next) {
+  try {
+    const {problemListId} = req.params;
+
+    if (!problemListId) {
+      return next({
+        status: 401,
+        message: `ProblemListId cannot be blank`,
+      });
+    }
+
+    await ProblemList.findByIdAndRemove(problemListId).exec();
+
+    return res.status(201).json({
+      status: 201,
     });
   } catch (err) {
     return next(err);
