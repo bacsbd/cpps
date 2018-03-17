@@ -97,6 +97,9 @@ elif [[ $TYPE = "kuejs" ]] ; then
   docker exec -it cpps_app_1 node_modules/kue/bin/kue-dashboard -p 3050 -r redis://cpps_redis_1:6379
 elif [[ $TYPE = "redis-clean" ]] ; then
   docker exec -it cpps_redis_1 redis-cli flushall
+elif [[ $TYPE = "stop" ]] ; then
+  docker-compose down
+  docker rmi $(docker images -f "dangling=true" -q)
 else
     echo -e "${BOLD}Unknown Type${OFF}: $TYPE"
 fi
