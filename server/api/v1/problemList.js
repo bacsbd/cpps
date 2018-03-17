@@ -1,5 +1,7 @@
 const express = require('express');
 const ProblemList = require('mongoose').model('ProblemList');
+const Classroom = require('mongoose').model('Classroom');
+const User = require('mongoose').model('User');
 
 const router = express.Router();
 
@@ -10,6 +12,8 @@ router.delete('/problemlists/:problemListId', deleteProblemList);
 router.post('/problemlists', insertProblemList);
 router.put('/problemlists/:problemListId/problems', addProblemToList);
 router.delete('/problemlists/:problemListId/problems/:pid', deleteProblemFromList);
+
+router.get('/problemlists/:problemListId/who-solved-it/classrooms/:classId', solveCountInClassroom);
 
 module.exports = {
   addRouter(app) {
@@ -178,6 +182,55 @@ async function deleteProblemFromList(req, res, next) {
 
     return res.status(201).json({
       status: 201,
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function solveCountInClassroom(req, res, next) {
+  try{
+    const {problemListId, classId} = req.params;
+
+    const studentList = await Classroom.findById(classId).populate('students').exec();
+    const problemList = await ProblemList.findById(problemListId).exec();
+
+    if (studentList.coach.toString() !== problemList.createdBy.toString()) {
+      return next({
+        status: 401,
+        message: 'Owner of classroom and problem list do not match',
+      });
+    }
+
+    const studentIds = studentList.students.map((s)=>s._id);
+
+    const resp = await Promise.all(problemList.problems.map(async (p)=>{
+      const solvedBy = await User.find({
+        _id: studentIds,
+        ojStats: {
+          $elemMatch: {
+            ojname: p.platform,
+            solveList: p.problemId,
+          },
+        },
+      }).select('_id username').exec();
+      return {
+        _id: p._id,
+        title: p.title,
+        platform: p.platform,
+        problemId: p.problemId,
+        link: p.link,
+        solvedBy: solvedBy.map((x)=>x.username),
+        solveCount: solvedBy.length,
+      }
+    }));
+
+    return res.status(200).json({
+      status: 200,
+      data: {
+        ranklist: resp,
+        studentUsernames: studentList.students.map((s)=>s.username),
+      },
     });
   } catch (err) {
     return next(err);

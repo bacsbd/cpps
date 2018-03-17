@@ -1,8 +1,16 @@
 {
-  "extends": "google",
+  "extends": ["google", "plugin:react/recommended"],
   "parserOptions": {
-    "ecmaVersion": 8
+    "ecmaVersion": 8,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    }
   },
+  "plugins": [
+    "react"
+  ],
   "env": {
     "node": true,
     "es6": true

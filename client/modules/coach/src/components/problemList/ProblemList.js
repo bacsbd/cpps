@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Row, Col, Table} from 'reactstrap';
 import {Form, FormGroup, Input, Label, Button} from 'reactstrap';
+import {Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import {UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem}
   from 'reactstrap';
 import {connect} from 'react-redux';
@@ -21,11 +22,24 @@ class ProblemList extends Component {
       ojname: '',
       problemId: '',
       redirectDashboard: false,
+      classrooms: [],
+      modalRanklist: false,
+      modalLoading: false,
+      ranklist: [],
+      studentUsernames: [],
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.removeProblem = this.removeProblem.bind(this);
+    this.showSolveCount = this.showSolveCount.bind(this);
+    this.toggleModalRanklist = this.toggleModalRanklist.bind(this);
+  }
+
+  toggleModalRanklist(){
+    this.setState({
+      modalRanklist: !this.state.modalRanklist,
+    });
   }
 
   handleError(err) {
@@ -100,6 +114,7 @@ class ProblemList extends Component {
 
   async componentWillMount() {
     const {problemListId} = this.props.match.params;
+    const {user} = this.props;
     try {
       let resp = await fetch(`/api/v1/problemlists/${problemListId}`, {
         method: 'GET',
@@ -107,9 +122,21 @@ class ProblemList extends Component {
       });
       resp = await resp.json();
       if (resp.status !== 200) throw resp;
+
+      const title = resp.data.title;
+      const problems = resp.data.problems;
+
+      resp = await fetch(`/api/v1/classrooms?coach=${user.userId}`, {
+        credentials: 'same-origin',
+      });
+      resp = await resp.json();
+
+      const classrooms = resp.data;
+
       this.setState({
-        title: resp.data.title,
-        problems: resp.data.problems,
+        title,
+        problems,
+        classrooms,
       });
     } catch (err) {
       this.handleError(err);
@@ -262,6 +289,136 @@ class ProblemList extends Component {
     );
   }
 
+  displayRankList() {
+    const ranklist = this.state.ranklist;
+    const studentUsernames = this.state.studentUsernames;
+
+    const totalSolved = studentUsernames.map((s)=>{
+      const solved = ranklist.filter((r)=>r.solvedBy.findIndex((x)=>x===s) !== -1).length;
+      return {username: s, solved};
+    });
+
+    totalSolved.sort((a, b)=>{
+      if ( b.solved - a.solved ) return b.solved - a.solved;
+      if ( a.username < b.username ) return -1;
+      else return 1;
+    });
+
+    return (
+       <Modal isOpen={this.state.modalRanklist} toggle={this.toggleModalRanklist}
+         className='modal-lg'
+         >
+         <Loadable active={this.state.modalLoading}
+         spinner={true}
+         text={this.state.loadingMessage || 'Please wait a moment...'}>
+           <ModalHeader toggle={this.toggleModalRanklist}>Ranklist</ModalHeader>
+           <ModalBody style={{overflowX: 'auto'}}>
+             <Table>
+               <thead>
+                 <tr>
+                   <th>#</th>
+                   <th>Username</th>
+                   <th>Total</th>
+                   {ranklist.map((x)=>{
+                     return (
+                       <th key={x._id}>
+                         <a href={x.link} target="_blank">
+                           {`${x.platform} ${x.problemId}`}
+                         </a>
+                       </th>
+                     );
+                   })}
+                 </tr>
+               </thead>
+               <tbody>
+                 {totalSolved.map((student, index)=>{
+                   return (
+                     <tr key={student.username}>
+                       <td>{index}</td>
+                       <td>{student.username}</td>
+                       <td>{student.solved}</td>
+                       {ranklist.map((p)=>{
+                         if (p.solvedBy.findIndex((x)=>x === student.username) !== -1 ) {
+                           return <td
+                            key={`${student.username}+${p.platform}+${p.problemId}`}
+                            className="text-success"><i className="fa fa-check"/></td>;
+                         } else {
+                           return <td key={`${student.username}+${p.platform}+${p.problemId}`}></td>;
+                         }
+                       })}
+                     </tr>
+                   );
+                 })}
+               </tbody>
+             </Table>
+           </ModalBody>
+           <ModalFooter>
+             <Button color="secondary" onClick={this.toggleModalRanklist}>Cancel</Button>
+           </ModalFooter>
+       </Loadable>
+       </Modal>
+   );
+  }
+
+  async showSolveCount(classId) {
+    const {problemListId} = this.props.match.params;
+
+    this.setState({
+      modalRanklist: true,
+      modalLoading: true,
+      loadingMessage: 'Building Ranklist...',
+    });
+
+    try {
+      let resp = await fetch(`/api/v1/problemlists/${problemListId}/who-solved-it/classrooms/${classId}`, {
+        credentials: 'same-origin',
+      });
+      resp = await resp.json();
+
+      if (resp.status !== 200) throw resp;
+      this.setState({
+        ranklist: resp.data.ranklist,
+        studentUsernames: resp.data.studentUsernames,
+      });
+    } catch (err) {
+      this.handleError(err);
+    } finally {
+      this.setState({
+        modalLoading: false,
+      });
+    }
+  }
+
+  classroomView() {
+    return (
+      <Col className="text-center">
+        <h2>Classroom View</h2>
+        <Table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Performance</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.classrooms.map((c, index)=>{
+              return (
+                <tr key={c._id}>
+                  <td>{index}</td>
+                  <td>{c.name}</td>
+                  <td><span className="btn-link pointer"
+                    onClick={()=>this.showSolveCount(c._id)}
+                    >View</span></td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      </Col>
+    );
+  }
+
   render() {
     return (
       <Loadable active={this.state.loadingState} spinner={true}
@@ -280,10 +437,10 @@ class ProblemList extends Component {
           <Col>
             {this.problemListView()}
           </Col>
-          {
-            this.state.view === 'addProblem'? this.addProblemView(): null
-          }
+          {this.state.view === 'normal'? this.classroomView(): null}
+          {this.state.view === 'addProblem'? this.addProblemView(): null}
         </Row>
+        {this.displayRankList()}
       </Loadable>
     );
   }
