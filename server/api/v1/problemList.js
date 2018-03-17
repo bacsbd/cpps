@@ -7,7 +7,8 @@ router.get('/problemlists', getProblemLists);
 router.get('/problemlists/:problemListId', getSingleProblemList);
 
 router.post('/problemlists', insertProblemList);
-router.put('/problemlists/:problemListId/add-problem', addProblemToList);
+router.put('/problemlists/:problemListId/problems', addProblemToList);
+router.delete('/problemlists/:problemListId/problems/:pid', deleteProblemFromList);
 
 module.exports = {
   addRouter(app) {
@@ -92,8 +93,6 @@ async function addProblemToList(req, res, next) {
     const {problemListId} = req.params;
     const {title, platform, problemId, link} = req.body;
 
-    console.log(platform);
-
     if (!problemListId || !title || !platform || !problemId || !link) {
       return next({
         status: 401,
@@ -127,6 +126,36 @@ async function addProblemToList(req, res, next) {
     return res.status(201).json({
       status: 201,
       data: updatedList.problems[updatedList.problems.length-1],
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function deleteProblemFromList(req, res, next) {
+  try {
+    const {problemListId, pid} = req.params;
+
+    if (!problemListId || !pid) {
+      return next({
+        status: 401,
+        message: `Some parameters are blank`,
+      });
+    }
+
+    await ProblemList.findOneAndUpdate({
+      _id: problemListId,
+      createdBy: req.session.userId,
+    }, {
+      $pull: {
+        problems: {
+          _id: pid,
+        },
+      },
+    });
+
+    return res.status(201).json({
+      status: 201,
     });
   } catch (err) {
     return next(err);
