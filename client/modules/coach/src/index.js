@@ -11,6 +11,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import './css/my.css';
 
 import {fetchUser} from 'actions/userActions';
+import {fetchOJnames} from 'actions/ojnameActions';
 
 import App from './App';
 
@@ -20,14 +21,21 @@ const store = createStore(
   applyMiddleware(thunk),
 );
 
-store.dispatch(fetchUser());
+async function main() {
+  await Promise.all([
+    store.dispatch(fetchUser()),
+    store.dispatch(fetchOJnames()),
+  ]);
 
-ReactDOM.render((
-  <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </Provider>
-  ),
-  document.getElementById('root')
-);
+  ReactDOM.render((
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+    ),
+    document.getElementById('root')
+  );
+}
+
+main();

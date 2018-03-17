@@ -2,6 +2,26 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {Table} from 'reactstrap';
 import PropTypes from 'prop-types';
+import {
+    Row, Col, Button, UncontrolledDropdown, DropdownToggle, DropdownMenu,
+    DropdownItem,
+} from 'reactstrap';
+import {LinkContainer} from 'react-router-bootstrap';
+
+function SettingsList() {
+  return (
+    <UncontrolledDropdown>
+     <DropdownToggle className='fa fa-lg fa-cog' color='light'></DropdownToggle>
+     <DropdownMenu>
+      <LinkContainer to='/coach/addClassroom'>
+         <DropdownItem>
+          <Button color='primary' className='btn-block'> Add Class </Button>
+        </DropdownItem>
+      </LinkContainer>
+     </DropdownMenu>
+   </UncontrolledDropdown>
+ );
+}
 
 class ClasroomList extends Component {
   constructor(props) {
@@ -25,7 +45,7 @@ class ClasroomList extends Component {
   }
 
   render() {
-    return (
+    const classroomTable = (
       <Table >
         <thead>
           <tr>
@@ -37,6 +57,25 @@ class ClasroomList extends Component {
           { this.getRows() }
         </tbody>
       </Table>
+    );
+
+    return (
+      <div>
+        <Row>
+          <Col>
+            <h1>Classrooms</h1>
+          </Col>
+          <Col className='text-right'>
+            <SettingsList/>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col>
+            {classroomTable}
+          </Col>
+        </Row>
+      </div>
     );
   }
 }

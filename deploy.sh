@@ -61,7 +61,6 @@ if [[ $TYPE = "prod" || $TYPE = "beta" ]] ; then
   else
     git checkout release
   fi
-  git submodule update --remote --recursive
   docker-compose build
   docker-compose up &
   sleep 5s

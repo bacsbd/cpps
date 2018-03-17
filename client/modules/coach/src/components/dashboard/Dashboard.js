@@ -1,76 +1,43 @@
 import React, {Component} from 'react';
-import {LinkContainer} from 'react-router-bootstrap';
-import {
-    Row, Col, Button, UncontrolledDropdown, DropdownToggle, DropdownMenu,
-    DropdownItem,
-} from 'reactstrap';
+import {Row, Col} from 'reactstrap';
+import {connect} from 'react-redux';
+import Notifications from 'react-notification-system-redux';
 
-import ClassroomList from './ClassroomList';
+import ClassroomListContainer from './ClassroomListContainer';
+import ProblemListContainer from './ProblemListContainer';
 
-function SettingsList() {
-  return (
-    <UncontrolledDropdown>
-     <DropdownToggle className='fa fa-lg fa-cog' color='light'></DropdownToggle>
-     <DropdownMenu>
-      <LinkContainer to='/coach/addClassroom'>
-         <DropdownItem>
-          <Button color='primary' className='btn-block'> Add Class </Button>
-        </DropdownItem>
-      </LinkContainer>
-     </DropdownMenu>
-   </UncontrolledDropdown>
- );
-}
-
-export default class Dashboard extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      classDetails: [],
-    };
-  }
-
-  async componentDidMount() {
-    try {
-      const api = '/api/v1/classrooms';
-      let resp = await fetch(api, {
-        method: 'get',
-        headers: {'Content-Type': 'application/json'},
-        credentials: 'same-origin',
-      });
-      resp = await resp.json();
-      if (resp.status !== 200) {
-        throw resp;
-      }
-      this.setState({
-        classDetails: resp.data,
-      });
-      return;
-    } catch (err) {
-      if (err.status) alert(err.message);
-      console.log(err);
-      return;
-    }
-  }
-
+class Dashboard extends Component {
   render() {
     return (
       <div>
+        <Notifications
+        notifications={this.props.notifications}
+        />
         <Row>
           <Col>
-            <h1>Classrooms</h1>
+            <ClassroomListContainer {...this.props}/>
           </Col>
-          <Col className='text-right'>
-            <SettingsList/>
-          </Col>
-        </Row>
-
-        <Row>
           <Col>
-            <ClassroomList classrooms={this.state.classDetails}/>
+            <ProblemListContainer {...this.props}/>
           </Col>
         </Row>
       </div>
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    notifications: state.notifications,
+    user: state.user,
+  };
+}
+function mapDispatchToProps(dispatch) {
+  return {
+    showNotification(msg) {
+      dispatch(msg);
+    },
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

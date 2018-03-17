@@ -5,20 +5,6 @@ import {Profile} from './Profile.js';
 import qs from 'qs';
 import Notifications from 'react-notification-system-redux';
 
-function mapStateToProps(state) {
-  return {
-    notifications: state.notifications,
-    user: state.user,
-  };
-}
-function mapDispatchToProps(dispatch) {
-  return {
-    showNotification(msg) {
-      dispatch(msg);
-    },
-  };
-}
-
 class UserProfileContainer extends Component {
   constructor(props) {
     super(props);
@@ -101,11 +87,10 @@ class UserProfileContainer extends Component {
   }
 
   render() {
-    const {notifications} = this.props;
     return (
       <div>
         <Notifications
-        notifications={notifications}
+        notifications={this.props.notifications}
       />
       <Profile {...this.props}
         displayUser={this.state.displayUser}
@@ -120,5 +105,19 @@ class UserProfileContainer extends Component {
 UserProfileContainer.propTypes = {
   match: PropTypes.shape(),
 };
+
+function mapStateToProps(state) {
+  return {
+    notifications: state.notifications,
+    user: state.user,
+  };
+}
+function mapDispatchToProps(dispatch) {
+  return {
+    showNotification(msg) {
+      dispatch(msg);
+    },
+  };
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfileContainer);

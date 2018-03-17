@@ -19,6 +19,8 @@ import {AddStandings} from 'components/contestPortal/AddStandings.js';
 import UserProfileContainer from
   'components/userProfile/UserProfileContainer.js';
 
+import ProblemList from 'components/problemList/ProblemList.js';
+
 export default class Main extends Component {
   render() {
     return (
@@ -51,6 +53,9 @@ export default class Main extends Component {
           <Route exact path='/users/profile/:username'
             component={UserProfileContainer}/>
 
+          {/* Problem List Portal*/}
+          <Route exact path='/problemList/:problemListId'
+            component={ProblemList}/>
         </Switch>
       </main>
     );
