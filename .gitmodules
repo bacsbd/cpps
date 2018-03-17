@@ -1,3 +1,0 @@
-[submodule "client/modules/coach"]
-	path = client/modules/coach
-	url = https://github.com/nuronialBlock/coach-cpps.git
