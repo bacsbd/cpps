@@ -4,8 +4,8 @@ const capitalAlphaNumeric = '^[A-Z0-9_]+$';
 // TODO: Show full names in bracket
 
 const data = [{
-    displayName: 'Codeforces',
     name: 'cf',
+    displayName: 'Codeforces',
     format: '^\\d+[A-Z]$',
   },
   {

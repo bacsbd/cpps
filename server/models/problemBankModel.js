@@ -12,7 +12,7 @@ const schema = new mongoose.Schema({
     type: String,
     set: removeNullOrBlank,
   },
-  problemID: {
+  problemId: {
     required: true,
     type: String,
     set: removeNullOrBlank,
@@ -27,7 +27,7 @@ const schema = new mongoose.Schema({
   },
 });
 
-schema.index({platform: 1, problemID: 1}, {unique: true});
+schema.index({platform: 1, problemId: 1}, {unique: true});
 
 mongoose.model('ProblemBank', schema);
 

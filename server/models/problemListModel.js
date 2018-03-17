@@ -14,8 +14,8 @@ const schema = new mongoose.Schema({
     ref: 'User',
   },
   problems: [{
-    ojname: String,
-    problemID: String,
+    platform: String,
+    problemId: String,
     title: String,
     link: String,
   }],

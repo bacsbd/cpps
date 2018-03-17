@@ -7,7 +7,7 @@ const ojscraper = require('ojscraper');
 
 const router = express.Router();
 
-router.get('/problembanks/:platform/:problemID', getProblem);
+router.get('/problembanks/:platform/:problemId', getProblem);
 
 module.exports = {
   addRouter(app) {
@@ -16,7 +16,7 @@ module.exports = {
 };
 
 async function getProblem(req, res, next) {
-  const {platform, problemID} = req.params;
+  const {platform, problemId} = req.params;
 
   if (ojnamesOnly.findIndex((x)=>x===platform) === -1) {
     return res.status(400).json({
@@ -28,7 +28,7 @@ async function getProblem(req, res, next) {
   try {
     const problem = await ProblemBank.findOne({
       platform,
-      problemID,
+      problemId,
     }).exec();
 
     // Problem found in bank
@@ -41,10 +41,15 @@ async function getProblem(req, res, next) {
 
     const credential = require('world').secretModule.ojscraper.loj.credential;
     const info = await ojscraper.getProblemInfo({
-      ojname: platform, problemID, credential,
+      ojname: platform, problemID: problemId, credential,
     });
 
-    const newProblem = new ProblemBank(info);
+    const newProblem = new ProblemBank({
+      title: info.title,
+      problemId: info.problemID,
+      platform: info.platform,
+      link: info.link,
+    });
     await newProblem.save();
 
     return res.status(200).json({
