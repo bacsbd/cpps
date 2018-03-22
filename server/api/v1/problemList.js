@@ -194,8 +194,9 @@ async function deleteProblemFromList(req, res, next) {
 }
 
 async function solveCountInClassroom(req, res, next) {
-  try{
+  try {
     const {problemListId, classId} = req.params;
+    const {userId} = req.session;
 
     const studentList = await Classroom.findById(classId).populate('students').exec();
     const problemList = await ProblemList.findById(problemListId).exec();
@@ -207,7 +208,13 @@ async function solveCountInClassroom(req, res, next) {
       });
     }
 
-    const studentIds = studentList.students.map((s)=>s._id);
+    const studentIds = studentList.students.map((s)=>s._id.toString());
+    if (userId !== problemList.createdBy.toString() && !studentIds.includes(userId)) {
+      return next({
+        status: 401,
+        message: 'You are neither the owner, nor student of classroom',
+      });
+    }
 
     const resp = await Promise.all(problemList.problems.map(async (p)=>{
       const solvedBy = await User.find({
