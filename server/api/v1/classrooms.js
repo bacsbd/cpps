@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const {isAdmin} = require('middlewares/userGroup');
 const Classroom = mongoose.model('Classroom');
+const ProblemList = mongoose.model('ProblemList');
 const isObjectId = mongoose.Types.ObjectId.isValid;
 
 const router = express.Router();
@@ -14,8 +15,9 @@ router.put('/classrooms/:classId', updateClassroom);
 router.delete('/classrooms/:classId', deleteClassroom);
 
 router.post('/classrooms/:classId/students', postAddOneStudent);
-router.delete(
-  '/classrooms/:classId/students/:studentId', deleteOneStudent);
+router.delete('/classrooms/:classId/students/:studentId', deleteOneStudent);
+
+router.get('/classrooms/:classId/problemlists', getProblemLists);
 
 module.exports = {
   addRouter(app) {
@@ -194,12 +196,48 @@ async function deleteClassroom(req, res, next) {
   try {
     const {classId} = req.params;
     const {userId} = req.session;
+
+    await ProblemList.update({
+      sharedWith: classId,
+    }, {
+      $pull: {
+        sharedWith: classId,
+      },
+    }, {
+      multi: true,
+    }).exec();
+
     await Classroom.findOneAndRemove({
       _id: classId,
       coach: userId,
     }).exec();
     return res.status(200).json({
       status: 200,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function getProblemLists(req, res, next) {
+  try {
+    const {classId} = req.params;
+
+    if (!classId || !isObjectId(classId)) {
+      return next({
+        status: 401,
+        message: `classId:${classId} is not a valid objectId`,
+      });
+    }
+
+    const problemLists = await ProblemList.find({
+      sharedWith: classId,
+    }).populate('createdBy', 'username')
+    .select('title').exec();
+
+    return res.status(200).json({
+      status: 200,
+      data: problemLists,
     });
   } catch (err) {
     next(err);

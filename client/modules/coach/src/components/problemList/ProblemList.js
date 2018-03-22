@@ -12,13 +12,17 @@ import {ViewClassroom} from './ViewClassroom';
 class ProblemList extends Component {
   constructor(props) {
     super(props);
+
+    const {classId} = props.match.params;
+    const view = classId? 'classroom' : 'normal';
+
     this.state = {
       loadingState: true,
       loadingMessage: 'Fetching data...',
       title: '',
       problems: [],
       sharedWith: [],
-      view: 'normal',
+      view: view,
       owner: false,
     };
 
@@ -163,14 +167,18 @@ class ProblemList extends Component {
           <Col>
             <h1>Problem List: {this.state.title}</h1>
           </Col>
-          <Col className='text-right'>
-            <SettingsList
-              {...this.props}
-              changeView={this.changeView}
-              setLoadingState={this.setLoadingState}
-              handleError={this.handleError}
-            />
-          </Col>
+          {
+            this.state.owner
+            ?<Col className='text-right'>
+              <SettingsList
+                {...this.props}
+                changeView={this.changeView}
+                setLoadingState={this.setLoadingState}
+                handleError={this.handleError}
+              />
+            </Col>
+            : null
+          }
         </Row>
         <Row>
           <Col>

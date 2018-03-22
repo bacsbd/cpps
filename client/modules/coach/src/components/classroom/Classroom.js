@@ -9,6 +9,7 @@ import StudentPortal from 'components/studentPortal/StudentPortal';
 import ContestPortalContainer from
   'components/contestPortal/ContestPortalContainer';
 import Notifications from 'react-notification-system-redux';
+import {ProblemListClassroom} from './ProblemListClassroom';
 
 /** Setting List */
 
@@ -38,6 +39,7 @@ SettingsList.propTypes = {
 };
 
 class Classroom extends Component {
+
   render() {
     const {classId, name, owner} = this.props;
     const {notifications} = this.props;
@@ -77,6 +79,7 @@ class Classroom extends Component {
           </Col>
           <Col>
             <ContestPortalContainer classId={classId} owner={owner} />
+            <ProblemListClassroom {...this.props} />
           </Col>
         </Row>
       </div>

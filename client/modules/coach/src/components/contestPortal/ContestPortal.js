@@ -42,6 +42,8 @@ function ContestPortal(props) {
       </td>
     </tr>
   ));
+
+  if (!owner && data.length == 0) return null;
   return (
     <div className='text-center'>
       <Row>

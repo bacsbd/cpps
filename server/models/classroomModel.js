@@ -28,3 +28,8 @@ function removeNullOrBlank(data) {
   if (data === null || data === '') return undefined;
   return data;
 }
+
+/**
+ * Related To:
+ *  1. ProblemList
+ */

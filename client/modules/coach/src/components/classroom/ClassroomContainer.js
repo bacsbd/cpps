@@ -4,20 +4,6 @@ import PropTypes from 'prop-types';
 import Classroom from './Classroom.js';
 import qs from 'qs';
 
-function mapStateToProps(state) {
-  return {
-    user: state.user,
-    notifications: state.notifications,
-  };
-}
-function mapDispatchToProps(dispatch) {
-  return {
-    showNotification(msg) {
-      dispatch(msg);
-    },
-  };
-}
-
 class ClassroomContainer extends Component {
   constructor(props) {
     super(props);
@@ -27,6 +13,7 @@ class ClassroomContainer extends Component {
       classId: this.props.match.params.classId,
       coach: {},
       name: '',
+      problemLists: [],
     };
   }
 
@@ -65,10 +52,17 @@ class ClassroomContainer extends Component {
         });
       }
 
+      let problemListResp = await fetch(`/api/v1/classrooms/${classId}/problemlists`, {
+        credentials: 'same-origin',
+      });
+      problemListResp = await problemListResp.json();
+      if (problemListResp.status !== 200) throw problemListResp;
+
       this.setState({
         students: resp.data.students,
         name: resp.data.name,
         coach: resp.data.coach,
+        problemLists: problemListResp.data,
       });
     } catch (err) {
       if (err.status) alert(err.message);
@@ -86,6 +80,7 @@ class ClassroomContainer extends Component {
         user={this.props.user}
         coach={this.state.coach}
         owner={this.state.coach._id === this.props.user.userId}
+        problemLists={this.state.problemLists}
       />
     );
   }
@@ -102,5 +97,18 @@ ClassroomContainer.propTypes = {
   }).isRequired,
 };
 
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+    notifications: state.notifications,
+  };
+}
+function mapDispatchToProps(dispatch) {
+  return {
+    showNotification(msg) {
+      dispatch(msg);
+    },
+  };
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClassroomContainer);
