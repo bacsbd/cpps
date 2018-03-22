@@ -8,6 +8,7 @@ export class ViewClassroom extends Component {
     super(props);
 
     this.state = {
+      classrooms: [],
       modalRanklist: false,
       modalLoading: false,
       loadingMessage: '',
@@ -17,12 +18,80 @@ export class ViewClassroom extends Component {
 
     this.showSolveCount = this.showSolveCount.bind(this);
     this.toggleModalRanklist = this.toggleModalRanklist.bind(this);
+    this.shareWith = this.shareWith.bind(this);
+    this.removeShareWith = this.removeShareWith.bind(this);
   }
 
   toggleModalRanklist() {
     this.setState({
       modalRanklist: !this.state.modalRanklist,
     });
+  }
+
+  async shareWith(classId) {
+    const {handleError, setLoadingState, sharedWith, setSharedWith} = this.props;
+    const {problemListId} = this.props.match.params;
+    try {
+      setLoadingState(true, 'Sharing with Classroom...');
+
+      const data = {
+        classId,
+      };
+      let resp = await fetch(`/api/v1/problemlists/${problemListId}/shared-with/classrooms`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+        headers: {'Content-Type': 'application/json'},
+        credentials: 'same-origin',
+      });
+      resp = await resp.json();
+      if (resp.status !== 201) throw resp;
+      setSharedWith([...sharedWith, classId]);
+    } catch (err) {
+      handleError(err);
+    } finally {
+      setLoadingState(false);
+    }
+  }
+
+  async removeShareWith(classId) {
+    const {handleError, setLoadingState, sharedWith, setSharedWith} = this.props;
+    const {problemListId} = this.props.match.params;
+    try {
+      setLoadingState(true, 'Removing Share Permission...');
+      let resp = await fetch(`/api/v1/problemlists/${problemListId}/shared-with/classrooms/${classId}`, {
+        method: 'DELETE',
+        credentials: 'same-origin',
+      });
+      resp = await resp.json();
+      if (resp.status !== 200) throw resp;
+      setSharedWith(sharedWith.filter((x)=>x!==classId));
+    } catch (err) {
+      handleError(err);
+    } finally {
+      setLoadingState(false);
+    }
+  }
+
+  async componentWillMount() {
+    const {problemListId} = this.props.match.params;
+    const {user, handleError, setLoadingState} = this.props;
+    try {
+      setLoadingState(true, 'Fetching Classrooms...');
+
+      let resp = await fetch(`/api/v1/classrooms?coach=${user.userId}`, {
+        credentials: 'same-origin',
+      });
+      resp = await resp.json();
+      const classrooms = resp.data;
+
+      this.setState({
+        classrooms,
+      });
+    } catch (err) {
+      handleError(err);
+    } finally {
+      setLoadingState(false);
+    }
   }
 
   async showSolveCount(classId) {
@@ -126,7 +195,8 @@ export class ViewClassroom extends Component {
   }
 
   render() {
-    const {classrooms} = this.props;
+    const {sharedWith} = this.props;
+    const {classrooms} = this.state;
     return (
       <div className="text-center">
         <h2>Classroom View</h2>
@@ -135,7 +205,8 @@ export class ViewClassroom extends Component {
             <tr>
               <th>#</th>
               <th>Name</th>
-              <th>Performance</th>
+              <th>Ranklist</th>
+              <th>Share</th>
             </tr>
           </thead>
           <tbody>
@@ -147,6 +218,13 @@ export class ViewClassroom extends Component {
                   <td><span className="btn-link pointer"
                     onClick={()=>this.showSolveCount(c._id)}
                     >View</span></td>
+                  <td>
+                    {
+                      sharedWith.includes(c._id)
+                      ? <i className="fa fa-check-square-o pointer" onClick={()=>this.removeShareWith(c._id)}/>
+                      : <i className="fa fa-square-o pointer" onClick={()=>this.shareWith(c._id)}/>
+                    }
+                  </td>
                 </tr>
               );
             })}

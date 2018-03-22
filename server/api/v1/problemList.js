@@ -1,7 +1,9 @@
 const express = require('express');
 const ProblemList = require('mongoose').model('ProblemList');
 const Classroom = require('mongoose').model('Classroom');
-const User = require('mongoose').model('User');
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
+const isObjectId = mongoose.Types.ObjectId.isValid;
 
 const router = express.Router();
 
@@ -14,6 +16,9 @@ router.put('/problemlists/:problemListId/problems', addProblemToList);
 router.delete('/problemlists/:problemListId/problems/:pid', deleteProblemFromList);
 
 router.get('/problemlists/:problemListId/who-solved-it/classrooms/:classId', solveCountInClassroom);
+
+router.put('/problemlists/:problemListId/shared-with/classrooms', shareWithClassroom);
+router.delete('/problemlists/:problemListId/shared-with/classrooms/:classId', removeShareWithAClassroom);
 
 module.exports = {
   addRouter(app) {
@@ -222,7 +227,7 @@ async function solveCountInClassroom(req, res, next) {
         link: p.link,
         solvedBy: solvedBy.map((x)=>x.username),
         solveCount: solvedBy.length,
-      }
+      };
     }));
 
     return res.status(200).json({
@@ -231,6 +236,79 @@ async function solveCountInClassroom(req, res, next) {
         ranklist: resp,
         studentUsernames: studentList.students.map((s)=>s.username),
       },
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function shareWithClassroom(req, res, next) {
+  try {
+    const {problemListId} = req.params;
+    const {classId} = req.body;
+    const {userId} = req.session;
+
+    if (!problemListId || !isObjectId(problemListId)) {
+      return next({
+        status: 401,
+        message: `problemListId:${problemListId} is not a valid objectId`,
+      });
+    }
+
+    if (!classId || !isObjectId(classId)) {
+      return next({
+        status: 401,
+        message: `ClassId:${classId} is not a valid objectId`,
+      });
+    }
+
+    await ProblemList.findOneAndUpdate({
+      _id: problemListId,
+      createdBy: userId,
+    }, {
+      $addToSet: {
+        sharedWith: classId,
+      },
+    });
+
+    return res.status(201).json({
+      status: 201,
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function removeShareWithAClassroom(req, res, next) {
+  try {
+    const {problemListId, classId} = req.params;
+    const {userId} = req.session;
+
+    if (!problemListId || !isObjectId(problemListId)) {
+      return next({
+        status: 401,
+        message: `problemListId:${problemListId} is not a valid objectId`,
+      });
+    }
+
+    if (!classId || !isObjectId(classId)) {
+      return next({
+        status: 401,
+        message: `ClassId:${classId} is not a valid objectId`,
+      });
+    }
+
+    await ProblemList.findOneAndUpdate({
+      _id: problemListId,
+      createdBy: userId,
+    }, {
+      $pull: {
+        sharedWith: classId,
+      },
+    });
+
+    return res.status(200).json({
+      status: 200,
     });
   } catch (err) {
     return next(err);

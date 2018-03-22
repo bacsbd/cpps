@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import {Row, Col, Table} from 'reactstrap';
-import {Button} from 'reactstrap';
 import {connect} from 'react-redux';
-import Notifications, {error, success}
+import Notifications, {error}
   from 'react-notification-system-redux';
 import Loadable from 'react-loading-overlay';
 
@@ -18,12 +17,9 @@ class ProblemList extends Component {
       loadingMessage: 'Fetching data...',
       title: '',
       problems: [],
+      sharedWith: [],
       view: 'normal',
-      classrooms: [],
-      modalRanklist: false,
-      modalLoading: false,
-      ranklist: [],
-      studentUsernames: [],
+      owner: false,
     };
 
     this.removeProblem = this.removeProblem.bind(this);
@@ -32,6 +28,13 @@ class ProblemList extends Component {
     this.setLoadingState = this.setLoadingState.bind(this);
     this.addProblem = this.addProblem.bind(this);
     this.handleError = this.handleError.bind(this);
+    this.setSharedWith = this.setSharedWith.bind(this);
+  }
+
+  setSharedWith(sharedWith) {
+    this.setState({
+      sharedWith,
+    });
   }
 
   addProblem(newProblem) {
@@ -74,20 +77,14 @@ class ProblemList extends Component {
       resp = await resp.json();
       if (resp.status !== 200) throw resp;
 
-      const title = resp.data.title;
-      const problems = resp.data.problems;
-
-      resp = await fetch(`/api/v1/classrooms?coach=${user.userId}`, {
-        credentials: 'same-origin',
-      });
-      resp = await resp.json();
-
-      const classrooms = resp.data;
+      const {title, problems, sharedWith, createdBy} = resp.data;
+      const owner = createdBy === user.userId;
 
       this.setState({
         title,
         problems,
-        classrooms,
+        sharedWith,
+        owner,
       });
     } catch (err) {
       this.handleError(err);
@@ -182,8 +179,10 @@ class ProblemList extends Component {
           <Col>
             {this.state.view === 'normal'? <ViewClassroom
               {...this.props}
-              classrooms={this.state.classrooms}
               handleError={this.handleError}
+              setLoadingState={this.setLoadingState}
+              sharedWith={this.state.sharedWith}
+              setSharedWith={this.setSharedWith}
             />: null}
             {this.state.view === 'addProblem'? <ViewAddProblem
               {...this.props}
