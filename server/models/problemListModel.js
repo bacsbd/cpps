@@ -19,6 +19,10 @@ const schema = new mongoose.Schema({
     title: String,
     link: String,
   }],
+  sharedWith: {
+    type: [{type: ObjectId, ref: 'Classroom'}],
+    default: [],
+  },
 }, {
   timestamps: true,
 });

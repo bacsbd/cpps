@@ -79,7 +79,9 @@
     "winston": "^3.0.0-rc1"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
-    "eslint-config-google": "^0.7.1"
+    "eslint": "^4.15.0",
+    "eslint-config-google": "^0.9.1",
+    "eslint-plugin-react": "^7.5.1",
+    "react-scripts": "1.0.12"
   }
 }
