@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {Table, Button} from 'reactstrap';
-import {Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
-import Loadable from 'react-loading-overlay';
+import {Table} from 'reactstrap';
+import {WhoSolvedIt} from './WhoSolvedIt';
 
 export class ViewClassroom extends Component {
   constructor(props) {
@@ -10,13 +9,10 @@ export class ViewClassroom extends Component {
     this.state = {
       classrooms: [],
       modalRanklist: false,
-      modalLoading: false,
       loadingMessage: '',
-      ranklist: [],
-      studentUsernames: [],
+      showSolveCountFor: '',
     };
 
-    this.showSolveCount = this.showSolveCount.bind(this);
     this.toggleModalRanklist = this.toggleModalRanklist.bind(this);
     this.shareWith = this.shareWith.bind(this);
     this.removeShareWith = this.removeShareWith.bind(this);
@@ -73,7 +69,6 @@ export class ViewClassroom extends Component {
   }
 
   async componentWillMount() {
-    const {problemListId} = this.props.match.params;
     const {user, handleError, setLoadingState} = this.props;
     try {
       setLoadingState(true, 'Fetching Classrooms...');
@@ -92,106 +87,6 @@ export class ViewClassroom extends Component {
     } finally {
       setLoadingState(false);
     }
-  }
-
-  async showSolveCount(classId) {
-    const {problemListId} = this.props.match.params;
-    const {handleError} = this.props;
-
-    this.setState({
-      modalRanklist: true,
-      modalLoading: true,
-      loadingMessage: 'Building Ranklist...',
-    });
-
-    try {
-      let resp = await fetch(`/api/v1/problemlists/${problemListId}/who-solved-it/classrooms/${classId}`, {
-        credentials: 'same-origin',
-      });
-      resp = await resp.json();
-
-      if (resp.status !== 200) throw resp;
-      this.setState({
-        ranklist: resp.data.ranklist,
-        studentUsernames: resp.data.studentUsernames,
-      });
-    } catch (err) {
-      handleError(err);
-    } finally {
-      this.setState({
-        modalLoading: false,
-      });
-    }
-  }
-
-  displayRankList() {
-    const {ranklist, studentUsernames} = this.state;
-
-    const totalSolved = studentUsernames.map((s)=>{
-      const solved = ranklist.filter((r)=>r.solvedBy.findIndex((x)=>x===s) !== -1).length;
-      return {username: s, solved};
-    });
-
-    totalSolved.sort((a, b)=>{
-      if ( b.solved - a.solved ) return b.solved - a.solved;
-      if ( a.username < b.username ) return -1;
-      else return 1;
-    });
-
-    return (
-       <Modal isOpen={this.state.modalRanklist} toggle={this.toggleModalRanklist}
-         className='modal-lg'
-         >
-         <Loadable active={this.state.modalLoading}
-         spinner={true}
-         text={this.state.loadingMessage || 'Please wait a moment...'}>
-           <ModalHeader toggle={this.toggleModalRanklist}>Ranklist</ModalHeader>
-           <ModalBody style={{overflowX: 'auto'}}>
-             <Table>
-               <thead>
-                 <tr>
-                   <th>#</th>
-                   <th>Username</th>
-                   <th>Total</th>
-                   {ranklist.map((x)=>{
-                     return (
-                       <th key={x._id}>
-                         <a href={x.link} target="_blank">
-                           {`${x.platform} ${x.problemId}`}
-                         </a>
-                       </th>
-                     );
-                   })}
-                 </tr>
-               </thead>
-               <tbody>
-                 {totalSolved.map((student, index)=>{
-                   return (
-                     <tr key={student.username}>
-                       <td>{index}</td>
-                       <td>{student.username}</td>
-                       <td>{student.solved}</td>
-                       {ranklist.map((p)=>{
-                         if (p.solvedBy.findIndex((x)=>x === student.username) !== -1 ) {
-                           return <td
-                            key={`${student.username}+${p.platform}+${p.problemId}`}
-                            className="text-success"><i className="fa fa-check"/></td>;
-                         } else {
-                           return <td key={`${student.username}+${p.platform}+${p.problemId}`}></td>;
-                         }
-                       })}
-                     </tr>
-                   );
-                 })}
-               </tbody>
-             </Table>
-           </ModalBody>
-           <ModalFooter>
-             <Button color="secondary" onClick={this.toggleModalRanklist}>Cancel</Button>
-           </ModalFooter>
-       </Loadable>
-       </Modal>
-   );
   }
 
   render() {
@@ -216,7 +111,10 @@ export class ViewClassroom extends Component {
                   <td>{index}</td>
                   <td>{c.name}</td>
                   <td><span className="btn-link pointer"
-                    onClick={()=>this.showSolveCount(c._id)}
+                    onClick={()=>this.setState({
+                      modalRanklist: true,
+                      showSolveCountFor: c._id,
+                    })}
                     >View</span></td>
                   <td>
                     {
@@ -230,7 +128,13 @@ export class ViewClassroom extends Component {
             })}
           </tbody>
         </Table>
-        {this.displayRankList()}
+        <WhoSolvedIt
+          {...this.props}
+          classId={this.state.showSolveCountFor}
+          problemListId={this.props.match.params.problemListId}
+          modalRanklist={this.state.modalRanklist}
+          toggleModalRanklist={this.toggleModalRanklist}
+        />
       </div>
     );
   }

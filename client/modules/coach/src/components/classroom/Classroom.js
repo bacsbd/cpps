@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import StudentPortal from 'components/studentPortal/StudentPortal';
 import ContestPortalContainer from
   'components/contestPortal/ContestPortalContainer';
-import Notifications from 'react-notification-system-redux';
+import Notifications, {error} from 'react-notification-system-redux';
 import {ProblemListClassroom} from './ProblemListClassroom';
 
 /** Setting List */
@@ -39,6 +39,20 @@ SettingsList.propTypes = {
 };
 
 class Classroom extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.handleError = this.handleError.bind(this);
+  }
+
+  handleError(err) {
+    this.props.showNotification(error({
+      title: 'Error',
+      message: err.message,
+      autoDismiss: 500,
+    }));
+  }
 
   render() {
     const {classId, name, owner} = this.props;
@@ -79,7 +93,7 @@ class Classroom extends Component {
           </Col>
           <Col>
             <ContestPortalContainer classId={classId} owner={owner} />
-            <ProblemListClassroom {...this.props} />
+            <ProblemListClassroom {...this.props} handleError={this.handleError} />
           </Col>
         </Row>
       </div>
