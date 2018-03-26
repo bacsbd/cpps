@@ -25,7 +25,7 @@ export class ProblemListClassroom extends Component {
 
     return (
       <div>
-        <h1>Problem Lists</h1>
+        <h2>Problem Lists</h2>
         <Table className="text-center">
           <thead>
             <tr>

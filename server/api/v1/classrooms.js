@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const {isAdmin} = require('middlewares/userGroup');
 const Classroom = mongoose.model('Classroom');
 const ProblemList = mongoose.model('ProblemList');
+const User = mongoose.model('User');
 const isObjectId = mongoose.Types.ObjectId.isValid;
 
 const router = express.Router();
@@ -13,6 +14,8 @@ router.post('/classrooms', isAdmin, insertClassroom);
 router.get('/classrooms/:classId', getOneClassroom);
 router.put('/classrooms/:classId', updateClassroom);
 router.delete('/classrooms/:classId', deleteClassroom);
+
+router.get('/classrooms/:classId/leaderboard', getLeaderboard);
 
 router.post('/classrooms/:classId/students', postAddOneStudent);
 router.delete('/classrooms/:classId/students/:studentId', deleteOneStudent);
@@ -238,6 +241,57 @@ async function getProblemLists(req, res, next) {
     return res.status(200).json({
       status: 200,
       data: problemLists,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function getLeaderboard(req, res, next) {
+  const {classId} = req.params;
+  try {
+    const studentList = await Classroom.findById(classId).select('students').exec();
+    const studentsIdList = studentList.students;
+
+    const userData = await User.aggregate([
+      {$match: {_id: {$in: studentsIdList}}},
+      {$project: {username: 1, _id: 0, ojStats: 1}},
+      {$unwind: '$ojStats'},
+      {
+        $project: {
+          username: 1,
+          ojname: '$ojStats.ojname',
+          solveCount: '$ojStats.solveCount',
+        }},
+      {
+        $group: {
+          _id: '$username',
+          totalSolved: {$sum: '$solveCount'},
+          ojStats: {
+            $push: {
+              ojname: '$ojname',
+              solveCount: '$solveCount',
+            }}}},
+      {$project: {_id: 0, username: '$_id', totalSolved: 1, ojStats: 1}},
+      {$sort: {totalSolved: -1, username: 1}},
+    ]);
+
+    const data = [];
+    userData.forEach(function(user) {
+      const d = {};
+      d.username = user.username;
+      d.totalSolved = user.totalSolved;
+      user.ojStats.forEach(function(stat) {
+        let {ojname, solveCount} = stat;
+        if (!solveCount) solveCount = 0;
+        d[ojname] = solveCount;
+      });
+      data.push(d);
+    });
+
+    return res.status(200).json({
+      status: 200,
+      data,
     });
   } catch (err) {
     next(err);

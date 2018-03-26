@@ -35,6 +35,7 @@ export class ViewAddProblem extends Component {
     setLoadingState(true, 'Adding Problem to List...');
 
     const {ojname, problemId} = this.state;
+    if (!ojname || !problemId) return;
 
     try {
       let resp = await fetch(`/api/v1/problembanks/${ojname}/${problemId}`, {
@@ -54,7 +55,6 @@ export class ViewAddProblem extends Component {
       if (resp.status !== 201) throw resp;
 
       this.setState({
-        ojname: '',
         problemId: '',
       });
       addProblem(resp.data);
