@@ -3,6 +3,8 @@ import {connect} from 'react-redux';
 import Notifications, {error}
   from 'react-notification-system-redux';
 import Loadable from 'react-loading-overlay';
+import {LinkContainer} from 'react-router-bootstrap';
+import PropTypes from 'prop-types';
 
 class Template extends Component {
   constructor(props) {
@@ -53,6 +55,11 @@ class Template extends Component {
     );
   }
 }
+
+Template.propTypes = {
+  showNotification: PropTypes.func.isRequired,
+  notifications: PropTypes.shape(),
+};
 
 function mapStateToProps(state) {
   return {

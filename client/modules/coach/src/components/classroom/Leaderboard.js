@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import Notifications, {error}
   from 'react-notification-system-redux';
 import Loadable from 'react-loading-overlay';
+import {LinkContainer} from 'react-router-bootstrap';
 
 class Leaderboard extends Component {
   constructor(props) {
@@ -52,9 +53,8 @@ class Leaderboard extends Component {
   dataTable() {
     const {data} = this.state;
     const {ojnames} = this.props;
-    const ojnamesOnly = ojnames.map((x)=>x.name);
+    const ojnamesOnly = ojnames.map((x)=>x.name).filter((x)=> x !== 'vjudge');
 
-    console.log(ojnames);
     return (
       <Table>
         <thead>
@@ -70,7 +70,13 @@ class Leaderboard extends Component {
             return (
               <tr key={u.username}>
                 <td>{index + 1}</td>
-                <td>{u.username}</td>
+                <td>
+                  <LinkContainer to={`/users/profile/${u.username}`}>
+                    <span className="btn-link pointer">
+                      {u.username}
+                    </span>
+                  </LinkContainer>
+                </td>
                 <td>{u.totalSolved}</td>
                 {ojnamesOnly.map((ojname)=><td key={ojname}>{u[ojname]}</td>)}
               </tr>
@@ -87,6 +93,7 @@ class Leaderboard extends Component {
       text={this.state.loadingMessage || 'Please wait a moment...'}>
         <Notifications notifications={this.props.notifications}/>
 
+        <h1 className="text-center">Leaderboard</h1>
         {this.dataTable()}
 
       </Loadable>
