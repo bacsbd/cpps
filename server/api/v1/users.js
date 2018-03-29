@@ -202,6 +202,15 @@ async function syncSolveCount(req, res, next) {
       });
     });
 
+    job.on('error', function(err) {
+      logger.error(err);
+      job.remove(function(error, job) {
+        if (error) {
+          logger.error(error);
+        }
+      });
+    });
+
     job.save(function(err) {
       if (err) next(err);
       else return res.status(202).json({
