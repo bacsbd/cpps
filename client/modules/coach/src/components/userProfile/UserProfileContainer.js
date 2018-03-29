@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Profile} from './Profile.js';
 import qs from 'qs';
-import Notifications from 'react-notification-system-redux';
+import Notifications, {error} from 'react-notification-system-redux';
 
 class UserProfileContainer extends Component {
   constructor(props) {
@@ -17,6 +17,18 @@ class UserProfileContainer extends Component {
     };
 
     this.updateOjStats = this.updateOjStats.bind(this);
+    this.handleError = this.handleError.bind(this);
+  }
+
+  handleError(err) {
+    if (err.status) {
+      this.props.showNotification(error({
+        title: 'Error',
+        message: err.message,
+        autoDismiss: 500,
+      }));
+    }
+    console.error(err);
   }
 
   updateOjStats(newOjStats) {
@@ -72,8 +84,7 @@ class UserProfileContainer extends Component {
         classrooms,
       });
     } catch (err) {
-      if (err.status) alert(err.message);
-      console.log(err);
+      this.handleError(err);
     }
   }
 
@@ -89,10 +100,9 @@ class UserProfileContainer extends Component {
   render() {
     return (
       <div>
-        <Notifications
-        notifications={this.props.notifications}
-      />
+        <Notifications notifications={this.props.notifications}/>
       <Profile {...this.props}
+        handleError={this.handleError}
         displayUser={this.state.displayUser}
         classrooms={this.state.classrooms}
         updateOjStats={this.updateOjStats}

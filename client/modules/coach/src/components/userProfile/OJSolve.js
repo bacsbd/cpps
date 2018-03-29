@@ -29,7 +29,7 @@ export class OJSolve extends Component {
   }
 
   async updateSolveCount() {
-    const {displayUser} = this.props;
+    const {displayUser, handleError} = this.props;
     const username = displayUser.username;
 
     try {
@@ -43,8 +43,7 @@ export class OJSolve extends Component {
       resp = await resp.json();
       if (resp.status !== 202) throw resp;
     } catch (err) {
-      if (err.status) alert(err.message);
-      console.error(err);
+      handleError(err);
     } finally {
       this.setState({
         loading: false,
@@ -59,7 +58,7 @@ export class OJSolve extends Component {
   }
 
   async unsetOjUsername(username, ojname) {
-    const {updateOjStats} = this.props;
+    const {updateOjStats, handleError} = this.props;
 
     this.setState({
       loading: true,
@@ -76,16 +75,16 @@ export class OJSolve extends Component {
 
       updateOjStats(resp.data);
     } catch (err) {
-      if (err.status) alert(err.message);
-      console.error(err);
+      handleError(err)
+    } finally {
+      this.setState({
+        loading: false,
+      });
     }
-    this.setState({
-      loading: false,
-    });
   }
 
   async setUsername(ojname) {
-    const {displayUser, updateOjStats} = this.props;
+    const {displayUser, updateOjStats, handleError} = this.props;
     const {username} = displayUser;
 
     this.setState({
@@ -102,13 +101,12 @@ export class OJSolve extends Component {
       if ( resp.status !== 201) throw resp;
       updateOjStats(resp.data);
     } catch (err) {
-      if (err.status) alert(err.message);
-      console.error(err);
+      handleError(err);
+    } finally {
+      this.setState({
+        loading: false,
+      });
     }
-
-    this.setState({
-      loading: false,
-    });
   }
 
   ojUsernameField(oj, index) {

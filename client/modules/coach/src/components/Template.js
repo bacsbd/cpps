@@ -14,6 +14,8 @@ class Template extends Component {
       loadingState: true,
       loadingMessage: '',
     };
+
+    this.handleError = this.handleError.bind(this);
   }
 
   handleError(err) {
