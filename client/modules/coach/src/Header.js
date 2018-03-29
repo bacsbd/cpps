@@ -64,12 +64,6 @@ class Header extends Component {
             </NavLink>
           </NavItem>
 
-          <NavItem>
-            <LinkContainer to='/coach'>
-              <NavLink>Dashboard</NavLink>
-            </LinkContainer>
-          </NavItem>
-
           {isClassroom?
             <NavItem>
               <LinkContainer to={`/classroom/${classId}`}>
@@ -84,8 +78,16 @@ class Header extends Component {
 
           <span className="ml-auto"></span>
           <NavItem>
+            <LinkContainer to='/coach'>
+              <NavLink>
+                <i className='fa fa-dashboard mr-1'/>
+                Dashboard
+              </NavLink>
+            </LinkContainer>
+          </NavItem>
+          <NavItem>
             <NavLink href='/admin/dashboard'>
-              <i className='fa fa-dashboard mr-1'></i>
+              <i className='fa fa-user-secret mr-1'></i>
               Admin
             </NavLink>
           </NavItem>
