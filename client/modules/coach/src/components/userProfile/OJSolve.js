@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 // import {LinkContainer} from 'react-router-bootstrap';
-import {Row, Col, Table, Button} from 'reactstrap';
+import {Row, Col, Table, Button, Form, Input} from 'reactstrap';
 import {PropTypes} from 'prop-types';
 import Spinner from 'react-spinkit';
 import Loadable from 'react-loading-overlay';
@@ -129,10 +129,14 @@ export class OJSolve extends Component {
 
     const inputForm = (
       <div>
-        <input type='text' name='ojusername' onChange={this.handleInputChange}/>
-        <Button color='primary ml-1' onClick={()=>this.setUsername(oj.ojname)}>
-          Set
-        </Button>
+        <Form className="form-inline justify-content-center"
+          onSubmit={(e)=>{
+            e.preventDefault();
+            this.setUsername(oj.ojname);
+          }}>
+          <Input type='text' name='ojusername' onChange={this.handleInputChange} pattern={ojDetails.usernamePattern} title={`Please match the regex: ${ojDetails.usernamePattern}`}/>
+          <Input type="submit" value="Set" className="btn-primary ml-1"/>
+        </Form>
       </div>
     );
 

@@ -1,7 +1,7 @@
 const fourDigits = '^\\d{4}$';
 const capitalAlphaNumeric = '^[A-Z0-9_]+$';
 const normal = '^[A-Za-z0-9_]$';
-const digitsOnly = '^\d+$';
+const digitsOnly = '^\\d+$';
 
 // TODO: Show full names in bracket
 
