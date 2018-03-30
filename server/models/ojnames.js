@@ -7,6 +7,13 @@ const digitsOnly = '^\\d+$';
 
 const data = [
   {
+    name: 'atc',
+    displayName: 'AtCoder',
+    format: '^[a-z0-9_]+_[a-z]$',
+    usernamePattern: normal,
+    profileLink: 'http://kenkoooo.com/atcoder/?user=$$$$$',
+  },
+  {
     name: 'cc',
     displayName: 'CodeChef',
     format: capitalAlphaNumeric,
