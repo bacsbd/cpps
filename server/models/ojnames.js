@@ -1,11 +1,19 @@
 const fourDigits = '^\\d{4}$';
 const capitalAlphaNumeric = '^[A-Z0-9_]+$';
-const normal = '^[A-Za-z0-9_]$';
+const normal = '^[A-Za-z0-9_\\-]+$';
 const digitsOnly = '^\\d+$';
 
 // TODO: Show full names in bracket
 
-const data = [{
+const data = [
+  {
+    name: 'cc',
+    displayName: 'CodeChef',
+    format: capitalAlphaNumeric,
+    usernamePattern: normal,
+    profileLink: 'https://www.codechef.com/users/$$$$$',
+  },
+  {
     name: 'cf',
     displayName: 'Codeforces',
     format: '^\\d+[A-Z]$',
@@ -13,11 +21,11 @@ const data = [{
     profileLink: 'http://codeforces.com/profile/$$$$$',
   },
   {
-    name: 'cc',
-    displayName: 'CodeChef',
-    format: capitalAlphaNumeric,
+    name: 'csa',
+    displayName: 'CSAcademy',
+    format: normal,
     usernamePattern: normal,
-    profileLink: 'https://www.codechef.com/users/$$$$$'
+    profileLink: 'https://csacademy.com/user/$$$$$',
   },
   {
     name: 'hdu',
