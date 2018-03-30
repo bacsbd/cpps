@@ -118,6 +118,10 @@ app.get('/users/*', function(req, res, next) {
   return res.sendFile(path.join(clientBuild, 'coach/index.html'));
 });
 
+app.get('/problemList/*', function(req, res, next) {
+  return res.sendFile(path.join(clientBuild, 'coach/index.html'));
+});
+
 app.use(function(err, req, res, next) {
   logger.error(err.stack);
   if ( req.session.status !== 'user' ) {

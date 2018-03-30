@@ -93,7 +93,7 @@ class UserProfileContainer extends Component {
   }
 
   async componentWillReceiveProps(nextProps) {
-    if (nextProps === this.props) return;
+    if (nextProps.match.params.username === this.props.match.params.username) return;
     this.loadProfile(nextProps);
   }
 
@@ -120,6 +120,7 @@ function mapStateToProps(state) {
   return {
     notifications: state.notifications,
     user: state.user,
+    ojnames: state.ojnames,
   };
 }
 function mapDispatchToProps(dispatch) {

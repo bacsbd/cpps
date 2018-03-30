@@ -113,10 +113,13 @@ export class OJSolve extends Component {
     const {displayUser, owner} = this.props;
     const {username} = displayUser;
     const {showInputForOj} = this.state;
+    const ojDetails = this.props.ojnames.filter((x)=>x.name === oj.ojname)[0];
 
     const displayOjUsername = (
       <span>
-        {oj.userIds[0]}
+        <a href={ojDetails.profileLink.replace('$$$$$', oj.userIds[0])} target="_blank">
+          {oj.userIds[0]}
+        </a>
         {owner? <i
           className="fa fa-times text-danger ml-1 pointer"
           onClick={()=>this.unsetOjUsername(username, oj.ojname)}
