@@ -18,8 +18,11 @@ router.get('/users/:username', getUser );
 router.get('/users/:username/root-stats', rootStats);
 router.put('/users/:username/sync-solve-count', syncSolveCount);
 
+router.put('/users/:username/change-password', changePassword);
+
 router.put('/users/:username/unset-oj-username/:ojname', unsetOjUsername);
 router.put('/users/:username/set-oj-username/:ojname/:userId', setOjUsername);
+
 
 module.exports = {
   addRouter(app) {
@@ -28,7 +31,7 @@ module.exports = {
 };
 
 async function getUserIdFromUsername(req, res, next) {
-  try{
+  try {
     const {username} = req.params;
     if (!username) {
       const err = new Error(`Query 'username' must be provided`);
@@ -45,7 +48,7 @@ async function getUserIdFromUsername(req, res, next) {
       status: 200,
       data: user._id,
     });
-  } catch(err) {
+  } catch (err) {
     next(err);
   }
 }
@@ -77,7 +80,7 @@ async function getUser(req, res, next) {
 }
 
 async function whoSolvedIt(req, res, next) {
-  try{
+  try {
     const {problemList, classId} = req.query;
 
     const studentList = await Classroom
@@ -213,9 +216,11 @@ async function syncSolveCount(req, res, next) {
 
     job.save(function(err) {
       if (err) next(err);
-      else return res.status(202).json({
-        status: 202,
-      });
+      else {
+        return res.status(202).json({
+          status: 202,
+        });
+      }
     });
   } catch (err) {
     next(err);
@@ -316,5 +321,51 @@ async function setOjUsername(req, res, next) {
     });
   } catch (err) {
     next(err);
+  }
+}
+
+async function changePassword(req, res, next) {
+  try {
+    const {currentPassword, newPassword, repeatPassword} = req.body;
+
+    if (newPassword !== repeatPassword) {
+      return next({
+        status: 400,
+        message: 'New password does not match with retyped password',
+      });
+    }
+
+    const username = req.session.username;
+
+    if (username !== req.params.username) {
+      return next({
+        status: 400,
+        message: `You ${username} cannot change password of ${req.params.username}`,
+      });
+    }
+
+    const user = await User.findOne({username}).exec();
+    if (!user) {
+      return next({
+        status: 400,
+        message: `No user found with username ${username}`,
+      });
+    }
+
+    if (!user.comparePassword(currentPassword)) {
+      return next({
+        status: 400,
+        message: `Current Password is Wrong`,
+      });
+    }
+
+    user.password = User.createHash(newPassword);
+    await user.save();
+
+    return res.status(201).json({
+      status: 201,
+    });
+  } catch (err) {
+    return next(err);
   }
 }

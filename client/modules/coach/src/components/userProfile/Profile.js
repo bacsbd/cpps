@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {Row, Col, ListGroup, ListGroupItem} from 'reactstrap';
 import {LinkContainer} from 'react-router-bootstrap';
 import {PropTypes} from 'prop-types';
@@ -8,6 +8,7 @@ import {
 } from 'recharts';
 
 import {OJSolve} from './OJSolve.js';
+import {ChangePassword} from './ChangePassword';
 
 function DrawRadarChart({userRootStats}) {
   if ( !userRootStats ) {
@@ -42,43 +43,71 @@ DrawRadarChart.propTypes = {
   userRootStats: PropTypes.shape(),
 };
 
-export function Profile(props) {
-  const {user, classrooms, displayUser, updateOjStats} = props;
-  const loadingInfo = displayUser.username === undefined;
-  const owner = user.username === displayUser.username;
-  const {userRootStats} = displayUser;
+export class Profile extends Component {
+  constructor(props) {
+    super(props);
 
-  const personalInfo = loadingInfo? <span>Loading</span>: (
-    <ListGroup className="d-inline-flex">
-      {
-        owner?
-        <ListGroupItem>
-          <i className="fa fa-envelope"></i> {user.email}
-        </ListGroupItem>: ''
-      }
-      <ListGroupItem>
-        <i className="fa fa-user"></i> {displayUser.username}
-      </ListGroupItem>
-      {
-        owner?
-        <ListGroupItem>
-          <i className="fa fa-key"></i> Change Password
-        </ListGroupItem>: ''
-      }
-      <ListGroupItem>
-        <i className="fa fa-users"></i> {
-          displayUser.status[0].toUpperCase().slice(0, 1) +
-          displayUser.status.slice(1)
+    this.state = {
+      view: 'normal',
+    };
+
+    this.changeView = this.changeView.bind(this);
+    this.propagateToChild = this.propagateToChild.bind(this);
+  }
+
+  propagateToChild() {
+    return {
+      changeView: this.changeView,
+    };
+  }
+
+  changeView(view) {
+    this.setState({
+      view,
+    });
+  }
+
+  render() {
+    const {user, classrooms, displayUser, updateOjStats} = this.props;
+    const loadingInfo = displayUser.username === undefined;
+    const owner = user.username === displayUser.username;
+    const {userRootStats} = displayUser;
+
+    const personalInfo = loadingInfo? <span>Loading</span>: (
+      <ListGroup className="d-inline-flex">
+        {
+          owner?
+          <ListGroupItem>
+            <i className="fa fa-envelope"></i> {user.email}
+          </ListGroupItem>: ''
         }
-      </ListGroupItem>
-    </ListGroup>
-  );
+        <ListGroupItem>
+          <i className="fa fa-user"></i> {displayUser.username}
+        </ListGroupItem>
+        {
+          owner
+          ? <ListGroupItem>
+              <i className="fa fa-key"></i>
+              <span className="btn-link pointer"
+                onClick={()=>this.setState({view: 'password'})}
+                >Change Password</span>
+            </ListGroupItem>
+          : ''
+        }
+        <ListGroupItem>
+          <i className="fa fa-users"></i> {
+            displayUser.status[0].toUpperCase().slice(0, 1) +
+            displayUser.status.slice(1)
+          }
+        </ListGroupItem>
+      </ListGroup>
+    );
 
-  const classroomPortal = classrooms.length ? (
-    <ListGroup className="d-inline-flex">
-      {classrooms.map((val, index)=>{
-        return (
-          <LinkContainer to={`/classroom/${val._id}`} key={val._id}>
+    const classroomPortal = classrooms.length ? (
+      <ListGroup className="d-inline-flex">
+        {classrooms.map((val, index)=>{
+          return (
+            <LinkContainer to={`/classroom/${val._id}`} key={val._id}>
             <ListGroupItem className="btn-link">
               {`${val.coach.username}/${val.name}`}
             </ListGroupItem>
@@ -88,38 +117,37 @@ export function Profile(props) {
     </ListGroup>):
     <span>Not enrolled in any class</span>;
 
-  return (
-    <div>
-      <div className="text-center">
-        <h3> Profile Page </h3>
+    return (
+      <div>
+        <div className="text-center">
+          <h3> Profile Page </h3>
+        </div>
+        <Row className="align-items justify-content-center">
+          <Col className="text-center">
+            { this.state.view === 'normal' ? <div> <h4>Personal Info</h4> {personalInfo} </div> : '' }
+            { this.state.view === 'password' ? <ChangePassword {...this.props} {...this.propagateToChild()}/>: ''}
+          </Col>
+          <Col className="text-center">
+            <div>
+              <h4>Classrooms</h4>
+              {classroomPortal}
+            </div>
+          </Col>
+          <Col className="text-center" xs={12}>
+            <div>
+              <h4>Overview</h4>
+              <DrawRadarChart userRootStats={userRootStats}/>
+            </div>
+          </Col>
+          <Col className="text-center">
+            <OJSolve {...this.props}
+              displayUser={displayUser} updateOjStats={updateOjStats} owner={owner}
+            />
+          </Col>
+        </Row>
       </div>
-      <Row className="align-items justify-content-center">
-        <Col className="text-center">
-          <div>
-            <h4>Personal Info</h4>
-            {personalInfo}
-          </div>
-        </Col>
-        <Col className="text-center">
-          <div>
-            <h4>Classrooms</h4>
-            {classroomPortal}
-          </div>
-        </Col>
-        <Col className="text-center" xs={12}>
-          <div>
-            <h4>Overview</h4>
-            <DrawRadarChart userRootStats={userRootStats}/>
-          </div>
-        </Col>
-        <Col className="text-center">
-          <OJSolve {...props}
-            displayUser={displayUser} updateOjStats={updateOjStats} owner={owner}
-          />
-        </Col>
-      </Row>
-    </div>
-  );
+    );
+  }
 };
 
 Profile.propTypes = {

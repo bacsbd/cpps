@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Profile} from './Profile.js';
 import qs from 'qs';
-import Notifications, {error} from 'react-notification-system-redux';
+import Notifications, {error, success} from 'react-notification-system-redux';
 
 class UserProfileContainer extends Component {
   constructor(props) {
@@ -18,17 +18,33 @@ class UserProfileContainer extends Component {
 
     this.updateOjStats = this.updateOjStats.bind(this);
     this.handleError = this.handleError.bind(this);
+    this.notifySuccess = this.notifySuccess.bind(this);
+    this.propagateToChild = this.propagateToChild.bind(this);
+  }
+
+  propagateToChild() {
+    return {
+      updateOjStats: this.updateOjStats,
+      handleError: this.handleError,
+      notifySuccess: this.notifySuccess,
+    };
   }
 
   handleError(err) {
-    if (err.status) {
-      this.props.showNotification(error({
-        title: 'Error',
-        message: err.message,
-        autoDismiss: 500,
-      }));
-    }
+    this.props.showNotification(error({
+      title: 'Error',
+      message: err.message,
+      autoDismiss: 500,
+    }));
     console.error(err);
+  }
+
+  notifySuccess(msg) {
+    this.props.showNotification(success({
+      title: 'Success',
+      message: msg,
+      autoDismiss: 10,
+    }));
   }
 
   updateOjStats(newOjStats) {
@@ -102,10 +118,9 @@ class UserProfileContainer extends Component {
       <div>
         <Notifications notifications={this.props.notifications}/>
       <Profile {...this.props}
-        handleError={this.handleError}
+        {...this.propagateToChild()}
         displayUser={this.state.displayUser}
         classrooms={this.state.classrooms}
-        updateOjStats={this.updateOjStats}
       />
       </div>
     );
