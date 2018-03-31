@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 // import {LinkContainer} from 'react-router-bootstrap';
-import {Row, Col, Table, Button, Form, Input} from 'reactstrap';
+import {Row, Col, Table, Form, Input} from 'reactstrap';
 import {PropTypes} from 'prop-types';
 import Spinner from 'react-spinkit';
 import Loadable from 'react-loading-overlay';
@@ -162,8 +162,22 @@ export class OJSolve extends Component {
   }
 
   render() {
-    const {displayUser} = this.props;
-    const ojStats = displayUser.ojStats;
+    const {displayUser, ojnames} = this.props;
+    const ojStats = displayUser.ojStats? displayUser.ojStats: [];
+    ojnames.forEach((x) => {
+      const ojname = x.name;
+      if (ojStats.filter((oj) => oj.ojname === ojname).length === 0 ) {
+        ojStats.push({
+          _id: ojname,
+          ojname,
+          userIds: [],
+          solveCount: 0,
+        });
+      }
+    });
+
+    ojStats.sort((x, y) => x.ojname < y.ojname? -1: 1);
+
     const ojSolve = ojStats? (
       <Table>
         <thead>
@@ -175,13 +189,13 @@ export class OJSolve extends Component {
           </tr>
         </thead>
         <tbody>
-          {displayUser.ojStats.map((oj, index)=>{
+          {ojStats.map((oj, index)=>{
             return (
               <tr key={oj._id}>
                 <td>{index}</td>
                 <td>{oj.ojname}</td>
                 <td>{this.ojUsernameField(oj, index)}</td>
-                <td>{oj.solveCount}</td>
+                <td>{oj.ojname === 'vjudge'? '*' : oj.solveCount? oj.solveCount: 0}</td>
               </tr>
             );
           })}
