@@ -19,7 +19,7 @@ router
 router.get('/set-username', getSetUsername);
 router.post('/set-username', postSetUsername);
 router.post('/set-userId', postSetUserId);
-router.post('/sync-ojsolve/:ojname', postSyncOjname);
+// router.post('/sync-ojsolve/:ojname', postSyncOjname);
 
 // TODO: account should be separate from profile
 router.get('/:username', getProfile);
@@ -36,41 +36,44 @@ module.exports = {
 
 async function getProfile(req, res) {
   const username = req.params.username;
-  const user = await User.findOne({username});
-  const data = {};
-  _.forEach(ojnames.data, function(oj) {
-    data[oj.name] = _.cloneDeep(oj);
-  });
-  _.forEach(user.ojStats, function(userId) {
-    data[userId.ojname].userId = userId.userIds;
-    data[userId.ojname].solveCount = userId.solveCount;
-  });
-  let dataSorted = [];
-  _.forEach(data, function(x) {
-    dataSorted.push(x);
-  });
-  dataSorted = _.orderBy(data, ['name']);
 
-  const displayUser = {
-    username: user.username,
-    status: user.status,
-  };
+  return res.redirect(`/users/profile/${username}`);
 
-  const owner = username === req.session.username;
-
-  let classrooms = [];
-  if (owner) {
-    const userId = req.session.userId;
-    classrooms = await Classroom.find({students: userId})
-      .select('name coach').populate('coach', 'username').exec();
-  }
-
-  return res.render('user/profile', {
-    data: dataSorted,
-    displayUser,
-    owner,
-    classrooms,
-  });
+  // const user = await User.findOne({username});
+  // const data = {};
+  // _.forEach(ojnames.data, function(oj) {
+  //   data[oj.name] = _.cloneDeep(oj);
+  // });
+  // _.forEach(user.ojStats, function(userId) {
+  //   data[userId.ojname].userId = userId.userIds;
+  //   data[userId.ojname].solveCount = userId.solveCount;
+  // });
+  // let dataSorted = [];
+  // _.forEach(data, function(x) {
+  //   dataSorted.push(x);
+  // });
+  // dataSorted = _.orderBy(data, ['name']);
+  //
+  // const displayUser = {
+  //   username: user.username,
+  //   status: user.status,
+  // };
+  //
+  // const owner = username === req.session.username;
+  //
+  // let classrooms = [];
+  // if (owner) {
+  //   const userId = req.session.userId;
+  //   classrooms = await Classroom.find({students: userId})
+  //     .select('name coach').populate('coach', 'username').exec();
+  // }
+  //
+  // return res.render('user/profile', {
+  //   data: dataSorted,
+  //   displayUser,
+  //   owner,
+  //   classrooms,
+  // });
 }
 
 function getChangePassword(req, res) {

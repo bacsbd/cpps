@@ -31,7 +31,9 @@ h1.text-center CPPS
       if (login)
         if (superUser)
           li.nav-item
-            a.nav-link(href='/admin/dashboard') #[i.fa.fa-dashboard] Admin
+            a.nav-link(href='/coach') #[i.fa.fa-dashboard] Dashboard
+          li.nav-item
+            a.nav-link(href='/admin/dashboard') #[i.fa.fa-user-secret] Admin
         li.nav-item
           a.nav-link(href=`/users/profile/${username}`) #[i.fa.fa-user] Profile
         li.nav-item

@@ -108,8 +108,8 @@ export class Profile extends Component {
         {classrooms.map((val, index)=>{
           return (
             <LinkContainer to={`/classroom/${val._id}`} key={val._id}>
-            <ListGroupItem className="btn-link">
-              {`${val.coach.username}/${val.name}`}
+            <ListGroupItem>
+              <span className="btn-link pointer">{`${val.coach.username}/${val.name}`}</span>
             </ListGroupItem>
           </LinkContainer>
         );
