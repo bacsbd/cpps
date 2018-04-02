@@ -34,12 +34,21 @@ class AddStudent extends Component {
       return alert('Student username cannot be empty');
     }
 
-    let student = this.state.student;
-
+    let students = this.state.student.split(',').map((x) => x.trim()).filter((x)=>x);
     try {
-      student = await asyncUsernameToUserId(student);
+      students = await Promise.all(students.map(async (student)=>{
+          try {
+            return await asyncUsernameToUserId(student);
+          } catch (err) {
+            console.error(err);
+            return '';
+          }
+        })
+      );
+      students = students.filter((s) => s);
+
       const data = {
-        student,
+        students,
       };
       const {classId} = this.props.match.params;
       const api = `/api/v1/classrooms/${classId}/students`;

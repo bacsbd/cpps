@@ -78,7 +78,7 @@ class Leaderboard extends Component {
                   </LinkContainer>
                 </td>
                 <td>{u.totalSolved}</td>
-                {ojnamesOnly.map((ojname)=><td key={ojname}>{u[ojname]}</td>)}
+                {ojnamesOnly.map((ojname)=><td key={ojname}>{u[ojname]?u[ojname]:'-'}</td>)}
               </tr>
             );
           })}

@@ -17,7 +17,7 @@ router.delete('/classrooms/:classId', deleteClassroom);
 
 router.get('/classrooms/:classId/leaderboard', getLeaderboard);
 
-router.post('/classrooms/:classId/students', postAddOneStudent);
+router.post('/classrooms/:classId/students', postAddStudents);
 router.delete('/classrooms/:classId/students/:studentId', deleteOneStudent);
 
 router.get('/classrooms/:classId/problemlists', getProblemLists);
@@ -71,24 +71,22 @@ async function getOneClassroom(req, res, next) {
   }
 }
 
-async function postAddOneStudent(req, res, next) {
-  try{
+async function postAddStudents(req, res, next) {
+  try {
     const {classId} = req.params;
-    const {student} = req.body;
+    let {students} = req.body;
     const {userId} = req.session;
 
-    if (isObjectId(student) == false) {
-      const e = new Error(`Student: ${student} must be an objectId`);
-      e.status = 400;
-      throw e;
-    }
+    students = students.filter((s)=> isObjectId(s));
 
     const classroom = await Classroom.findOneAndUpdate({
       _id: classId,
       coach: userId,
     }, {
       $addToSet: {
-        students: student,
+        students: {
+          $each: students,
+        },
       },
     });
 
