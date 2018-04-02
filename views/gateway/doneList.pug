@@ -13,4 +13,5 @@ block content
         each d, ind in doneList
           tr
             td= ind + 1
-            td= d
+            td
+              a(href=`/users/profile/${d}`)= d
