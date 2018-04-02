@@ -6,3 +6,5 @@ css_build
 server/secret.js
 client/build/
 logs/
+.env
+backup/

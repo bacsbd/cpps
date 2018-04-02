@@ -5,20 +5,17 @@ REV='\e[1;32m'       # Bold Green
 OFF='\e[0m'
 
 TYPE=""
-PORT=""
 HELP="false"
 
 #Help function
 function HELP_DETAILS {
   echo -e "${REV}TYPE${OFF}: Can be one of dev, prod, beta, init, mongo or mongo-express"
-  echo -e "${REV}PORT${OFF}: Port number for listeining to request. Required if type is dev, prod or beta"
   exit 1
 }
 
 while getopts hp:t: FLAG; do
   case $FLAG in
     h) HELP="true" ;;
-    p) PORT=$OPTARG ;;
     t) TYPE=$OPTARG ;;
     *) echo "Unexpected option" && HELP_DETAILS && exit 1 ;;
   esac
@@ -35,22 +32,11 @@ if [[ $TYPE = "" ]] ; then
   exit 1
 fi
 
-if [[ $TYPE = "prod" || $TYPE = "dev" || $TYPE = "beta" ]] ; then
-  if [[ $PORT = "" ]]; then
-    echo -e "${BOLD}Port Number Required${OFF}: Please provide -p flag"
-    echo
-    HELP_DETAILS
-    exit 1
-  fi
-fi
-
 # Check if secret.js file exists
 if [[ ! -f server/secret.js ]] ; then
   echo -e "${BOLD}File missing${OFF}: server/secret.js (Please read README.md)"
   exit 0
 fi
-
-export PORT
 
 if [[ $TYPE = "prod" || $TYPE = "beta" ]] ; then
   docker-compose down
@@ -88,10 +74,17 @@ elif [[ $TYPE = "mongo-express" ]] ; then
 elif [[ $TYPE = "init" ]] ; then
   docker exec -it cpps_app_1 node server/configuration/init.js
 elif [[ $TYPE = "mongo-backup" ]]; then
+  # Create backup and copy it out from docker
+  # Run this from root folder
   docker exec -it cpps_db_1 mongodump --db cpps --out /root/volumes/cpps_db/`date +"%m-%d-%y"`
   docker cp cpps_db_1:/root/volumes/cpps_db ./backup/
   docker exec -it cpps_db_1 rm -r /root/volumes/cpps_db/`date +"%m-%d-%y"`
 elif [[ $TYPE = "mongo-restore" ]]; then
+  # Copy the backup file to docker into path /root/volumes/cpps_db/restore/cpps
+  # docker cp <your_folder> cpps_db_1:/root/volumes/cpps_db/restore
+  # Then run this command
+  docker exec cpps_db_1 rm -rf /root/volumes/cpps_db/restore
+  docker cp ./backup/restore cpps_db_1:/root/volumes/cpps_db/restore
   docker exec -it cpps_db_1 mongorestore --db cpps --drop /root/volumes/cpps_db/restore/cpps/
 elif [[ $TYPE = "kuejs" ]] ; then
   docker exec -it cpps_app_1 node_modules/kue/bin/kue-dashboard -p 3050 -r redis://cpps_redis_1:6379
