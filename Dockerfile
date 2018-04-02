@@ -21,6 +21,11 @@ RUN yarn install
 COPY client client
 RUN cd client/modules/coach && yarn install && yarn build && cd - && cd client/ && mkdir -p build && cd build && cp ../modules/coach/build -r coach
 
+RUN wget https://github.com/Yelp/dumb-init/releases/download/v1.2.1/dumb-init_1.2.1_amd64.deb
+RUN dpkg -i dumb-init_*.deb
+
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
 ADD . .
 
 EXPOSE 8002

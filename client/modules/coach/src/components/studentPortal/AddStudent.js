@@ -76,10 +76,10 @@ class AddStudent extends Component {
         <h1> Add Student </h1>
         <Form onSubmit={this.handleSubmit}>
           <FormGroup>
-            <Label>Student Username</Label>
+            <Label>Student Usernames</Label>
             <Input
               name='student'
-              placeholder='Username'
+              placeholder='username1, username2, username3 ... '
               onChange={ this.handleInputChange }
             />
           </FormGroup>

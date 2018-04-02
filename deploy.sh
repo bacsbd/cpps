@@ -60,6 +60,7 @@ elif [[ $TYPE = "dev" ]] ; then
   docker-compose up &
   sleep 5s
   docker cp server/secret.js cpps_app_1:/home/src/server/
+  docker exec -itd cpps_app_1 /bin/bash -c "cd /root/src && node server/node_modules/queue/worker.js"
   docker exec -it cpps_app_1 /bin/bash -c "cd /root/src && yarn install && gulp"
 elif [[ $TYPE = "mongo" ]] ; then
   docker exec -it cpps_db_1 mongo
