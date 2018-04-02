@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Table, Modal, ModalHeader, ModalBody, ModalFooter,
 Button} from 'reactstrap';
 import PropTypes from 'prop-types';
-import qs from 'qs';
 import {asyncUsernameToUserId} from 'components/utility/index';
 import {getNewRatings} from 'codeforces-rating-system';
 
@@ -30,12 +29,15 @@ export default class StandingsPreview extends Component {
       let previousRating;
       try {
         userId = await asyncUsernameToUserId(username);
-        const ratingApiQs = qs.stringify({
+        const data = {
           classroomId: classId,
           userIds: [userId], // TODO: Reduce number of api calls
-        });
-        const ratingApi = `/api/v1/ratings?${ratingApiQs}`;
+        };
+        const ratingApi = `/api/v1/ratings`;
         let resp = await fetch(ratingApi, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data),
           credentials: 'same-origin',
         });
         resp = await resp.json();

@@ -5,7 +5,7 @@ const Standing = require('mongoose').model('Standing');
 
 const router = express.Router();
 
-router.get('/ratings', getRatings);
+router.post('/ratings', getRatings);
 router.put('/ratings/apply/contest/:contestId', isRoot, applyRating);
 
 module.exports = {
@@ -16,7 +16,7 @@ module.exports = {
 
 async function getRatings(req, res, next) {
   try {
-    const {classroomId, userIds} = req.query;
+    const {classroomId, userIds} = req.body;
     if (!classroomId || !userIds || !userIds[0]) {
       const e = new Error(
         `classroomId: ${classroomId} or userIds: ${userIds} query is missing`);

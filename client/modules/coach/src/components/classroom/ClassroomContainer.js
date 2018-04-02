@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Classroom from './Classroom.js';
-import qs from 'qs';
 
 class ClassroomContainer extends Component {
   constructor(props) {
@@ -30,11 +29,14 @@ class ClassroomContainer extends Component {
       const userIds = resp.data.students.map((x)=>x._id);
 
       if (userIds.length) {
-        const query = qs.stringify({
+        const data = {
           classroomId: classId,
           userIds,
-        });
-        let ratingResp = await fetch(`/api/v1/ratings?${query}`, {
+        };
+        let ratingResp = await fetch(`/api/v1/ratings`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data),
           credentials: 'same-origin',
         });
         ratingResp = await ratingResp.json();
