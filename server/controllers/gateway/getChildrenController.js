@@ -85,6 +85,18 @@ function get_getChildren_ParentId(req, res, next) {
     }
   }, function(err, result) {
     if (err) return next(err);
+
+    const items = result.items;
+    items.sort((x, y) => {
+      if (x.type.toString() === 'folder') {
+        if (y.type.toString() === 'folder') return x.ind - y.ind;
+        else return -1;
+      } else {
+        if (y.type.toString() === 'folder') return 1;
+        else return y.userSolved - x.userSolved;
+      }
+    });
+
     return res.render( 'gateway/getChildren', {
       root: result.root,
       items: result.items,
