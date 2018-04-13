@@ -195,7 +195,7 @@ async function syncSolveCount(req, res, next) {
     const job = queue.create('syncSolveCount', {
       title: username,
       requestedBy: req.session.username,
-    }).unique(username);
+    }).unique(username).ttl(300000);
 
     job.on('complete', function(result) {
       job.remove(function(error, job) {
