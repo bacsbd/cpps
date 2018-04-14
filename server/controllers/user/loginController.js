@@ -3,6 +3,7 @@ const User = require('mongoose').model('User');
 const recaptcha = require('express-recaptcha');
 const allowSignUp = require('middlewares/allowSignUp');
 const _ = require('lodash');
+const {sendEmailVerification} = require('./verificationController');
 
 const router = express.Router();
 
@@ -61,7 +62,7 @@ function get_register(req, res) {
   });
 }
 
-function post_register(req, res, next) {
+async function post_register(req, res, next) {
   if (req.recaptcha.error) {
     req.flash('error', 'Please complete the captcha');
     return res.redirect('/user/register');
@@ -72,21 +73,35 @@ function post_register(req, res, next) {
   const user = new User({
     email,
     password,
-    verificationValue: _.random(100000, 999999)
+    verificationValue: _.random(100000, 999999),
   });
 
-  user.save(function(err) {
-    if (err) {
-      if (err.code === 11000) {
-        req.flash('error', 'Email address already exists');
-      } else {
-        req.flash('error', `An error occured. Error code: ${err.code}`);
-      }
-      return res.redirect('/user/register');
-    }
+  try {
+    await user.save();
     req.flash('success', 'Successfully registered');
-    return res.redirect('/');
-  });
+    req.session.login = true;
+    req.session.verified = false;
+    req.session.verificationValue = user.verificationValue;
+    req.session.email = email;
+    req.session.status = user.status;
+    req.session.userId = user._id;
+  } catch (err) {
+    if (err.code === 11000) {
+      req.flash('error', 'Email address already exists');
+    } else {
+      req.flash('error', `An error occured while creating user. Error code: ${err.code}`);
+    }
+    return res.redirect('/user/register');
+  }
+
+  try {
+    await sendEmailVerification(user.email, user.verificationValue);
+    req.flash('success', 'Verification Code sent to your email');
+  } catch (err) {
+    req.flash('error', `An error occured while sending email for verfication.`);
+  } finally {
+    return res.redirect('/user/verify');
+  }
 }
 
 function get_logout(req, res, next) {

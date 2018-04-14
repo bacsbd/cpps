@@ -12,7 +12,8 @@ router.get('/send-code', login, get_send_code);
 module.exports = {
   addRouter(app) {
     app.use('/user', router);
-  }
+  },
+  sendEmailVerification,
 };
 
 /**
@@ -55,26 +56,30 @@ function post_verify(req, res) {
   });
 }
 
-function get_send_code(req, res) {
+async function sendEmailVerification(emailAddress, verificationValue) {
+  const email = {
+    to: [emailAddress],
+    from: 'CPPS BACS <no-reply@bacsbd.org>',
+    subject: 'Verfication Code for CPPS',
+    text: `Here is your verification code: ${verificationValue}`,
+    html: `Here is your verification code: <b>${verificationValue}</b>`,
+  };
+  return mailer.sendMail(email);
+}
+
+async function get_send_code(req, res) {
   if (req.session.verified) {
     req.flash('info', 'Email already verified');
     return res.redirect('/');
   }
 
-  const email = {
-    to: [req.session.email],
-    from: 'CPPS BACS <no-reply@bacsbd.org>',
-    subject: 'Verfication Code for CPPS',
-    text: `Here is your verification code: ${req.session.verificationValue}`,
-    html: `Here is your verification code: <b>${req.session.verificationValue}</b>`
-  };
-
-  mailer.sendMail(email, function(err) {
-    if (err) {
-      req.flash('error', 'There was some error while sending verification code. Try again.');
-    } else {
-      req.flash('success', 'Verification Code sent to your email');
-    }
+  try {
+    await sendEmailVerification(req.session.email, req.session.verificationValue);
+    req.flash('success', 'Verification Code sent to your email');
+  } catch (err) {
+    console.log(err);
+    req.flash('error', 'There was some error while sending verification code. Try again.');
+  } finally {
     return res.redirect('/user/verify');
-  });
+  }
 }
