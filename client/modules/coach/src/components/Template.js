@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import Notifications, {error}
-  from 'react-notification-system-redux';
+import Notifications, {error, success} from 'react-notification-system-redux';
 import Loadable from 'react-loading-overlay';
 import {LinkContainer} from 'react-router-bootstrap';
 import PropTypes from 'prop-types';
@@ -23,7 +22,9 @@ class Template extends Component {
 
   propagateToChild() {
     return {
+      ...this.props,
       changeView: this.changeView,
+      handleError: this.handleError,
     };
   }
 

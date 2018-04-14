@@ -10,6 +10,7 @@ export default class ClassroomListContainer extends Component {
   }
 
   async componentDidMount() {
+    const {handleError} = this.props;
     try {
       const api = '/api/v1/classrooms';
       let resp = await fetch(api, {
@@ -26,8 +27,7 @@ export default class ClassroomListContainer extends Component {
       });
       return;
     } catch (err) {
-      if (err.status) alert(err.message);
-      console.log(err);
+      handleError(err);
       return;
     }
   }

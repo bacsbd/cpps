@@ -33,10 +33,17 @@ module.exports = {
 
 async function getClassroom(req, res, next) {
   try {
-    const {coach, student, select, populate=['', '']} = req.query;
+    const {coach = req.session.userId, student, select, populate=['', '']} = req.query;
     const dbQuery = {};
+
     if (coach) {
       dbQuery.coach = mongoose.Types.ObjectId(coach);
+    }
+    if (coach !== req.session.userId) {
+      return next({
+        status: 400,
+        message: `You ${req.session.userId} are not allowed to view classrooms of ${coach}`,
+      });
     }
     if (student) {
       dbQuery.students = student;
@@ -57,11 +64,19 @@ async function getClassroom(req, res, next) {
 
 async function getOneClassroom(req, res, next) {
   try {
+    const {userId} = req.session;
     const {classId} = req.params;
     const classroom = await Classroom
-      .findOne({_id: classId})
+      .findOne({_id: classId, $or: [{coach: userId}, {students: userId}]})
       .populate('coach students', 'username')
       .exec();
+
+    if (!classroom) {
+      return next({
+        status: 400,
+        message: 'Classroom doesn\'t exist or you do not have permission to view',
+      });
+    }
     return res.status(200).json({
       status: 200,
       data: classroom,
