@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Classroom from './Classroom.js';
 import Notifications, {error, success} from 'react-notification-system-redux';
+import Loadable from 'react-loading-overlay';
 
 class ClassroomContainer extends Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class ClassroomContainer extends Component {
     this.handleError = this.handleError.bind(this);
     this.notifySuccess = this.notifySuccess.bind(this);
     this.propagateToChild = this.propagateToChild.bind(this);
+    this.setLoadingStateComponent = this.setLoadingStateComponent.bind(this);
   }
 
   propagateToChild() {
@@ -28,7 +30,15 @@ class ClassroomContainer extends Component {
       ...this.props,
       changeView: this.changeView,
       handleError: this.handleError,
+      setLoadingStateComponent: this.setLoadingStateComponent,
     };
+  }
+
+  setLoadingStateComponent(state, message) {
+    this.setState({
+      loadingState: state,
+      loadingMessage: message,
+    });
   }
 
   handleError(err) {
@@ -101,20 +111,24 @@ class ClassroomContainer extends Component {
       });
     } catch (err) {
       return this.handleError(err);
+    } finally {
+      this.setLoadingStateComponent(false);
     }
   }
 
   render() {
     return (
-      <Classroom
-        {...this.propagateToChild()}
-        name={this.state.name}
-        classId={this.state.classId}
-        students={this.state.students}
-        coach={this.state.coach}
-        owner={this.state.coach._id === this.props.user.userId}
-        problemLists={this.state.problemLists}
-      />
+      <Loadable active={this.state.loadingState} spinner={true} text={this.state.loadingMessage || 'Please wait a moment...'}>
+        <Classroom
+          {...this.propagateToChild()}
+          name={this.state.name}
+          classId={this.state.classId}
+          students={this.state.students}
+          coach={this.state.coach}
+          owner={this.state.coach._id === this.props.user.userId}
+          problemLists={this.state.problemLists}
+        />
+      </Loadable>
     );
   }
 }

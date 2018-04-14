@@ -5,7 +5,7 @@ import {
     DropdownItem,
 } from 'reactstrap';
 import PropTypes from 'prop-types';
-import ProgressButton from 'react-progress-button';
+// import ProgressButton from 'react-progress-button';
 import {success} from 'react-notification-system-redux';
 
 /** Setting List */
@@ -43,6 +43,7 @@ SettingsList.propTypes = {
 async function syncAll(students, props) {
   const usernames = students.map((s)=>s.username);
 
+  props.setLoadingStateComponent(true);
   for (let username of usernames) {
     try {
       let resp = await fetch(`/api/v1/users/${username}/sync-solve-count`, {
@@ -61,6 +62,8 @@ async function syncAll(students, props) {
     position: 'tr',
     autoDismiss: 5,
   }));
+
+  props.setLoadingStateComponent(false);
 }
 
 function StudentPortal(props) {
@@ -104,12 +107,14 @@ function StudentPortal(props) {
         <Col>
           {
             owner?
-            <ProgressButton
+            <Button
                 className="ml-1"
+                color="primary"
+                title="Sync Profiles of all students"
                 onClick={()=>syncAll(students, props)}
                 >
               Sync All
-            </ProgressButton>: ''
+            </Button>: ''
           }
         </Col>
       </Row>

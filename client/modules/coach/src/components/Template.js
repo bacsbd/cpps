@@ -18,6 +18,14 @@ class Template extends Component {
     this.notifySuccess = this.notifySuccess.bind(this);
     this.propagateToChild = this.propagateToChild.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.setLoadingStateComponent = this.setLoadingStateComponent.bind(this);
+  }
+
+  setLoadingStateComponent(state, message) {
+    this.setState({
+      loadingState: state,
+      loadingMessage: message,
+    });
   }
 
   propagateToChild() {
@@ -25,6 +33,7 @@ class Template extends Component {
       ...this.props,
       changeView: this.changeView,
       handleError: this.handleError,
+      setLoadingStateComponent: this.setLoadingStateComponent,
     };
   }
 
@@ -83,8 +92,7 @@ class Template extends Component {
 
   render() {
     return (
-      <Loadable active={this.state.loadingState} spinner={true}
-      text={this.state.loadingMessage || 'Please wait a moment...'}>
+      <Loadable active={this.state.loadingState} spinner={true} text={this.state.loadingMessage || 'Please wait a moment...'}>
         <Notifications notifications={this.props.notifications}/>
       </Loadable>
     );
