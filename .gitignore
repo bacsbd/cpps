@@ -8,3 +8,5 @@ client/build/
 logs/
 .env
 backup/
+package-lock.json
+yarn.lock

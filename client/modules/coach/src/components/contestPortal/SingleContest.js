@@ -73,6 +73,7 @@ function SingleContest(props) {
   const {contestId, data, deleteStandings, classId, owner} = props;
   let tabulatedContestList = data.map((s, ind) => (
     <tr key={s._id}>
+      <td>{ind+1}</td>
       <td>{s.position}</td>
       <td>{s.username}</td>
       <td>{s.previousRating}</td>
@@ -102,6 +103,7 @@ function SingleContest(props) {
       <Table>
         <thead>
           <tr>
+            <th> # </th>
             <th> Position </th>
             <th> Username </th>
             <th> Previous Rating </th>
