@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get('/contests', getContests);
 router.get('/contests/:contestId', getContest);
+router.put('/contests/:contestId', editContest);
 router.post('/contests', isRoot, insertContest);
 router.delete('/contests/:contestId', isRoot, deleteStandings);
 
@@ -84,6 +85,36 @@ async function insertContest(req, res, next) {
     });
   } catch (err) {
     err.message = err.message + ' Error during contest creation';
+    err.status = 500;
+    err.type = 'contest-error';
+    return next(err);
+  }
+}
+
+async function editContest(req, res, next) {
+  const {name, link} = req.body;
+  const {userId} = req.session;
+  const {contestId} = req.params;
+
+  try {
+    const contest = await Contest.findOneAndUpdate(
+      {_id: contestId, coach: userId},
+      {
+        $set: {
+          name,
+          link,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    return res.status(201).json({
+      status: 200,
+      data: contest,
+    });
+  } catch (err) {
+    err.message = err.message + ' Error during contest update';
     err.status = 500;
     err.type = 'contest-error';
     return next(err);

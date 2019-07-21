@@ -60,6 +60,14 @@ function SettingsList({contestId, classId, deleteStandings}) {
           </div>
         </DropdownItem>
 
+        <LinkContainer
+          to={`/classroom/${classId}/contest/${contestId}/edit`}
+        >
+          <DropdownItem>
+            <div className="btn btn-block btn-info">Edit</div>
+          </DropdownItem>
+        </LinkContainer>
+
         {/* <LinkContainer to={`/classroom/${classId}/contest/add-contest`}>
         <DropdownItem>
            <Button color='danger' className='btn-block'>
