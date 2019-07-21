@@ -51,17 +51,23 @@ help_details() {
   exit 1
 }
 
+echo_info() {
+  echo -e "${REV}${1}${OFF}"
+}
+
 deploy_prod() {
   docker-compose down
-  docker rmi $(docker images -f "dangling=true" -q)
+  docker rmi $(docker images -f "dangling=true" -q) || ret=$?
   git pull origin
   git checkout master
   docker-compose build
   docker-compose up &
   sleep 5s
+  echo_info "Sleep complete"
   docker cp server/secret.js cpps_app_1:/home/src/server/
   docker exec -itd cpps_app_1 /bin/bash -c "gulp production && forever start server/index.js"
   docker exec -itd cpps_app_1 forever start server/node_modules/queue/worker.js
+  echo_info "Done"
 }
 
 deploy_dev() {
