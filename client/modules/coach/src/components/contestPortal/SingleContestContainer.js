@@ -16,6 +16,7 @@ class SingleContestContainer extends Component {
     this.state = {
       data: [], // Array of standings
       coach: '',
+      contest: {},
     };
 
     this.deleteStandings = this.deleteStandings.bind(this);
@@ -53,9 +54,15 @@ class SingleContestContainer extends Component {
       });
       resp2 = await resp2.json();
 
+      let resp3 = await fetch(`/api/v1/contests/${contestId}`, {
+        credentials: 'same-origin',
+      });
+      resp3 = await resp3.json();
+
       this.setState({
         data: resp.data,
         coach: resp2.data.coach._id,
+        contest: resp3.data,
       });
     } catch (err) {
       if (err.status) alert(err.message);
@@ -70,6 +77,7 @@ class SingleContestContainer extends Component {
       <SingleContest
         classId={classId}
         contestId={contestId}
+        contest={this.state.contest}
         data={this.state.data}
         deleteStandings={this.deleteStandings}
         owner={this.state.coach.toString() === userId.toString()}
@@ -89,6 +97,5 @@ SingleContestContainer.propTypes = {
     userId: PropTypes.string.isRequired,
   }),
 };
-
 
 export default connect(mapStateToProps)(SingleContestContainer);

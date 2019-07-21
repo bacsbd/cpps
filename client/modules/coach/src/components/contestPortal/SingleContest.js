@@ -1,8 +1,13 @@
 import React from 'react';
 import {LinkContainer} from 'react-router-bootstrap';
 import {
-    Table, Row, Col, UncontrolledDropdown, DropdownToggle, DropdownMenu,
-    DropdownItem,
+  Table,
+  Row,
+  Col,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
 } from 'reactstrap';
 import PropTypes from 'prop-types';
 
@@ -27,38 +32,43 @@ async function applyRating(contestId) {
 function SettingsList({contestId, classId, deleteStandings}) {
   return (
     <UncontrolledDropdown>
-     <DropdownToggle className='fa fa-lg fa-cog' color='light'></DropdownToggle>
-     <DropdownMenu>
-
-      <DropdownItem>
-         <div className='btn btn-block btn-primary'
-           onClick={()=>applyRating(contestId)}>
-           Apply Rating </div>
-      </DropdownItem>
-
-      <LinkContainer to={
-          `/classroom/${classId}/contest/${contestId}/add-standings`}>
+      <DropdownToggle className="fa fa-lg fa-cog" color="light" />
+      <DropdownMenu>
         <DropdownItem>
-          <div className='btn btn-block btn-primary'>Add Standings</div>
+          <div
+            className="btn btn-block btn-primary"
+            onClick={() => applyRating(contestId)}
+          >
+            Apply Rating{' '}
+          </div>
         </DropdownItem>
-      </LinkContainer>
 
-      <DropdownItem>
-         <div className='btn btn-block btn-danger'
-           onClick={()=>deleteStandings(contestId)}>
-           Delete Standings</div>
-      </DropdownItem>
+        <LinkContainer
+          to={`/classroom/${classId}/contest/${contestId}/add-standings`}
+        >
+          <DropdownItem>
+            <div className="btn btn-block btn-primary">Add Standings</div>
+          </DropdownItem>
+        </LinkContainer>
 
-      {/* <LinkContainer to={`/classroom/${classId}/contest/add-contest`}>
+        <DropdownItem>
+          <div
+            className="btn btn-block btn-danger"
+            onClick={() => deleteStandings(contestId)}
+          >
+            Delete Standings
+          </div>
+        </DropdownItem>
+
+        {/* <LinkContainer to={`/classroom/${classId}/contest/add-contest`}>
         <DropdownItem>
            <Button color='danger' className='btn-block'>
             Rollback Rating </Button>
         </DropdownItem>
       </LinkContainer> */}
-
-     </DropdownMenu>
-   </UncontrolledDropdown>
- );
+      </DropdownMenu>
+    </UncontrolledDropdown>
+  );
 }
 
 SettingsList.propTypes = {
@@ -70,34 +80,36 @@ SettingsList.propTypes = {
 /** Standings List */
 
 function SingleContest(props) {
-  const {contestId, data, deleteStandings, classId, owner} = props;
+  const {contestId, contest, data, deleteStandings, classId, owner} = props;
   let tabulatedContestList = data.map((s, ind) => (
     <tr key={s._id}>
-      <td>{ind+1}</td>
+      <td>{ind + 1}</td>
       <td>{s.position}</td>
       <td>{s.username}</td>
       <td>{s.previousRating}</td>
       <td>{s.newRating}</td>
-      <td>{s.newRating-s.previousRating}</td>
+      <td>{s.newRating - s.previousRating}</td>
     </tr>
   ));
 
   return (
-    <div className='text-center'>
+    <div className="text-center">
       <Row>
         <Col>
-          <h1>Contest Details</h1>
+          <h1>
+            Contest Details: <a href={contest.link}>{contest.name}</a>
+          </h1>
         </Col>
-        <Col className='text-right'>
-          {
-            owner?
+        <Col className="text-right">
+          {owner ? (
             <SettingsList
               contestId={contestId}
               classId={classId}
               deleteStandings={deleteStandings}
-            />:
-            <span></span>
-          }
+            />
+          ) : (
+            <span />
+          )}
         </Col>
       </Row>
       <Table>
@@ -111,9 +123,7 @@ function SingleContest(props) {
             <th> Delta </th>
           </tr>
         </thead>
-        <tbody>
-          { tabulatedContestList }
-        </tbody>
+        <tbody>{tabulatedContestList}</tbody>
       </Table>
     </div>
   );
@@ -122,15 +132,18 @@ function SingleContest(props) {
 SingleContest.propTypes = {
   classId: PropTypes.string.isRequired,
   contestId: PropTypes.string.isRequired,
-  data: PropTypes.arrayOf(PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    userId: PropTypes.string.isRequired,
-    position: PropTypes.number.isRequired,
-    previousRating: PropTypes.number.isRequired,
-    newRating: PropTypes.number.isRequired,
-  })).isRequired,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      userId: PropTypes.string.isRequired,
+      position: PropTypes.number.isRequired,
+      previousRating: PropTypes.number.isRequired,
+      newRating: PropTypes.number.isRequired,
+    })
+  ).isRequired,
   deleteStandings: PropTypes.func.isRequired,
   owner: PropTypes.bool.isRequired,
+  contest: PropTypes.object.isRequired,
 };
 
 export default SingleContest;

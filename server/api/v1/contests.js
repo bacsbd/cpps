@@ -7,6 +7,7 @@ const Classroom = require('mongoose').model('Classroom');
 const router = express.Router();
 
 router.get('/contests', getContests);
+router.get('/contests/:contestId', getContest);
 router.post('/contests', isRoot, insertContest);
 router.delete('/contests/:contestId', isRoot, deleteStandings);
 
@@ -34,13 +35,27 @@ async function getContests(req, res, next) {
   }
 }
 
+async function getContest(req, res, next) {
+  try {
+    const {contestId} = req.params;
+    const contest = await Contest.findById(contestId).exec();
+    return res.status(200).json({
+      status: 200,
+      data: contest,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function insertContest(req, res, next) {
   const {name, link, classroomId} = req.body;
   const {userId} = req.session;
 
   try {
     const classroom = await Classroom.findOne({_id: classroomId})
-      .select('coach').exec();
+      .select('coach')
+      .exec();
 
     if (!classroom) {
       const e = new Error(`No such classroom with id ${classroom}`);
@@ -48,7 +63,7 @@ async function insertContest(req, res, next) {
       throw e;
     }
 
-    if ( classroom.coach.toString() !== userId.toString() ) {
+    if (classroom.coach.toString() !== userId.toString()) {
       const e = new Error(`You are not the owner of this classroom`);
       e.status = 400;
       throw e;
