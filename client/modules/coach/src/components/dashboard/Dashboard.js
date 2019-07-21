@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {Row, Col} from 'reactstrap';
-import {connect} from 'react-redux';
-import Notifications, {error, success} from 'react-notification-system-redux';
+import React, { Component } from 'react';
+import { Row, Col } from 'reactstrap';
+import { connect } from 'react-redux';
+import Notifications, { error, success } from 'react-notification-system-redux';
 
 import ClassroomListContainer from './ClassroomListContainer';
 import ProblemListContainer from './ProblemListContainer';
@@ -18,7 +18,6 @@ class Dashboard extends Component {
     this.handleError = this.handleError.bind(this);
     this.notifySuccess = this.notifySuccess.bind(this);
     this.propagateToChild = this.propagateToChild.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   handleError(err) {
@@ -51,14 +50,14 @@ class Dashboard extends Component {
     return (
       <div>
         <Notifications
-        notifications={this.props.notifications}
+          notifications={this.props.notifications}
         />
         <Row>
           <Col>
-            <ClassroomListContainer {...this.propagateToChild()}/>
+            <ClassroomListContainer {...this.propagateToChild()} />
           </Col>
           <Col>
-            <ProblemListContainer {...this.propagateToChild()}/>
+            <ProblemListContainer {...this.propagateToChild()} />
           </Col>
         </Row>
       </div>
